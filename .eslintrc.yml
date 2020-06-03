@@ -7,6 +7,9 @@ env:
 
 parser: babel-eslint
 
+globals:
+  I18n: true
+
 extends:
   - airbnb-base
   - eslint:recommended
