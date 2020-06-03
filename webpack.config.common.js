@@ -7,28 +7,29 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const generateHTMLPlugins = () => glob.sync('./demo/**/*.html').map(
   dir => new HTMLWebpackPlugin({
     filename: path.basename(dir), // Output
-    template: dir, // Input
-  }),
+    template: dir // Input
+  })
 );
 
 module.exports = {
   node: {
-    fs: 'empty',
+    fs: 'empty'
   },
   entry: ['./demo/js/application.js', './demo/style/application.sass'],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'app.bundle.js',
+    filename: 'app.bundle.js'
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.html$/,
-        loader: 'raw-loader',
+        loader: 'raw-loader'
       },
       {
         test: /\.(pdf|gif|png|jpe?g|svg)$/,
@@ -36,10 +37,10 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              outputPath: 'static/',
-            },
-          },
-        ],
+              outputPath: 'static/'
+            }
+          }
+        ]
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
@@ -47,23 +48,23 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            outputPath: 'fonts/',
-          },
-        }],
-      },
-    ],
+            outputPath: 'fonts/'
+          }
+        }]
+      }
+    ]
   },
   plugins: [
     new CopyWebpackPlugin([
       {
         from: './demo/static/',
-        to: './static/',
-      },
+        to: './static/'
+      }
     ]),
-    ...generateHTMLPlugins(),
+    ...generateHTMLPlugins()
   ],
   stats: {
-    colors: true,
+    colors: true
   },
-  devtool: 'source-map',
+  devtool: 'source-map'
 };
