@@ -11,6 +11,12 @@
     "type": "git",
     "url": "git+https://github.com/shikimori/shiki-editor.git"
   },
+  "scripts": {
+    "build": "webpack --config webpack.config.prod.js",
+    "lint:js": "./node_modules/.bin/eslint src/js/*.js",
+    "lint:styles": "stylelint \"src/**/*.scss\"",
+    "start": "webpack-dev-server --config webpack.config.dev.js"
+  },
   "devDependencies": {
     "eslint": "7.1.0",
     "eslint-config-airbnb-base": "14.1.0",
@@ -46,7 +52,7 @@
   },
   "peerDependencies": {},
     "browserslist": [
-    "> 1%",
-    "last 2 versions"
+      "> 1%",
+      "last 2 versions"
   ]
 }

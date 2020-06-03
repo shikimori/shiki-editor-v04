@@ -4,7 +4,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 
-const generateHTMLPlugins = () => glob.sync('./src/**/*.html').map(
+const generateHTMLPlugins = () => glob.sync('./demo/**/*.html').map(
   dir => new HTMLWebpackPlugin({
     filename: path.basename(dir), // Output
     template: dir, // Input
