@@ -18,9 +18,9 @@ window.I18n = {
   t: key => key
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.editor-container').forEach(container => {
-    const editor = container.querySelector('.editor-inner');
+    const editor = container.querySelector('.prosemirror-container');
     const textarea = container.querySelector('textarea');
 
     const view = new EditorView(editor, {

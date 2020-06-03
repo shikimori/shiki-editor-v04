@@ -2,6 +2,7 @@
 
 @import ./blocks/b-quote-v2
 @import ./blocks/b-list
+@import ./blocks/b-code
 @import ./mixins/flex_column
 @import ./mixins/input
 @import ./mixins/responsive
@@ -11,6 +12,19 @@ body
   font-size: 13px
   min-height: 100vh
   font-family: Helvetica Neue, Arial, Verdana, sans-serif;
+
+strong
+  font-weight: bold
+
+em
+  font-style: italic
+
+.container
+  margin-left: auto
+  margin-right: auto
+  max-width: 1200px
+  padding: 40px 20px 0
+  width: 100%
 
 .fc-2
   +fcolumn-responsive($columns: 2)

@@ -1,11 +1,11 @@
 .prosemirror-container
   background-clip: padding-box
   color: #123
+  font-size: 16px
   margin: 20px 0
   padding: 5px 0
 
 .ProseMirror
-  +input-colors
   -webkit-font-variant-ligatures: none
   font-variant-ligatures: none
   min-height: 89px
@@ -13,8 +13,13 @@
   white-space: pre-wrap
   word-wrap: break-word
 
+  // +input_colors
+  background-color: #fcfcfc
+  border: 1px solid #ddd
+  color: #123
+
   &-focused
-    +input-focus
+    // +input_focus
     border-color: #2b8acc
 
   pre
