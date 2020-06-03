@@ -1,4 +1,5 @@
 import { Token } from './token';
+import { flatten } from 'lodash-es';
 
 export class Tokenizer {
   SPECIAL_TAGS = {
@@ -24,7 +25,7 @@ export class Tokenizer {
       this.parseLine('');
     }
 
-    return this.tokens.flatten();
+    return this.tokens |> flatten;
   }
 
   next(steps = 1) {
@@ -135,10 +136,10 @@ export class Tokenizer {
         break;
     }
 
-    if (inlineTokens.last()?.type !== 'text') {
+    if (inlineTokens[inlineTokens.length - 1]?.type !== 'text') {
       inlineTokens.push(new Token('text', ''));
     }
-    const token = inlineTokens.last();
+    const token = inlineTokens[inlineTokens.length - 1];
 
     token.content += char1;
     this.next();
@@ -198,7 +199,7 @@ export class Tokenizer {
 
   processCode(sequence) {
     this.next(sequence.length);
-    const language = this.extractLanguage();
+    const _language = this.extractLanguage();
     const startIndex = this.index;
     let isEnded = false;
 

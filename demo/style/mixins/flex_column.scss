@@ -1,0 +1,27 @@
+@mixin fcolumn-responsive(
+  $columns: '', // one argument to rule all columns
+  $gutter: 40px,
+  $offset: 40px,
+  $selector: '.f-column'
+) {
+  @include fcolumn($columns, $gutter, $offset, $selector);
+}
+
+@mixin fcolumn($columns, $gutter, $offset, $selector) {
+  // background: rgba(green, 0.5);
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: -$offset;
+  margin-left: -$gutter;
+
+  & > #{$selector} {
+    // background: rgba(blue, 0.5);
+    margin-bottom: $offset;
+    margin-left: $gutter;
+    @include fcolumn-size(1 / $columns, $gutter);
+  }
+}
+
+@mixin fcolumn-size($ratio, $gutter) {
+  width: calc(#{100% * $ratio} - #{$gutter});
+}

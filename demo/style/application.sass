@@ -1,1 +1,22 @@
-@import ./prosemirror.sass
+@import 'node_modules/reset-css/sass/reset'
+
+@import ./blocks/b-quote-v2
+@import ./blocks/b-list
+@import ./mixins/flex_column
+@import ./mixins/input
+@import ./mixins/responsive
+@import ./prosemirror
+
+body
+  font-size: 13px
+  min-height: 100vh
+  font-family: Helvetica Neue, Arial, Verdana, sans-serif;
+
+.fc-2
+  +fcolumn-responsive($columns: 2)
+
+textarea
+  +input-colors
+
+.editor-inner
+  margin-bottom: 40px
