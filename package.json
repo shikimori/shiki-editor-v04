@@ -18,6 +18,7 @@
     "start": "webpack-dev-server --config webpack.config.dev.js"
   },
   "dependencies": {
+    "lodash-es": "^4.17.15",
     "prosemirror-inputrules": "^1.1.2",
     "prosemirror-keymap": "^1.1.4",
     "prosemirror-menu": "^1.1.4",
@@ -38,12 +39,14 @@
     "autoprefixer": "^9.1.5",
     "babel-eslint": "11.0.0-beta.2",
     "babel-loader": "^8.1.0",
+    "reset-css": "5.0.1",
     "babel-plugin-macros": "^2.8.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "core-js": "^3.6.5",
     "css-loader": "^3.4.2",
     "cssnano": "^4.1.0",
+    "delay": "^4.3.0",
     "eslint": "7.1.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-import-resolver-webpack": "0.12.1",
@@ -68,7 +71,6 @@
     "webpack-dev-server": "^3.9.0",
     "webpack-merge": "^4.2.2"
   },
-  "peerDependencies": {},
   "browserslist": [
     "> 1%",
     "last 2 versions"
