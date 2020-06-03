@@ -4,9 +4,8 @@ env:
   browser: true
   node: true
   es6: true
-  jquery: true
 
-parser: vue-eslint-parser
+parser: babel-eslint
 
 extends:
   - airbnb-base
@@ -103,29 +102,11 @@ rules:
       vue: never
   import/first: 0
   import/order: 0
-  vue/max-attributes-per-line:
-    - error
-    - singleline: 3
-      multiline:
-        max: 1
-        allowFirstLine: false
-  vue/singleline-html-element-content-newline: 0
-  vue/html-quotes: 0
-    # - 1
-    # - single
-  vue/component-name-in-template-casing:
-    - 2
-    - PascalCase
-    - ignores:
-      - router-view
-      - router-link
 
-# settings:
-#   import/resolver:
-#     webpack:
-#       config: './config/webpack/development.js'
-#     node:
-#       extensions:
-#         - '.js'
-#         - '.coffee'
-#         - '.vue'
+settings:
+  import/resolver:
+    webpack:
+      config: './webpack.config.dev.js'
+    node:
+      extensions:
+        - '.js'
