@@ -14,6 +14,10 @@ module.exports = {
       '@babel/plugin-proposal-pipeline-operator',
       { proposal: 'minimal' }
     ],
-    '@babel/plugin-proposal-partial-application'
+    '@babel/plugin-proposal-partial-application',
+    [
+      '@babel/plugin-proposal-class-properties',
+      { loose: true }
+    ]
   ]
 };

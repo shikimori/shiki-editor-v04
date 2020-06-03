@@ -1,7 +1,6 @@
 /* eslint-disable */
 // https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
 
-import markdownit from 'markdown-it';
 import { Mark } from 'prosemirror-model';
 
 import { Tokenizer } from './tokenizer';
@@ -226,11 +225,6 @@ export class MarkdownParser {
 // :: MarkdownParser
 // A parser parsing unextended [CommonMark](http://commonmark.org/),
 // without inline HTML, and producing a document in the basic schema.
-const markdownTokenizer = markdownit('commonmark', { html: false });
-
-window.markdownTokenizer = markdownTokenizer;
-window.Tokenizer = Tokenizer;
-
 const tokens = {
   // ordered_list: { block: 'ordered_list', getAttrs: tok => ({ order: +tok.attrGet('start') || 1 }) },
   // heading: { block: 'heading', getAttrs: tok => ({ level: +tok.tag.slice(1) }) },
