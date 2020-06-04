@@ -173,6 +173,62 @@ describe('Tokenizer', () => {
         }]);
       });
     });
+
+    describe('inline_code', () => {
+      it('`zxc`', () => {
+        expect(Tokenizer.parse('`zxc`')).to.eql([{
+          content: '',
+          type: 'paragraph_open',
+          children: null
+        }, {
+          content: '`zxc`',
+          type: 'inline',
+          children: [{
+            content: 'zxc',
+            type: 'code_inline',
+            children: null
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close',
+          children: null
+        }]);
+      });
+
+      it('a`zxc`A', () => {
+        expect(Tokenizer.parse('a`zxc`A')).to.eql([{
+          content: '',
+          type: 'paragraph_open',
+          children: null
+        }, {
+          content: 'a`zxc`A',
+          type: 'inline',
+          children: [{
+            content: 'a',
+            type: 'text',
+            children: null
+          }, {
+            content: 'zxc',
+            type: 'code_inline',
+            children: null
+          }, {
+            content: 'A',
+            type: 'text',
+            children: null
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close',
+          children: null
+        }]);
+      });
+
+      it('`zxc', () => {
+        expect(Tokenizer.parse('`zxc`')).to.eql([
+          ...text('`zxc')
+        ]);
+      });
+    });
   });
 
   describe('nodes', () => {
