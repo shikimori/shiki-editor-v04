@@ -4,14 +4,15 @@ import {
   wrapItem,
   liftItem,
   undoItem,
-  redoItem,
-  blockTypeItem
+  redoItem
+  // blockTypeItem
 } from 'prosemirror-menu';
 import shikiIcons from './icons';
 // import { TextSelection } from 'prosemirror-state';
 import { toggleMark } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
 import { schema } from './schema';
+import toggleBlockType from './commands/toggle_block_type';
 
 function cmdItem(cmd, options) {
   const passedOptions = {
@@ -37,6 +38,21 @@ const markActive = markType => state => {
   }
   return state.doc.rangeHasMark(from, to, markType);
 };
+
+function toggleableBlockTypeItem(nodeType, options) {
+  const command = toggleBlockType(nodeType, schema.nodes.paragraph, options.attrs);
+
+  return new MenuItem({
+    run: command,
+    enable(state) { return command(state); },
+    active(state) {
+      const { $from, to, node } = state.selection;
+      if (node) return node.hasMarkup(nodeType, options.attrs);
+      return to <= $from.end() && $from.parent.hasMarkup(nodeType, options.attrs);
+    },
+    ...options
+  });
+}
 
 // const canInsert = nodeType => state => {
 //   const { $from } = state.selection;
@@ -113,11 +129,7 @@ export const menu = {
         title: 'Wrap in block quote',
         icon: icons.blockquote
       }),
-      // wrapItem(schema.nodes.code_block, {
-      //   title: 'Wrap in code',
-      //   icon: shikiIcons.code_block
-      // }),
-      blockTypeItem(schema.nodes.code_block, {
+      toggleableBlockTypeItem(schema.nodes.code_block, {
         title: 'Wrap in code',
         icon: shikiIcons.code_block
       }),
