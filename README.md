@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/shikimori/shiki-editor.svg?branch=master)](https://travis-ci.org/shikimori/shiki-editor)
+
 ### Installation
 
 ```sh
