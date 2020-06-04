@@ -9,6 +9,8 @@ parser: babel-eslint
 
 globals:
   I18n: true
+  describe: true
+  it: true
 
 extends:
   - airbnb-base
