@@ -15,7 +15,7 @@ window.markdownTokenizer = markdownTokenizer;
 window.Tokenizer = Tokenizer;
 
 window.I18n = {
-  t: key => key
+  t: key => `:${key}`
 };
 
 document.addEventListener('DOMContentLoaded', () => {
