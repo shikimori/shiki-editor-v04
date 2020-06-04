@@ -55,7 +55,8 @@ const nodes = {
     code: true,
     defining: true,
     marks: '',
-    attrs: { params: { default: '' } },
+    draggable: false,
+    // attrs: { params: { default: '' } },
     parseDOM: [{
       tag: 'pre',
       preserveWhitespace: 'full',
@@ -72,12 +73,6 @@ const nodes = {
     }
   }
 };
-
-    // "<pre class='to-process' data-dynamic='code_highlight'>"\
-    //   "<code class='b-code' data-language='#{language}'>" +
-    //     text +
-    //   '</code>'\
-    // '</pre>'
 
 const marks = {
   em: {
