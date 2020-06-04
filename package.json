@@ -18,7 +18,6 @@
     "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config.test.js test/**/*.spec.js --recursive"
   },
   "dependencies": {
-    "lodash-es": "^4.17.15",
     "prosemirror-inputrules": "^1.1.2",
     "prosemirror-keymap": "^1.1.4",
     "prosemirror-menu": "^1.1.4",
@@ -69,5 +68,8 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.9.0",
     "webpack-merge": "^4.2.2"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.15"
   }
 }

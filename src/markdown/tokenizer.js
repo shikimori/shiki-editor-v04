@@ -1,5 +1,5 @@
 import { Token } from './token';
-import { flatten } from 'lodash-es';
+import { flatten } from 'lodash';
 
 export class Tokenizer {
   SPECIAL_TAGS = {
