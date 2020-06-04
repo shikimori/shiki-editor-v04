@@ -8,13 +8,15 @@ import {
   // emDash,
   // ellipsis
 } from 'prosemirror-inputrules';
+import markInputRule from './commands/mark_input_rule';
 
 import { schema } from './schema';
 
 export default inputRules({
   rules: [
     wrappingInputRule(/^\s*>\s$/, schema.nodes.blockquote),
-    wrappingInputRule(/^\s*([-+*])\s$/, schema.nodes.bullet_list)
+    wrappingInputRule(/^\s*([-+*])\s$/, schema.nodes.bullet_list),
+    markInputRule(/(?:`)([^`]+)(?:`)$/, schema.marks.code)
     // textblockTypeInputRule(/^```\w*\n/, schema.nodes.code_block)
   ]
 });

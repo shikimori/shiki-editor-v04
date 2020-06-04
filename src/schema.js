@@ -98,6 +98,10 @@ const marks = {
       { tag: 'span' }
     ],
     toDOM: () => ['span', { style: 'text-decoration: underline;' }, 0]
+  },
+  code: {
+    parseDOM: [{ tag: 'code' }],
+    toDOM() { return ['code']; }
   }
 };
 

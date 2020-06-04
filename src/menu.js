@@ -115,22 +115,28 @@ export const menu = {
         enable: () => true,
         active: markActive(schema.marks.deleted),
         run: toggleMark(schema.marks.deleted)
+      }),
+      new MenuItem({
+        title: () => I18n.t('frontend.shiki_editor.code'),
+        icon: icons.code,
+        enable: () => true,
+        active: markActive(schema.marks.code),
+        run: toggleMark(schema.marks.code)
       })
-      // icons.code
     ], [
       undoItem,
       redoItem
     ], [
       wrapListItem(schema.nodes.bullet_list, {
-        title: 'Wrap in bullet list',
+        title: () => I18n.t('frontend.shiki_editor.list'),
         icon: icons.bulletList
       }),
       wrapItem(schema.nodes.blockquote, {
-        title: 'Wrap in block quote',
+        title: () => I18n.t('frontend.shiki_editor.blockquote'),
         icon: icons.blockquote
       }),
       toggleableBlockTypeItem(schema.nodes.code_block, {
-        title: 'Wrap in code',
+        title: () => I18n.t('frontend.shiki_editor.code_block'),
         icon: shikiIcons.code_block
       }),
       liftItem
