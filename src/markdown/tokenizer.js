@@ -161,7 +161,8 @@ export class Tokenizer {
       index += 1;
       const isEnd = this.char1 === '\n' || this.char1 === undefined;
 
-      if (!isFirstSymbolPassed) { if (this.text[index] === '`') {
+      if (!isFirstSymbolPassed) {
+        if (this.text[index] === '`') {
           tag += '`';
         } else {
           startIndex = index;

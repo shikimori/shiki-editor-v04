@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.prod.js",
-    "lint:js": "./node_modules/.bin/eslint src/**/*.js test/**/*.js",
+    "lint": "./node_modules/.bin/eslint src/**/*.js test/**/*.js",
     "start": "webpack-dev-server --config webpack.config.dev.js",
     "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config.test.js test/**/*.spec.js --recursive"
   },
