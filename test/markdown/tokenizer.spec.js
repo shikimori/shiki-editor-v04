@@ -195,6 +195,30 @@ describe('Tokenizer', () => {
         }]);
       });
 
+      it('``zxc```', () => {
+        expect(Tokenizer.parse('``zxc```')).to.eql([{
+          content: '',
+          type: 'paragraph_open',
+          children: null
+        }, {
+          content: '``zxc```',
+          type: 'inline',
+          children: [{
+            content: 'zxc',
+            type: 'code_inline',
+            children: null
+          }, {
+            content: '`',
+            type: 'text',
+            children: null
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close',
+          children: null
+        }]);
+      });
+
       it('a`zxc`A', () => {
         expect(Tokenizer.parse('a`zxc`A')).to.eql([{
           content: '',
@@ -223,9 +247,9 @@ describe('Tokenizer', () => {
         }]);
       });
 
-      it('`zxc', () => {
-        expect(Tokenizer.parse('`zxc`')).to.eql([
-          ...text('`zxc')
+      it('z`zxc', () => {
+        expect(Tokenizer.parse('z`zxc')).to.eql([
+          ...text('z`zxc')
         ]);
       });
     });

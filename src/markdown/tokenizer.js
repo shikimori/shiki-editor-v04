@@ -89,7 +89,7 @@ export class Tokenizer {
   }
 
   processInline() {
-    const { char1, inlineTokens } = this;
+    const { inlineTokens } = this;
 
     switch (this.bbcode) {
       case '[b]':
@@ -136,13 +136,56 @@ export class Tokenizer {
         break;
     }
 
+    if (this.char1 === '`') {
+      if (this.processInlineCode()) {
+        return;
+      }
+    }
+
     if (inlineTokens[inlineTokens.length - 1]?.type !== 'text') {
       inlineTokens.push(new Token('text', ''));
     }
     const token = inlineTokens[inlineTokens.length - 1];
 
-    token.content += char1;
+    token.content += this.char1;
     this.next();
+  }
+
+  processInlineCode() {
+    let { index } = this;
+    let tag = '`';
+    let startIndex = this;
+    let isFirstSymbolPassed = false;
+
+    while (index <= this.text.length) {
+      index += 1;
+      const isEnd = this.char1 === '\n' || this.char1 === undefined;
+
+      if (!isFirstSymbolPassed) {
+        if (this.text[index] === '`') {
+          tag += '`';
+        } else {
+          startIndex = index;
+          isFirstSymbolPassed = true;
+        }
+        continue;
+      }
+
+      if (this.text[index] === '`' &&
+          this.text.slice(index, index + tag.length) === tag
+      ) {
+        const code = this.text.slice(startIndex, index);
+        this.inlineTokens.push(new Token('code_inline', code));
+        this.next(code.length + tag.length * 2);
+        return true;
+      }
+
+      if (isEnd) {
+        return false;
+      }
+    }
+
+    return false;
   }
 
   processParagraph(startIndex) {
@@ -213,7 +256,10 @@ export class Tokenizer {
     }
 
     this.push(
-      new Token('code_block', this.text.slice(startIndex, isEnded ? this.index - 5 : this.index))
+      new Token(
+        'code_block',
+        this.text.slice(startIndex, isEnded ? this.index - 5 : this.index)
+      )
     );
   }
 
