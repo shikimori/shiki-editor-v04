@@ -67,18 +67,11 @@ const nodes = {
       )
     }],
     toDOM(node) {
-      const language = node.attrs.language ?
-        { 'data-language': node.attrs.language } :
-        {};
-
+      // node.attrs.params ? { 'data-params': node.attrs.params } : {},
       return [
         'pre',
-        node.attrs.params ? { 'data-params': node.attrs.params } : {},
-        [
-          'code',
-          { class: 'b-code', ...language },
-          0
-        ]
+        { class: 'b-code-v2', 'data-language': node.attrs.language || '' },
+        ['code', 0]
       ];
     }
   }
