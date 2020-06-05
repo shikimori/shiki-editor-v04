@@ -63,7 +63,9 @@ export class Token {
     *
     * An array of child nodes (inline and img tokens)
     * */
-    this.children = children;
+    if (children) {
+      this.children = children;
+    }
 
     /**
     * Token#content -> String
