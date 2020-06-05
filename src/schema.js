@@ -40,7 +40,6 @@ const nodes = {
     }
   },
   list_item: {
-    // content: 'paragraph block*',
     content: 'block*',
     defining: true,
     parseDOM: [{ tag: 'li' }],
@@ -64,7 +63,6 @@ const nodes = {
       )
     }],
     toDOM(node) {
-      // node.attrs.params ? { 'data-params': node.attrs.params } : {},
       return [
         'pre',
         { class: 'b-code-v2', 'data-language': node.attrs.language || '' },
