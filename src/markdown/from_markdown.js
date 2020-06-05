@@ -52,12 +52,12 @@ class MarkdownParseState {
     this.marks = mark.removeFromSet(this.marks);
   }
 
-  parseTokens(toks) {
-    for (let i = 0; i < toks.length; i++) {
-      const tok = toks[i];
-      const handler = this.tokenHandlers[tok.type];
-      if (!handler) throw new Error('Token type `' + tok.type + '` not supported by Markdown parser');
-      handler(this, tok);
+  parseTokens(tokens) {
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      const handler = this.tokenHandlers[token.type];
+      if (!handler) throw new Error('Token type `' + token.type + '` not supported by Markdown parser');
+      handler(this, token);
     }
   }
 
@@ -111,28 +111,28 @@ function tokenHandlers(schema, tokens) {
     if (spec.block) {
       const nodeType = schema.nodeType(spec.block);
       if (noOpenClose(type)) {
-        handlers[type] = (state, tok) => {
-          state.openNode(nodeType, attrs(spec, tok));
-          state.addText(withoutTrailingNewline(tok.content));
+        handlers[type] = (state, token) => {
+          state.openNode(nodeType, attrs(spec, token));
+          state.addText(withoutTrailingNewline(token.content));
           state.closeNode();
         };
       } else {
-        handlers[type + '_open'] = (state, tok) => state.openNode(nodeType, attrs(spec, tok));
+        handlers[type + '_open'] = (state, token) => state.openNode(nodeType, attrs(spec, token));
         handlers[type + '_close'] = state => state.closeNode();
       }
     } else if (spec.node) {
       const nodeType = schema.nodeType(spec.node);
-      handlers[type] = (state, tok) => state.addNode(nodeType, attrs(spec, tok));
+      handlers[type] = (state, token) => state.addNode(nodeType, attrs(spec, token));
     } else if (spec.mark) {
       const markType = schema.marks[spec.mark];
       if (noOpenClose(type)) {
-        handlers[type] = (state, tok) => {
-          state.openMark(markType.create(attrs(spec, tok)));
-          state.addText(withoutTrailingNewline(tok.content));
+        handlers[type] = (state, token) => {
+          state.openMark(markType.create(attrs(spec, token)));
+          state.addText(withoutTrailingNewline(token.content));
           state.closeMark(markType);
         };
       } else {
-        handlers[type + '_open'] = (state, tok) => state.openMark(markType.create(attrs(spec, tok)));
+        handlers[type + '_open'] = (state, token) => state.openMark(markType.create(attrs(spec, token)));
         handlers[type + '_close'] = state => state.closeMark(markType);
       }
     } else if (spec.ignore) {
@@ -147,8 +147,8 @@ function tokenHandlers(schema, tokens) {
     }
   }
 
-  handlers.text = (state, tok) => state.addText(tok.content);
-  handlers.inline = (state, tok) => state.parseTokens(tok.children);
+  handlers.text = (state, token) => state.addText(token.content);
+  handlers.inline = (state, token) => state.parseTokens(token.children);
   handlers.softbreak = handlers.softbreak || (state => state.addText('\n'));
 
   return handlers;
@@ -214,7 +214,6 @@ export class MarkdownParser {
     const state = new MarkdownParseState(this.schema, this.tokenHandlers); let
       doc;
 
-    // state.parseTokens(this.tokenizer.parse(text, {}));
     state.parseTokens(Tokenizer.parse(text));
 
     do { doc = state.closeNode(); } while (state.stack.length);
@@ -226,15 +225,15 @@ export class MarkdownParser {
 // A parser parsing unextended [CommonMark](http://commonmark.org/),
 // without inline HTML, and producing a document in the basic schema.
 const tokens = {
-  // ordered_list: { block: 'ordered_list', getAttrs: tok => ({ order: +tok.attrGet('start') || 1 }) },
-  // heading: { block: 'heading', getAttrs: tok => ({ level: +tok.tag.slice(1) }) },
-  // fence: { block: 'code_block', getAttrs: tok => ({ params: tok.info || '' }) },
+  // ordered_list: { block: 'ordered_list', getAttrs: token => ({ order: +token.attrGet('start') || 1 }) },
+  // heading: { block: 'heading', getAttrs: token => ({ level: +token.tag.slice(1) }) },
+  // fence: { block: 'code_block', getAttrs: token => ({ params: token.info || '' }) },
   // hr: { node: 'horizontal_rule' },
   // image: { node: 'image',
-  //   getAttrs: tok => ({
-  //     src: tok.attrGet('src'),
-  //     title: tok.attrGet('title') || null,
-  //     alt: tok.children[0] && tok.children[0].content || null
+  //   getAttrs: token => ({
+  //     src: token.attrGet('src'),
+  //     title: token.attrGet('title') || null,
+  //     alt: token.children[0] && token.children[0].content || null
   //   }) },
   // hardbreak: { node: 'hard_break' },
 
@@ -242,7 +241,12 @@ const tokens = {
   blockquote: { block: 'blockquote' },
   list_item: { block: 'list_item' },
   bullet_list: { block: 'bullet_list' },
-  code_block: { block: 'code_block' },
+  code_block: {
+    block: 'code_block',
+    getAttrs: token => ({
+      language: token.attrGet('language')
+    })
+  },
 
   em: { mark: 'em' },
   strong: { mark: 'strong' },
@@ -250,9 +254,9 @@ const tokens = {
   underline: { mark: 'underline' },
   code_inline: { mark: 'code' }
   // link: { mark: 'link',
-  //   getAttrs: tok => ({
-  //     href: tok.attrGet('href'),
-  //     title: tok.attrGet('title') || null
+  //   getAttrs: token => ({
+  //     href: token.attrGet('href'),
+  //     title: token.attrGet('title') || null
   //   }) },
 };
 

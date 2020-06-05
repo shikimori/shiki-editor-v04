@@ -56,7 +56,9 @@ const nodes = {
     defining: true,
     marks: '',
     draggable: false,
-    // attrs: { params: { default: '' } },
+    attrs: {
+      language: { default: '' }
+    },
     parseDOM: [{
       tag: 'pre',
       preserveWhitespace: 'full',
@@ -65,10 +67,18 @@ const nodes = {
       )
     }],
     toDOM(node) {
+      const language = node.attrs.language ?
+        { 'data-language': node.attrs.language } :
+        {};
+
       return [
         'pre',
         node.attrs.params ? { 'data-params': node.attrs.params } : {},
-        ['code', { class: 'b-code' }, 0]
+        [
+          'code',
+          { class: 'b-code', ...language },
+          0
+        ]
       ];
     }
   }
