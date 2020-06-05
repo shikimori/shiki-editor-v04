@@ -22,15 +22,30 @@ strong
 em
   font-style: italic
 
+textarea
+  +lte_ipad
+    font-size: 16px
+
+  +gte_laptop
+    font-size: 13px
+
 .container
   margin-left: auto
   margin-right: auto
   max-width: 1200px
-  padding: 40px 20px 0
   width: 100%
 
+  +lte_ipad
+    padding: 0 20px 0
+
+  +gte_laptop
+    padding: 40px 20px 0
+
 .fc-2
-  +fcolumn-responsive($columns: 2)
+  +lte_ipad
+    +fcolumn-responsive($columns: 1, $offset: 40px)
+  +gte_laptop
+    +fcolumn-responsive($columns: 2)
 
 textarea
   +input-colors
