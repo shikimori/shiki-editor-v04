@@ -48,7 +48,11 @@ function toggleableBlockTypeItem(nodeType, options) {
     active(state) {
       const { $from, to, node } = state.selection;
       if (node) return node.hasMarkup(nodeType, options.attrs);
-      return to <= $from.end() && $from.parent.hasMarkup(nodeType, options.attrs);
+      return to <= $from.end() && $from.parent.type == nodeType;
+      // do not use hasMarkup because it compares node attributes
+      // we don't need this check because `code_block` may have different
+      // language attributes
+      // return to <= $from.end() && $from.parent.hasMarkup(nodeType, options.attrs);
     },
     ...options
   });
