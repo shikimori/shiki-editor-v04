@@ -256,5 +256,4 @@ const tokens = {
   //   }) },
 };
 
-export const markitMarkdownParser = new MarkdownParser(schema, Tokenizer, tokens);
 export const shikiMarkdownParser = new MarkdownParser(schema, Tokenizer, tokens);
