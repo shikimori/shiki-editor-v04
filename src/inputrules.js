@@ -16,7 +16,7 @@ export default inputRules({
   rules: [
     wrappingInputRule(/^\s*>\s$/, schema.nodes.blockquote),
     wrappingInputRule(/^\s*([-+*])\s$/, schema.nodes.bullet_list),
-    markInputRule(/(?:`)([^`]+)(?:`)$/, schema.marks.code)
+    markInputRule(/(?:`)([^`]+)(?:`) $/, schema.marks.code)
     // textblockTypeInputRule(/^```\w*\n/, schema.nodes.code_block)
   ]
 });
