@@ -90,5 +90,26 @@ export const shikiMarkdownSerializer = new MarkdownSerializer({
   em: { open: '[i]', close: '[/i]', mixable: true, expelEnclosingWhitespace: true },
   strong: { open: '[b]', close: '[/b]', mixable: true, expelEnclosingWhitespace: true },
   deleted: { open: '[s]', close: '[/s]', mixable: true, expelEnclosingWhitespace: true },
-  underline: { open: '[u]', close: '[/u]', mixable: true, expelEnclosingWhitespace: true }
+  underline: { open: '[u]', close: '[/u]', mixable: true, expelEnclosingWhitespace: true },
+  code: {
+    open(_state, _mark, parent, index) {
+      return backticksFor(parent.child(index), -1);
+    },
+    close(_state, _mark, parent, index) {
+      return backticksFor(parent.child(index - 1), 1);
+    },
+    escape: false
+  }
 });
+
+function backticksFor(node, side) {
+  const ticks = /`+/g;
+  let m;
+  let len = 0;
+
+  if (node.isText) while (m = ticks.exec(node.text)) { len = Math.max(len, m[0].length); } // eslint-disable-line
+  let result = len > 0 && side > 0 ? ' `' : '`';
+  for (let i = 0; i < len; i++) result += '`';
+  if (len > 0 && side < 0) result += ' ';
+  return result;
+}
