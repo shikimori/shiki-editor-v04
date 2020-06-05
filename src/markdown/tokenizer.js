@@ -161,8 +161,7 @@ export class Tokenizer {
       index += 1;
       const isEnd = this.char1 === '\n' || this.char1 === undefined;
 
-      if (!isFirstSymbolPassed) {
-        if (this.text[index] === '`') {
+      if (!isFirstSymbolPassed) { if (this.text[index] === '`') {
           tag += '`';
         } else {
           startIndex = index;
@@ -242,7 +241,7 @@ export class Tokenizer {
 
   processCode(sequence) {
     this.next(sequence.length);
-    const _language = this.extractLanguage();
+    const language = this.extractLanguage();
     const startIndex = this.index;
     let isEnded = false;
 
@@ -255,12 +254,14 @@ export class Tokenizer {
       this.next();
     }
 
-    this.push(
-      new Token(
-        'code_block',
-        this.text.slice(startIndex, isEnded ? this.index - 5 : this.index)
-      )
+    const token = new Token(
+      'code_block',
+      this.text.slice(startIndex, isEnded ? this.index - 5 : this.index)
     );
+    if (language) {
+      token.attrSet('language', language);
+    }
+    this.push(token);
   }
 
   extractLanguage() {

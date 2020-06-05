@@ -515,6 +515,14 @@ describe('Tokenizer', () => {
           children: null
         }]);
       });
+      it('```ruby\\nzxc\\n```', () => {
+        expect(Tokenizer.parse('```ruby\nzxc\n```')).to.eql([{
+          content: 'zxc',
+          type: 'code_block',
+          children: null,
+          attrs: [['language', 'ruby']]
+        }]);
+      });
     });
   });
 });
