@@ -104,7 +104,7 @@ const marks = {
   },
   code: {
     parseDOM: [{ tag: 'code' }],
-    toDOM() { return ['code']; }
+    toDOM() { return ['code', { class: 'b-code-v2-inline' }]; }
   }
 };
 
