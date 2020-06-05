@@ -247,13 +247,13 @@ const tokens = {
   em: { mark: 'em' },
   strong: { mark: 'strong' },
   del: { mark: 'deleted' },
-  underline: { mark: 'underline' }
+  underline: { mark: 'underline' },
+  code_inline: { mark: 'code' }
   // link: { mark: 'link',
   //   getAttrs: tok => ({
   //     href: tok.attrGet('href'),
   //     title: tok.attrGet('title') || null
   //   }) },
-  // code_inline: { mark: 'code' }
 };
 
 export const markitMarkdownParser = new MarkdownParser(schema, Tokenizer, tokens);
