@@ -46,9 +46,6 @@ const nodes = {
     parseDOM: [{ tag: 'li' }],
     toDOM() { return liDOM; }
   },
-  // :: NodeSpec A code listing. Disallows marks or non-text inline
-  // nodes by default. Represented as a `<pre>` element with a
-  // `<code>` element inside of it.
   code_block: {
     content: 'text*',
     group: 'block',
