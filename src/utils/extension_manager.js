@@ -1,5 +1,4 @@
-// based on
-// https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Utils/ExtensionManager.js
+// based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Utils/ExtensionManager.js
 import { keymap } from 'prosemirror-keymap';
 
 export default class ExtensionManager {
