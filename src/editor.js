@@ -44,7 +44,7 @@ export default class ShikiEditor {
   }
 
   get state() {
-    return this.view ? this.view.state : null;
+    return this.view?.state;
   }
 
   createExtensions() {
@@ -179,7 +179,7 @@ export default class ShikiEditor {
 
   @bind
   dispatchTransaction(transaction) {
-    const newState = this.state.apply(transaction);
+    const newState = this.state.applyTransaction(transaction);
     this.view.updateState(newState);
     // this.selection = {
     //   from: this.state.selection.from,
