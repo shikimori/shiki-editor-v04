@@ -76,6 +76,12 @@ module.exports = {
           priority: -10,
           name: 'vendors'
         },
+        prosemirror: {
+          test: /[\\/]node_modules\/prosemirror/,
+          chunks: 'initial',
+          priority: -5,
+          name: 'prosemirror'
+        },
         vendors_async: {
           test: /[\\/]node_modules[\\/]/,
           minChunks: 1,
