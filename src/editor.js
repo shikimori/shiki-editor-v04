@@ -43,6 +43,10 @@ export default class ShikiEditor {
     this.extensions.view = this.view;
   }
 
+  get state() {
+    return this.view ? this.view.state : null;
+  }
+
   createExtensions() {
     return new ExtensionManager([
       new Doc(),
