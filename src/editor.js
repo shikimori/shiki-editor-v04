@@ -76,7 +76,11 @@ export default class ShikiEditor {
   }
 
   createTextParser() {
-    return new MarkdownParser(this.schema, Tokenizer, tokens);
+    return new MarkdownParser(
+      this.schema,
+      Tokenizer,
+      this.extensions.markdownTokens()
+    );
   }
 
   createPlugins() {

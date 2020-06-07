@@ -259,5 +259,3 @@ export const tokens = {
   //     title: token.attrGet('title') || null
   //   }) },
 };
-
-export const shikiMarkdownParser = new MarkdownParser(schema, Tokenizer, tokens);

@@ -134,6 +134,15 @@ export default class ExtensionManager {
     ]), []);
   }
 
+  markdownTokens() {
+    return this.extensions
+      .filter(extension => extension.markdownToken)
+      .reduce((allMarkdownTokens, extension) => {
+        allMarkdownTokens[extension.name] = extension.markdownToken;
+        return allMarkdownTokens;
+      }, {});
+  }
+
   commands({ schema, view }) {
     return this.extensions
       .filter(extension => extension.commands)

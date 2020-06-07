@@ -17,6 +17,10 @@ export default class Node extends Extension {
     return null;
   }
 
+  get markdownToken() {
+    return null;
+  }
+
   command() {
     return () => {};
   }
