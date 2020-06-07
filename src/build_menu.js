@@ -88,7 +88,7 @@ function toggleableBlockTypeItem(nodeType, options, schema) {
 undoItem.spec.title = () => I18n.t('frontend.shiki_editor.undo');
 redoItem.spec.title = () => I18n.t('frontend.shiki_editor.redo');
 
-export function buildMenu(schema) {
+export function buildMenu({ schema, commands }) {
   const marks = [];
   const undos = [undoItem, redoItem];
   const blocks = [];
@@ -125,10 +125,21 @@ export function buildMenu(schema) {
   }
   if (schema.nodes.code_block) {
     blocks.push(
-      toggleableBlockTypeItem(schema.nodes.code_block, {
+      new MenuItem({
         title: () => I18n.t('frontend.shiki_editor.code_block'),
-        icon: shikiIcons.code_block
-      }, schema)
+        icon: shikiIcons.code_block,
+        run: commands.code_block,
+        enable: () => true,
+        // enable: state => commands.code_block(state),
+        active(state) {
+          const { $from, to, node } = state.selection;
+          if (node) {
+            return node.type === schema.nodes.code_block;
+          }
+          return to <= $from.end() &&
+            $from.parent.type === schema.nodes.code_block;
+        }
+      })
     );
   }
   blocks.push(liftItem);

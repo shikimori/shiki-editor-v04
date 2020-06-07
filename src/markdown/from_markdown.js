@@ -238,15 +238,15 @@ export const tokens = {
   // hardbreak: { node: 'hard_break' },
 
   paragraph: { block: 'paragraph' },
-  // blockquote: { block: 'blockquote' },
-  // list_item: { block: 'list_item' },
-  // bullet_list: { block: 'bullet_list' },
-  // code_block: {
-  //   block: 'code_block',
-  //   getAttrs: token => ({
-  //     language: token.attrGet('language')
-  //   })
-  // },
+  blockquote: { block: 'blockquote' },
+  list_item: { block: 'list_item' },
+  bullet_list: { block: 'bullet_list' },
+  code_block: {
+    block: 'code_block',
+    getAttrs: token => ({
+      language: token.attrGet('language')
+    })
+  },
 
   em: { mark: 'em' },
   strong: { mark: 'strong' },
@@ -259,3 +259,5 @@ export const tokens = {
   //     title: token.attrGet('title') || null
   //   }) },
 };
+
+export const shikiMarkdownParser = new MarkdownParser(schema, Tokenizer, tokens);

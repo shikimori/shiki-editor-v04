@@ -9,10 +9,15 @@ import { keymap } from 'prosemirror-keymap';
 import { baseKeymap } from 'prosemirror-commands';
 import { inputRules, undoInputRule } from 'prosemirror-inputrules';
 
-import { Doc, Text, Paragraph } from './nodes';
+import {
+  Doc,
+  Text,
+  Paragraph,
+  CodeBlock
+} from './nodes';
 import { ExtensionManager } from './utils';
 
-import { MarkdownParser, tokens } from './markdown/from_markdown';
+import { MarkdownParser } from './markdown/from_markdown';
 import { Tokenizer } from './markdown/tokenizer';
 import { buildMenu } from './build_menu';
 
@@ -34,13 +39,15 @@ export default class ShikiEditor {
     this.marks = this.createMarks();
     this.schema = this.createSchema();
     this.textParser = this.createTextParser();
-    this.plugins = this.createPlugins();
     this.keymaps = this.createKeymaps();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
     this.view = this.createView();
 
     this.commands = this.createCommands();
+
+    this.plugins = this.createPlugins();
+    this.attachPlugins();
 
     // give extension manager access to our view
     this.extensions.view = this.view;
@@ -55,6 +62,7 @@ export default class ShikiEditor {
       new Doc(),
       new Text(),
       new Paragraph(),
+      new CodeBlock(),
       ...this.options.extensions
     ], this);
   }
@@ -84,7 +92,61 @@ export default class ShikiEditor {
   }
 
   createPlugins() {
-    return this.extensions.plugins;
+    return [
+      ...this.extensions.plugins,
+      inputRules({
+        rules: this.inputRules
+      }),
+      ...this.pasteRules,
+      ...this.keymaps,
+      keymap({
+        Backspace: undoInputRule
+      }),
+      keymap(baseKeymap),
+      buildMenu(this)
+      // dropCursor(this.options.dropCursor),
+      // gapCursor(),
+      // new Plugin({
+      //   key: new PluginKey('editable'),
+      //   props: {
+      //     editable: () => this.options.editable
+      //   }
+      // }),
+      // new Plugin({
+      //   props: {
+      //     attributes: {
+      //       tabindex: 0
+      //     },
+      //     handleDOMEvents: {
+      //       focus: (view, event) => {
+      //         this.focused = true;
+      //         this.emit('focus', {
+      //           event,
+      //           state: view.state,
+      //           view
+      //         });
+      //
+      //         const transaction = this.state.tr.setMeta('focused', true);
+      //         this.view.dispatch(transaction);
+      //       },
+      //       blur: (view, event) => {
+      //         this.focused = false;
+      //         this.emit('blur', {
+      //           event,
+      //           state: view.state,
+      //           view
+      //         });
+      //
+      //         const transaction = this.state.tr.setMeta('focused', false);
+      //         this.view.dispatch(transaction);
+      //       }
+      //     }
+      //   }
+      // }),
+      // new Plugin({
+      //   props: this.options.editorProps
+      // })
+    ];
   }
 
   createKeymaps() {
@@ -130,71 +192,17 @@ export default class ShikiEditor {
   }
 
   createState() {
-    // return EditorState.create({
-    //   schema,
-    //   plugins,
-    //   doc: shikiMarkdownParser.parse(this.options.content)
-    // });
-
     return EditorState.create({
       schema: this.schema,
-      doc: this.createDocument(this.options.content),
-      plugins: [
-        ...this.plugins,
-        inputRules({
-          rules: this.inputRules
-        }),
-        ...this.pasteRules,
-        ...this.keymaps,
-        keymap({
-          Backspace: undoInputRule
-        }),
-        keymap(baseKeymap),
-        buildMenu(this.schema)
-        // dropCursor(this.options.dropCursor),
-        // gapCursor(),
-        // new Plugin({
-        //   key: new PluginKey('editable'),
-        //   props: {
-        //     editable: () => this.options.editable
-        //   }
-        // }),
-        // new Plugin({
-        //   props: {
-        //     attributes: {
-        //       tabindex: 0
-        //     },
-        //     handleDOMEvents: {
-        //       focus: (view, event) => {
-        //         this.focused = true;
-        //         this.emit('focus', {
-        //           event,
-        //           state: view.state,
-        //           view
-        //         });
-        //
-        //         const transaction = this.state.tr.setMeta('focused', true);
-        //         this.view.dispatch(transaction);
-        //       },
-        //       blur: (view, event) => {
-        //         this.focused = false;
-        //         this.emit('blur', {
-        //           event,
-        //           state: view.state,
-        //           view
-        //         });
-        //
-        //         const transaction = this.state.tr.setMeta('focused', false);
-        //         this.view.dispatch(transaction);
-        //       }
-        //     }
-        //   }
-        // }),
-        // new Plugin({
-        //   props: this.options.editorProps
-        // })
-      ]
+      doc: this.textParser.parse(this.options.content),
+      plugins: []
     });
+  }
+
+  attachPlugins() {
+    this.view.updateState(
+      this.state.reconfigure({ plugins: this.plugins })
+    );
   }
 
   createCommands() {
@@ -202,10 +210,6 @@ export default class ShikiEditor {
       schema: this.schema,
       view: this.view
     });
-  }
-
-  createDocument(content) {
-    return this.textParser.parse(content);
   }
 
   @bind
