@@ -5,15 +5,16 @@ import { bind } from 'decko';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Schema } from 'prosemirror-model';
-// import { Schema, DOMParser, DOMSerializer } from 'prosemirror-model'
-import { inputRules } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
 import { baseKeymap } from 'prosemirror-commands';
-// import { inputRules, undoInputRule } from 'prosemirror-inputrules'
+import { inputRules, undoInputRule } from 'prosemirror-inputrules';
 
 import { Doc, Text, Paragraph } from './nodes';
 import { ExtensionManager } from './utils';
-import { shikiMarkdownParser } from './markdown/from_markdown';
+
+import { MarkdownParser, tokens } from './markdown/from_markdown';
+import { Tokenizer } from './markdown/tokenizer';
+import { buildMenu } from './build_menu';
 
 export default class ShikiEditor {
   options = {
@@ -32,11 +33,13 @@ export default class ShikiEditor {
     this.nodes = this.createNodes();
     this.marks = this.createMarks();
     this.schema = this.createSchema();
+    this.textParser = this.createTextParser();
     this.plugins = this.createPlugins();
     this.keymaps = this.createKeymaps();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
     this.view = this.createView();
+
     this.commands = this.createCommands();
 
     // give extension manager access to our view
@@ -72,6 +75,10 @@ export default class ShikiEditor {
     });
   }
 
+  createTextParser() {
+    return new MarkdownParser(this.schema, Tokenizer, tokens);
+  }
+
   createPlugins() {
     return this.extensions.plugins;
   }
@@ -97,6 +104,19 @@ export default class ShikiEditor {
   }
 
   createView() {
+    // return new EditorView(this.options.node, {
+    //   state: EditorState.create({
+    //     schema,
+    //     plugins,
+    //     doc: shikiMarkdownParser.parse(this.options.content)
+    //   }),
+    //   // doc: DOMParser.fromSchema(mySchema).parse(this.$textarea[0]),
+    //   dispatchTransaction: transaction => {
+    //     const { state } = this.view.state.applyTransaction(transaction);
+    //     this.view.updateState(state);
+    //   }
+    // });
+
     return new EditorView(this.options.node, {
       state: this.createState(),
       // handlePaste: (...args) => { this.emit('paste', ...args); },
@@ -106,6 +126,12 @@ export default class ShikiEditor {
   }
 
   createState() {
+    // return EditorState.create({
+    //   schema,
+    //   plugins,
+    //   doc: shikiMarkdownParser.parse(this.options.content)
+    // });
+
     return EditorState.create({
       schema: this.schema,
       doc: this.createDocument(this.options.content),
@@ -116,10 +142,11 @@ export default class ShikiEditor {
         }),
         ...this.pasteRules,
         ...this.keymaps,
-        // keymap({
-        //   Backspace: undoInputRule,
-        // }),
-        keymap(baseKeymap)
+        keymap({
+          Backspace: undoInputRule
+        }),
+        keymap(baseKeymap),
+        buildMenu(this.schema)
         // dropCursor(this.options.dropCursor),
         // gapCursor(),
         // new Plugin({
@@ -174,13 +201,14 @@ export default class ShikiEditor {
   }
 
   createDocument(content) {
-    return shikiMarkdownParser.parse(content);
+    return this.textParser.parse(content);
   }
 
   @bind
   dispatchTransaction(transaction) {
-    const newState = this.state.applyTransaction(transaction);
-    this.view.updateState(newState);
+    const { state } = this.state.applyTransaction(transaction);
+    this.view.updateState(state);
+
     // this.selection = {
     //   from: this.state.selection.from,
     //   to: this.state.selection.to

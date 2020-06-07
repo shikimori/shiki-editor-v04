@@ -1,5 +1,5 @@
 /* eslint-disable */
-// https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
+// based on https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
 
 import { Mark } from 'prosemirror-model';
 
@@ -224,7 +224,7 @@ export class MarkdownParser {
 // :: MarkdownParser
 // A parser parsing unextended [CommonMark](http://commonmark.org/),
 // without inline HTML, and producing a document in the basic schema.
-const tokens = {
+export const tokens = {
   // ordered_list: { block: 'ordered_list', getAttrs: token => ({ order: +token.attrGet('start') || 1 }) },
   // heading: { block: 'heading', getAttrs: token => ({ level: +token.tag.slice(1) }) },
   // fence: { block: 'code_block', getAttrs: token => ({ params: token.info || '' }) },
@@ -238,15 +238,15 @@ const tokens = {
   // hardbreak: { node: 'hard_break' },
 
   paragraph: { block: 'paragraph' },
-  blockquote: { block: 'blockquote' },
-  list_item: { block: 'list_item' },
-  bullet_list: { block: 'bullet_list' },
-  code_block: {
-    block: 'code_block',
-    getAttrs: token => ({
-      language: token.attrGet('language')
-    })
-  },
+  // blockquote: { block: 'blockquote' },
+  // list_item: { block: 'list_item' },
+  // bullet_list: { block: 'bullet_list' },
+  // code_block: {
+  //   block: 'code_block',
+  //   getAttrs: token => ({
+  //     language: token.attrGet('language')
+  //   })
+  // },
 
   em: { mark: 'em' },
   strong: { mark: 'strong' },
