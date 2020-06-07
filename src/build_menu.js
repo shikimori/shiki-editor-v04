@@ -88,20 +88,25 @@ function toggleableBlockTypeItem(nodeType, options, schema) {
 undoItem.spec.title = () => I18n.t('frontend.shiki_editor.undo');
 redoItem.spec.title = () => I18n.t('frontend.shiki_editor.redo');
 
-export function buildMenu({ schema, commands }) {
+export function buildMenu({ schema, commands, activeChecks }) {
   const marks = [];
   const undos = [undoItem, redoItem];
   const blocks = [];
 
-  ['strong', 'em', 'underline', 'deleted', 'code'].forEach(type => {
+  // ['strong', 'em', 'underline', 'deleted', 'code'].forEach(type => {
+  // ['strong', 'em', 'underline', 'deleted', 'code'].forEach(type => {
+  ['underline'].forEach(type => {
     if (schema.marks[type]) {
       marks.push(
         new MenuItem({
           title: () => I18n.t(`frontend.shiki_editor.${type}`),
           icon: shikiIcons[type] || icons[type],
           enable: () => true,
-          active: markActive(schema.marks[type]),
-          run: toggleMark(schema.marks[type])
+          // active: activeChecks[type],
+          active: activeChecks[type],
+          run: commands[type]
+          // active: markActive(schema.marks[type]),
+          // run: toggleMark(schema.marks[type])
         })
       );
     }

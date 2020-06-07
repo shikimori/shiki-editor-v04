@@ -1,5 +1,4 @@
 import { Mark } from '../utils';
-import { toggleMark } from 'prosemirror-commands';
 
 export default class Underline extends Mark {
   get name() {
@@ -8,26 +7,18 @@ export default class Underline extends Mark {
 
   get schema() {
     return {
-      parseDOM: [
-        {
-          tag: 'u'
-        },
-        {
-          style: 'text-decoration',
-          getAttrs: value => value === 'underline'
-        }
-      ],
+      parseDOM: [{ tag: 'u' }],
       toDOM: () => ['u', 0]
     };
   }
 
   keys({ type }) {
     return {
-      'Mod-u': toggleMark(type)
+      'Mod-u': this.command(type)
     };
   }
 
-  commands({ type }) {
-    return () => toggleMark(type);
+  get markdownToken() {
+    return { mark: 'underline' };
   }
 }

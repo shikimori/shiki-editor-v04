@@ -38,6 +38,8 @@ export default class ShikiEditor {
     };
 
     this.extensions = this.createExtensions();
+    this.markdownTokens = this.extensions.markdownTokens();
+
     this.nodes = this.createNodes();
     this.marks = this.createMarks();
     this.schema = this.createSchema();
@@ -48,6 +50,7 @@ export default class ShikiEditor {
     this.view = this.createView();
 
     this.commands = this.createCommands();
+    this.activeChecks = this.createActiveChecks();
 
     this.plugins = this.createPlugins();
     this.attachPlugins();
@@ -91,7 +94,7 @@ export default class ShikiEditor {
     return new MarkdownParser(
       this.schema,
       Tokenizer,
-      this.extensions.markdownTokens()
+      this.markdownTokens
     );
   }
 
@@ -211,6 +214,13 @@ export default class ShikiEditor {
 
   createCommands() {
     return this.extensions.commands({
+      schema: this.schema,
+      view: this.view
+    });
+  }
+
+  createActiveChecks() {
+    return this.extensions.activeChecks({
       schema: this.schema,
       view: this.view
     });

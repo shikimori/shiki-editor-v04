@@ -143,13 +143,57 @@ export default class ExtensionManager {
       }, {});
   }
 
+  activeChecks({ schema, view }) {
+    return this.extensions
+      .filter(extension => extension.activeCheck)
+      .reduce((allActiveChecks, extension) => {
+        const { name, type } = extension;
+        const activeChecks = {};
+        const value = extension.activeCheck({
+          schema,
+          ...['node', 'mark'].includes(type) ? {
+            type: schema[`${type}s`][name]
+          } : {}
+        });
+
+        const apply = (cb, attrs) => {
+          if (!view.editable) {
+            return false;
+          }
+          view.focus();
+          return cb(attrs)(view.state, view.dispatch, view);
+        };
+
+        const handle = (_name, _value) => {
+          if (Array.isArray(_value)) {
+            activeChecks[_name] = attrs => _value.forEach(callback => apply(callback, attrs));
+          } else if (typeof _value === 'function') {
+            activeChecks[_name] = attrs => apply(_value, attrs);
+          }
+        };
+
+        if (typeof value === 'object') {
+          Object.entries(value).forEach(([activeCheckName, activeCheckValue]) => {
+            handle(activeCheckName, activeCheckValue);
+          });
+        } else {
+          handle(name, value);
+        }
+
+        return {
+          ...allActiveChecks,
+          ...activeChecks
+        };
+      }, {});
+  }
+
   commands({ schema, view }) {
     return this.extensions
-      .filter(extension => extension.commands)
+      .filter(extension => extension.command)
       .reduce((allCommands, extension) => {
         const { name, type } = extension;
         const commands = {};
-        const value = extension.commands({
+        const value = extension.command({
           schema,
           ...['node', 'mark'].includes(type) ? {
             type: schema[`${type}s`][name]

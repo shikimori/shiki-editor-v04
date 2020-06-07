@@ -53,7 +53,7 @@ export default class CodeBlock extends Node {
     ];
   }
 
-  commands({ schema, type }) {
+  command({ schema, type }) {
     return () => toggleBlockType(type, schema.nodes.paragraph, {});
   }
 }
