@@ -17,8 +17,4 @@ export default class Underline extends Mark {
       'Mod-u': this.command(type)
     };
   }
-
-  get markdownToken() {
-    return { mark: 'underline' };
-  }
 }

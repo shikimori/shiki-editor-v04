@@ -1,5 +1,4 @@
 import {
-  icons,
   MenuItem,
   wrapItem,
   liftItem,
@@ -7,7 +6,7 @@ import {
   redoItem,
   menuBar
 } from 'prosemirror-menu';
-import shikiIcons from './icons';
+import icons from './icons';
 // import { TextSelection } from 'prosemirror-state';
 import { toggleMark } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
@@ -93,14 +92,12 @@ export function buildMenu({ schema, commands, activeChecks }) {
   const undos = [undoItem, redoItem];
   const blocks = [];
 
-  // ['strong', 'em', 'underline', 'deleted', 'code'].forEach(type => {
-  // ['strong', 'em', 'underline', 'deleted', 'code'].forEach(type => {
-  ['underline'].forEach(type => {
+  ['strong', 'em', 'underline', 'deleted', 'code_inline'].forEach(type => {
     if (schema.marks[type]) {
       marks.push(
         new MenuItem({
           title: () => I18n.t(`frontend.shiki_editor.${type}`),
-          icon: shikiIcons[type] || icons[type],
+          icon: icons[type],
           enable: () => true,
           // active: activeChecks[type],
           active: activeChecks[type],
@@ -132,7 +129,7 @@ export function buildMenu({ schema, commands, activeChecks }) {
     blocks.push(
       new MenuItem({
         title: () => I18n.t('frontend.shiki_editor.code_block'),
-        icon: shikiIcons.code_block,
+        icon: icons.code_block,
         run: commands.code_block,
         enable: () => true,
         // enable: state => commands.code_block(state),

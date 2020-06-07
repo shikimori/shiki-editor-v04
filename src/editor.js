@@ -16,7 +16,11 @@ import {
   CodeBlock
 } from './nodes';
 import {
-  Underline
+  Strong,
+  Em,
+  Underline,
+  Deleted,
+  CodeInline
 } from './marks';
 import { ExtensionManager } from './utils';
 
@@ -68,7 +72,11 @@ export default class ShikiEditor {
       new Doc(),
       new Text(),
       new Paragraph(),
+      new Strong(),
+      new Em(),
       new Underline(),
+      new Deleted(),
+      new CodeInline(),
       new CodeBlock(),
       ...this.options.extensions
     ], this);

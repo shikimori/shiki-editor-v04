@@ -134,13 +134,13 @@ describe('Tokenizer', () => {
           type: 'inline',
           children: [{
             content: '',
-            type: 'del_open'
+            type: 'deleted_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
             content: '',
-            type: 'del_close'
+            type: 'deleted_close'
           }]
         }, {
           content: '',

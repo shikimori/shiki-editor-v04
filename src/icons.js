@@ -1,6 +1,9 @@
 /* eslint max-len: 0 */
+import { icons } from 'prosemirror-menu';
 
 export default {
+  ...icons,
+  code_inline: icons.code,
   bold: {
     width: 384,
     height: 512,
