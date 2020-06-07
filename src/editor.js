@@ -15,6 +15,9 @@ import {
   Paragraph,
   CodeBlock
 } from './nodes';
+import {
+  Underline
+} from './marks';
 import { ExtensionManager } from './utils';
 
 import { MarkdownParser } from './markdown/from_markdown';
@@ -62,6 +65,7 @@ export default class ShikiEditor {
       new Doc(),
       new Text(),
       new Paragraph(),
+      new Underline(),
       new CodeBlock(),
       ...this.options.extensions
     ], this);
