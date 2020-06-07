@@ -6,7 +6,7 @@ import {
   redoItem,
   menuBar
 } from 'prosemirror-menu';
-import icons from './icons';
+import icons from './utils/icons';
 // import { TextSelection } from 'prosemirror-state';
 import { toggleMark } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
@@ -29,14 +29,6 @@ function cmdItem(cmd, options) {
 function wrapListItem(nodeType, options) {
   return cmdItem(wrapInList(nodeType, options.attrs), options);
 }
-
-const markActive = markType => state => {
-  const { from, $from, to, empty } = state.selection;
-  if (empty) {
-    return markType.isInSet(state.storedMarks || $from.marks());
-  }
-  return state.doc.rangeHasMark(from, to, markType);
-};
 
 function toggleableBlockTypeItem(nodeType, options, schema) {
   const command = toggleBlockType(nodeType, schema.nodes.paragraph, options.attrs);
