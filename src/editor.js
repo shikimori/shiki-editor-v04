@@ -2,12 +2,14 @@
 
 import { bind } from 'decko';
 
+import { history } from 'prosemirror-history';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Schema } from 'prosemirror-model';
 import { keymap } from 'prosemirror-keymap';
-import { baseKeymap } from 'prosemirror-commands';
-import { inputRules, undoInputRule } from 'prosemirror-inputrules';
+import { baseKeymap, joinBackward } from 'prosemirror-commands';
+import { inputRules } from 'prosemirror-inputrules';
+import { undo, redo } from 'prosemirror-history';
 
 import {
   Doc,
@@ -109,16 +111,19 @@ export default class ShikiEditor {
   createPlugins() {
     return [
       ...this.extensions.plugins,
+      history(),
+      buildMenu(this),
       inputRules({
         rules: this.inputRules
       }),
       ...this.pasteRules,
       ...this.keymaps,
       keymap({
-        Backspace: undoInputRule
+        'Mod-z': undo,
+        'Shift-Mod-z': redo,
+        Backspace: joinBackward
       }),
-      keymap(baseKeymap),
-      buildMenu(this)
+      keymap(baseKeymap)
       // dropCursor(this.options.dropCursor),
       // gapCursor(),
       // new Plugin({

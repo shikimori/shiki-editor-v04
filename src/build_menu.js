@@ -8,10 +8,7 @@ import {
 } from 'prosemirror-menu';
 import icons from './utils/icons';
 // import { TextSelection } from 'prosemirror-state';
-import { toggleMark } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
-
-import toggleBlockType from './commands/toggle_block_type';
 
 function cmdItem(cmd, options) {
   const passedOptions = {
@@ -28,25 +25,6 @@ function cmdItem(cmd, options) {
 
 function wrapListItem(nodeType, options) {
   return cmdItem(wrapInList(nodeType, options.attrs), options);
-}
-
-function toggleableBlockTypeItem(nodeType, options, schema) {
-  const command = toggleBlockType(nodeType, schema.nodes.paragraph, options.attrs);
-
-  return new MenuItem({
-    run: command,
-    enable(state) { return command(state); },
-    active(state) {
-      const { $from, to, node } = state.selection;
-      if (node) return node.hasMarkup(nodeType, options.attrs);
-      return to <= $from.end() && $from.parent.type === nodeType;
-      // do not use hasMarkup because it compares node attributes
-      // we don't need this check because `code_block` may have different
-      // language attributes
-      // return to <= $from.end() && $from.parent.hasMarkup(nodeType, options.attrs);
-    },
-    ...options
-  });
 }
 
 // const canInsert = nodeType => state => {
@@ -91,11 +69,8 @@ export function buildMenu({ schema, commands, activeChecks }) {
           title: () => I18n.t(`frontend.shiki_editor.${type}`),
           icon: icons[type],
           enable: () => true,
-          // active: activeChecks[type],
           active: activeChecks[type],
           run: commands[type]
-          // active: markActive(schema.marks[type]),
-          // run: toggleMark(schema.marks[type])
         })
       );
     }
