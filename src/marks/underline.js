@@ -14,7 +14,7 @@ export default class Underline extends Mark {
 
   keys({ type }) {
     return {
-      'Mod-u': this.command(type)
+      'Mod-u': (state, dispatch) => thisis.command({ type })()(state, dispatch)
     };
   }
 }
