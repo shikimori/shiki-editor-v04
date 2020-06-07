@@ -56,6 +56,7 @@
     "html-webpack-plugin": "^3.0.0",
     "http-server": "^0.12.1",
     "markdown-it": "^11.0.0",
+    "memoize-decorator": "^1.0.2",
     "mini-css-extract-plugin": "^0.9.0",
     "mocha": "^7.2.0",
     "mocha-webpack": "^2.0.0-beta.0",
