@@ -1,4 +1,4 @@
-import { Mark } from '../utils';
+import { Mark } from '../base';
 
 export default class Strong extends Mark {
   get name() {
@@ -14,7 +14,16 @@ export default class Strong extends Mark {
 
   keys({ type }) {
     return {
-      'Mod-b': (state, dispatch) => thisis.command({ type })()(state, dispatch)
+      'Mod-b': (state, dispatch) => this.command({ type })()(state, dispatch)
+    };
+  }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[b]',
+      close: '[/b]',
+      mixable: true,
+      expelEnclosingWhitespace: true
     };
   }
 }

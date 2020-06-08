@@ -1,13 +1,9 @@
-import Extension from './extension';
+import Emitter from './emitter';
 import ExtensionManager from './extension_manager';
-import Mark from './mark';
-import Node from './node';
-import markIsActive from './mark_is_active';
+import buildMenu from './build_menu';
 
 export {
-  Extension,
+  Emitter,
   ExtensionManager,
-  Mark,
-  Node,
-  markIsActive
+  buildMenu
 };

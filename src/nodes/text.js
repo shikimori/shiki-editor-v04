@@ -1,5 +1,5 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Nodes/Text.js
-import Node from '../utils/node';
+import { Node } from '../base';
 
 export default class Text extends Node {
   get name() {
@@ -10,5 +10,13 @@ export default class Text extends Node {
     return {
       group: 'inline'
     };
+  }
+
+  get markdownParserToken() {
+    return null;
+  }
+
+  markdownSerialize(state, node) {
+    state.text(node.text);
   }
 }

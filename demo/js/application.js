@@ -10,8 +10,8 @@
 //
 // import markdownit from 'markdown-it';
 //
-// const markdownTokenizer = markdownit('commonmark', { html: false });
-// window.markdownTokenizer = markdownTokenizer;
+// const markdownParserTokenizer = markdownit('commonmark', { html: false });
+// window.markdownParserTokenizer = markdownParserTokenizer;
 // window.Tokenizer = Tokenizer;
 import ShikiEditor from '../../src/editor';
 
@@ -21,10 +21,12 @@ window.I18n = {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.editor-container').forEach(container => {
-    const editor = container.querySelector('.prosemirror-container');
+    const node = container.querySelector('.prosemirror-container');
     const textarea = container.querySelector('textarea');
 
-    new ShikiEditor({ node: editor, content: textarea.value });
+    const editor = new ShikiEditor({ node, content: textarea.value });
+
+    editor.on('update', () => textarea.value = editor.exportMarkdown());
   });
 });
 // document.addEventListener('DOMContentLoaded', () => {

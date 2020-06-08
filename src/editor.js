@@ -2,20 +2,23 @@
 
 import { bind } from 'decko';
 
-import { history } from 'prosemirror-history';
+import { history, undo, redo } from 'prosemirror-history';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Schema } from 'prosemirror-model';
 import { keymap } from 'prosemirror-keymap';
 import { baseKeymap, joinBackward } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
-import { undo, redo } from 'prosemirror-history';
+
 
 import {
   Doc,
   Text,
   Paragraph,
-  CodeBlock
+  CodeBlock,
+  BulltList,
+  ListItem,
+  Blockquote
 } from './nodes';
 import {
   Strong,
@@ -24,13 +27,15 @@ import {
   Deleted,
   CodeInline
 } from './marks';
-import { ExtensionManager } from './utils';
+import { ExtensionManager, Emitter, buildMenu } from './utils';
 
-import { MarkdownParser } from './markdown/from_markdown';
-import { Tokenizer } from './markdown/tokenizer';
-import { buildMenu } from './build_menu';
+import {
+  MarkdownParser,
+  MarkdownSerializer,
+  MarkdownTokenizer
+} from './markdown';
 
-export default class ShikiEditor {
+export default class ShikiEditor extends Emitter {
   options = {
     node: null,
     extensions: [],
@@ -38,18 +43,22 @@ export default class ShikiEditor {
   }
 
   constructor(options) {
+    super(options);
+
     this.options = {
       ...this.options,
       ...options
     };
 
     this.extensions = this.createExtensions();
-    this.markdownTokens = this.extensions.markdownTokens();
 
     this.nodes = this.createNodes();
     this.marks = this.createMarks();
     this.schema = this.createSchema();
-    this.textParser = this.createTextParser();
+
+    this.markdownParser = this.createMarkdownParser();
+    this.markdownSerializer = this.createMarkdownSerializer();
+
     this.keymaps = this.createKeymaps();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
@@ -80,6 +89,9 @@ export default class ShikiEditor {
       new Deleted(),
       new CodeInline(),
       new CodeBlock(),
+      new BulltList(),
+      new ListItem(),
+      new Blockquote(),
       ...this.options.extensions
     ], this);
   }
@@ -100,12 +112,17 @@ export default class ShikiEditor {
     });
   }
 
-  createTextParser() {
+  createMarkdownParser() {
     return new MarkdownParser(
       this.schema,
-      Tokenizer,
-      this.markdownTokens
+      MarkdownTokenizer,
+      this.extensions.markdownParserTokens()
     );
+  }
+
+  createMarkdownSerializer() {
+    const { nodes, marks } = this.extensions.markdownSerializerTokens();
+    return new MarkdownSerializer(nodes, marks);
   }
 
   createPlugins() {
@@ -214,7 +231,7 @@ export default class ShikiEditor {
   createState() {
     return EditorState.create({
       schema: this.schema,
-      doc: this.textParser.parse(this.options.content),
+      doc: this.markdownParser.parse(this.options.content),
       plugins: []
     });
   }
@@ -256,11 +273,15 @@ export default class ShikiEditor {
     //   state: this.state,
     //   transaction
     // });
-    //
-    // if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
-    //   return;
-    // }
-    //
-    // this.emitUpdate(transaction);
+
+    if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
+      return;
+    }
+
+    this.emit('update', { transaction });
+  }
+
+  exportMarkdown() {
+    return this.markdownSerializer.serialize(this.state.doc);
   }
 }

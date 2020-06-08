@@ -52,8 +52,8 @@ export default class ExtensionManager {
   get plugins() {
     return this.extensions
       .filter(extension => extension.plugins)
-      .reduce((allPlugins, { plugins }) => ([
-        ...allPlugins,
+      .reduce((memo, { plugins }) => ([
+        ...memo,
         ...plugins
       ]), []);
   }
@@ -100,8 +100,8 @@ export default class ExtensionManager {
     return [
       ...extensionInputRules,
       ...nodeMarkInputRules
-    ].reduce((allInputRules, inputRules) => ([
-      ...allInputRules,
+    ].reduce((memo, inputRules) => ([
+      ...memo,
       ...inputRules
     ]), []);
   }
@@ -128,69 +128,59 @@ export default class ExtensionManager {
     return [
       ...extensionPasteRules,
       ...nodeMarkPasteRules
-    ].reduce((allPasteRules, pasteRules) => ([
-      ...allPasteRules,
+    ].reduce((memo, pasteRules) => ([
+      ...memo,
       ...pasteRules
     ]), []);
   }
 
-  markdownTokens() {
+  markdownParserTokens() {
     return this.extensions
-      .filter(extension => extension.markdownToken)
-      .reduce((allMarkdownTokens, extension) => {
-        allMarkdownTokens[extension.name] = extension.markdownToken;
-        return allMarkdownTokens;
+      .filter(extension => extension.markdownParserToken)
+      .reduce((memo, extension) => {
+        memo[extension.name] = extension.markdownParserToken;
+        return memo;
       }, {});
+  }
+
+  markdownSerializerTokens() {
+    const nodes = this.extensions
+      .filter(extension => extension.markdownSerialize)
+      .reduce((memo, extension) => {
+        const { name, markdownSerialize } = extension;
+        memo[name] = markdownSerialize;
+        return memo;
+      }, {});
+
+    const marks = this.extensions
+      .filter(extension => extension.markdownSerializerToken)
+      .reduce((memo, extension) => {
+        const { name, markdownSerializerToken } = extension;
+        memo[name] = markdownSerializerToken;
+        return memo;
+      }, {});
+
+    return { nodes, marks };
   }
 
   activeChecks({ schema, view }) {
     return this.extensions
       .filter(extension => extension.activeCheck)
-      .reduce((allActiveChecks, extension) => {
+      .reduce((memo, extension) => {
         const { name, type } = extension;
-        const activeChecks = {};
-        const value = extension.activeCheck({
-          schema,
-          ...['node', 'mark'].includes(type) ? {
-            type: schema[`${type}s`][name]
-          } : {}
-        });
+        const schemaType = schema[`${type}s`][name];
 
-        const apply = (cb, attrs) => {
-          if (!view.editable) {
-            return false;
-          }
-          view.focus();
-          return cb(attrs)(view.state, view.dispatch, view);
-        };
-
-        const handle = (_name, _value) => {
-          if (Array.isArray(_value)) {
-            activeChecks[_name] = attrs => _value.forEach(callback => apply(callback, attrs));
-          } else if (typeof _value === 'function') {
-            activeChecks[_name] = attrs => apply(_value, attrs);
-          }
-        };
-
-        if (typeof value === 'object') {
-          Object.entries(value).forEach(([activeCheckName, activeCheckValue]) => {
-            handle(activeCheckName, activeCheckValue);
-          });
-        } else {
-          handle(name, value);
-        }
-
-        return {
-          ...allActiveChecks,
-          ...activeChecks
-        };
+        memo[extension.name] = _state => (
+          extension.activeCheck(schemaType, view.state)
+        );
+        return memo;
       }, {});
   }
 
   commands({ schema, view }) {
     return this.extensions
       .filter(extension => extension.command)
-      .reduce((allCommands, extension) => {
+      .reduce((memo, extension) => {
         const { name, type } = extension;
         const commands = {};
         const value = extension.command({
@@ -210,7 +200,9 @@ export default class ExtensionManager {
 
         const handle = (_name, _value) => {
           if (Array.isArray(_value)) {
-            commands[_name] = attrs => _value.forEach(callback => apply(callback, attrs));
+            commands[_name] = attrs => (
+              _value.forEach(callback => apply(callback, attrs))
+            );
           } else if (typeof _value === 'function') {
             commands[_name] = attrs => apply(_value, attrs);
           }
@@ -225,7 +217,7 @@ export default class ExtensionManager {
         }
 
         return {
-          ...allCommands,
+          ...memo,
           ...commands
         };
       }, {});

@@ -1,7 +1,8 @@
 import { textblockTypeInputRule } from 'prosemirror-inputrules';
 
-import Node from '../utils/node';
-import toggleBlockType from '../commands/toggle_block_type';
+import { Node } from '../base';
+import { nodeIsActive } from '../checks';
+import { toggleBlockType } from '../commands';
 
 export default class CodeBlock extends Node {
   get name() {
@@ -36,7 +37,23 @@ export default class CodeBlock extends Node {
     };
   }
 
-  get markdownToken() {
+  command({ schema, type }) {
+    return () => toggleBlockType(type, schema.nodes.paragraph, {});
+  }
+
+  activeCheck(type, state) {
+    return nodeIsActive(type, state);
+  }
+
+  inputRules({ type }) {
+    return [
+      textblockTypeInputRule(/^```\w* $/, type, match => ({
+        language: match[0].match(/`+(\w*)/)[1] || ''
+      }))
+    ];
+  }
+
+  get markdownParserToken() {
     return {
       block: 'code_block',
       getAttrs: token => ({
@@ -45,15 +62,11 @@ export default class CodeBlock extends Node {
     };
   }
 
-  inputrules({ type }) {
-    return [
-      textblockTypeInputRule(/^```\w* $/, type, match => ({
-        language: match[0].match(/`+(\w*)/)[1] || ''
-      }))
-    ];
-  }
-
-  command({ schema, type }) {
-    return () => toggleBlockType(type, schema.nodes.paragraph, {});
+  markdownSerialize(state, node) {
+    state.write('```' + (node.attrs.language || '') + '\n');
+    state.text(node.textContent, false);
+    state.ensureNewLine();
+    state.write('```');
+    state.closeBlock(node);
   }
 }

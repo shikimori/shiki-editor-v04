@@ -1,4 +1,4 @@
-import { Mark } from '../utils';
+import { Mark } from '../base';
 
 export default class Underline extends Mark {
   get name() {
@@ -14,7 +14,16 @@ export default class Underline extends Mark {
 
   keys({ type }) {
     return {
-      'Mod-u': (state, dispatch) => thisis.command({ type })()(state, dispatch)
+      'Mod-u': (state, dispatch) => this.command({ type })()(state, dispatch)
+    };
+  }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[u]',
+      close: '[/u]',
+      mixable: true,
+      expelEnclosingWhitespace: true
     };
   }
 }

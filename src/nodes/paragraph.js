@@ -1,6 +1,6 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Nodes/Paragraph.js
-import { setBlockType } from '../commands';
-import Node from '../utils/node';
+import { setBlockType } from 'prosemirror-commands';
+import { Node } from '../base';
 
 export default class Paragraph extends Node {
   get name() {
@@ -19,11 +19,19 @@ export default class Paragraph extends Node {
     };
   }
 
-  get markdownToken() {
-    return { block: 'paragraph' };
-  }
-
   command({ type }) {
     return () => setBlockType(type);
+  }
+
+  markdownSerialize(state, node) {
+    if (node.content.content.length) {
+      state.renderInline(node);
+      state.closeBlock(node);
+    } else {
+      if (!state.atBlank) {
+        state.closeBlock(node);
+      }
+      state.write('\n');
+    }
   }
 }

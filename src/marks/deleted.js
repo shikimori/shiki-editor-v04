@@ -1,4 +1,4 @@
-import { Mark } from '../utils';
+import { Mark } from '../base';
 
 export default class Em extends Mark {
   get name() {
@@ -9,6 +9,15 @@ export default class Em extends Mark {
     return {
       parseDOM: [{ tag: 'del' }],
       toDOM: () => ['del', 0]
+    };
+  }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[s]',
+      close: '[/s]',
+      mixable: true,
+      expelEnclosingWhitespace: true
     };
   }
 }

@@ -1,7 +1,7 @@
-import { Token } from './token';
+import Token from './token';
 import { flatten } from 'lodash';
 
-export class Tokenizer {
+export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
     paragraph: 'p',
     bullet_list: 'ul',
@@ -15,6 +15,10 @@ export class Tokenizer {
 
     this.tokens = [];
     this.inlineTokens = [];
+  }
+
+  static parse(text) {
+    return new MarkdownTokenizer(text).parse();
   }
 
   parse() {
@@ -305,7 +309,3 @@ export class Tokenizer {
     return null;
   }
 }
-
-Tokenizer.parse = function (text) {
-  return new Tokenizer(text).parse();
-};
