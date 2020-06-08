@@ -140,48 +140,6 @@ export default class ShikiEditor extends Emitter {
         Backspace: joinBackward
       }),
       keymap(baseKeymap)
-      // dropCursor(this.options.dropCursor),
-      // gapCursor(),
-      // new Plugin({
-      //   key: new PluginKey('editable'),
-      //   props: {
-      //     editable: () => this.options.editable
-      //   }
-      // }),
-      // new Plugin({
-      //   props: {
-      //     attributes: {
-      //       tabindex: 0
-      //     },
-      //     handleDOMEvents: {
-      //       focus: (view, event) => {
-      //         this.focused = true;
-      //         this.emit('focus', {
-      //           event,
-      //           state: view.state,
-      //           view
-      //         });
-      //
-      //         const transaction = this.state.tr.setMeta('focused', true);
-      //         this.view.dispatch(transaction);
-      //       },
-      //       blur: (view, event) => {
-      //         this.focused = false;
-      //         this.emit('blur', {
-      //           event,
-      //           state: view.state,
-      //           view
-      //         });
-      //
-      //         const transaction = this.state.tr.setMeta('focused', false);
-      //         this.view.dispatch(transaction);
-      //       }
-      //     }
-      //   }
-      // }),
-      // new Plugin({
-      //   props: this.options.editorProps
-      // })
     ];
   }
 
@@ -206,23 +164,8 @@ export default class ShikiEditor extends Emitter {
   }
 
   createView() {
-    // return new EditorView(this.options.node, {
-    //   state: EditorState.create({
-    //     schema,
-    //     plugins,
-    //     doc: shikiMarkdownParser.parse(this.options.content)
-    //   }),
-    //   // doc: DOMParser.fromSchema(mySchema).parse(this.$textarea[0]),
-    //   dispatchTransaction: transaction => {
-    //     const { state } = this.view.state.applyTransaction(transaction);
-    //     this.view.updateState(state);
-    //   }
-    // });
-
     return new EditorView(this.options.node, {
       state: this.createState(),
-      // handlePaste: (...args) => { this.emit('paste', ...args); },
-      // handleDrop: (...args) => { this.emit('drop', ...args); },
       dispatchTransaction: this.dispatchTransaction
     });
   }
@@ -259,19 +202,6 @@ export default class ShikiEditor extends Emitter {
   dispatchTransaction(transaction) {
     const { state } = this.state.applyTransaction(transaction);
     this.view.updateState(state);
-
-    // this.selection = {
-    //   from: this.state.selection.from,
-    //   to: this.state.selection.to
-    // };
-    // this.setActiveNodesAndMarks();
-    //
-    // this.emit('transaction', {
-    //   getHTML: this.getHTML.bind(this),
-    //   getJSON: this.getJSON.bind(this),
-    //   state: this.state,
-    //   transaction
-    // });
 
     if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
       return;
