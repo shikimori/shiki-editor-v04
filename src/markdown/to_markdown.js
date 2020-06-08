@@ -91,7 +91,7 @@ export const shikiMarkdownSerializer = new MarkdownSerializer({
   strong: { open: '[b]', close: '[/b]', mixable: true, expelEnclosingWhitespace: true },
   deleted: { open: '[s]', close: '[/s]', mixable: true, expelEnclosingWhitespace: true },
   underline: { open: '[u]', close: '[/u]', mixable: true, expelEnclosingWhitespace: true },
-  code: {
+  code_inline: {
     open(_state, _mark, parent, index) {
       return backticksFor(parent.child(index), -1);
     },
