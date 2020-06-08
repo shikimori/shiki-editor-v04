@@ -45,7 +45,7 @@ export default class CodeBlock extends Node {
     };
   }
 
-  inputrules({ type }) {
+  inputRules({ type }) {
     return [
       textblockTypeInputRule(/^```\w* $/, type, match => ({
         language: match[0].match(/`+(\w*)/)[1] || ''
