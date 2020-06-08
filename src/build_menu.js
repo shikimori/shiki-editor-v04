@@ -63,17 +63,17 @@ export function buildMenu({ schema, commands, activeChecks }) {
   const blocks = [];
 
   ['strong', 'em', 'underline', 'deleted', 'code_inline'].forEach(type => {
-    if (schema.marks[type]) {
-      marks.push(
-        new MenuItem({
-          title: () => I18n.t(`frontend.shiki_editor.${type}`),
-          icon: icons[type],
-          enable: () => true,
-          active: activeChecks[type],
-          run: commands[type]
-        })
-      );
-    }
+    if (!schema.marks[type]) { return; }
+
+    marks.push(
+      new MenuItem({
+        title: () => I18n.t(`frontend.shiki_editor.${type}`),
+        icon: icons[type],
+        enable: () => true,
+        active: activeChecks[type],
+        run: commands[type]
+      })
+    );
   });
 
   if (schema.nodes.bullet_list) {
@@ -92,25 +92,19 @@ export function buildMenu({ schema, commands, activeChecks }) {
       })
     );
   }
-  if (schema.nodes.code_block) {
+  ['code_block'].forEach(type => {
+    if (!schema.nodes[type]) { return; }
+
     blocks.push(
       new MenuItem({
         title: () => I18n.t('frontend.shiki_editor.code_block'),
-        icon: icons.code_block,
-        run: commands.code_block,
+        icon: icons[type],
         enable: () => true,
-        // enable: state => commands.code_block(state),
-        active(state) {
-          const { $from, to, node } = state.selection;
-          if (node) {
-            return node.type === schema.nodes.code_block;
-          }
-          return to <= $from.end() &&
-            $from.parent.type === schema.nodes.code_block;
-        }
+        active: activeChecks[type],
+        run: commands[type]
       })
     );
-  }
+  });
   blocks.push(liftItem);
 
   return menuBar({

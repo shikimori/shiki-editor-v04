@@ -17,11 +17,11 @@ export default class Node extends Extension {
     return { block: this.name };
   }
 
-  command() {
-    return () => {};
+  command({ type: _type }) {
+    return () => _state => {};
   }
 
   activeCheck({ type: _type }) {
-    return () => {};
+    return () => _state => {};
   }
 }

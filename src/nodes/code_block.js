@@ -56,4 +56,14 @@ export default class CodeBlock extends Node {
   command({ schema, type }) {
     return () => toggleBlockType(type, schema.nodes.paragraph, {});
   }
+
+  activeCheck({ type }) {
+    return () => state => {
+      const { $from, to, node } = state.selection;
+      if (node) {
+        return node.type === type;
+      }
+      return to <= $from.end() && $from.parent.type === type;
+    };
+  }
 }
