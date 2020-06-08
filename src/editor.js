@@ -15,7 +15,9 @@ import {
   Doc,
   Text,
   Paragraph,
-  CodeBlock
+  CodeBlock,
+  BulltList,
+  ListItem
 } from './nodes';
 import {
   Strong,
@@ -80,6 +82,8 @@ export default class ShikiEditor {
       new Deleted(),
       new CodeInline(),
       new CodeBlock(),
+      new BulltList(),
+      new ListItem(),
       ...this.options.extensions
     ], this);
   }
