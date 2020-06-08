@@ -29,9 +29,11 @@ import {
 } from './marks';
 import { ExtensionManager, Emitter, buildMenu } from './utils';
 
-import { MarkdownParser } from './markdown/from_markdown';
-import { MarkdownSerializer } from './markdown/to_markdown';
-import { Tokenizer } from './markdown/tokenizer';
+import {
+  MarkdownParser,
+  MarkdownSerializer,
+  MarkdownTokenizer
+} from './markdown';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -113,7 +115,7 @@ export default class ShikiEditor extends Emitter {
   createMarkdownParser() {
     return new MarkdownParser(
       this.schema,
-      Tokenizer,
+      MarkdownTokenizer,
       this.extensions.markdownParserTokens()
     );
   }

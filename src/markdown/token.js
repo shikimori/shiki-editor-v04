@@ -1,6 +1,6 @@
 // based on https://github.com/markdown-it/markdown-it/blob/master/lib/token.js
 
-export class Token {
+export default class Token {
   constructor(type, content, children = null) {
     this.type = type;
 

@@ -1,6 +1,6 @@
-import { MarkdownSerializerState } from './markdown_serializer_state';
+import MarkdownSerializerState from './serializer_state';
 
-export class MarkdownSerializer {
+export default class MarkdownSerializer {
   // :: (Object<(state: MarkdownSerializerState, node: Node, parent: Node, index: number)>, Object)
   // Construct a serializer with the given configuration. The `nodes`
   // object should map node names in a given schema to function that

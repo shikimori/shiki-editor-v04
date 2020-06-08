@@ -3,7 +3,7 @@
 // ::- This is an object used to track state and expose
 // methods related to markdown serialization. Instances are passed to
 // node and mark serialization methods (see `toMarkdown`).
-export class MarkdownSerializerState {
+export default class MarkdownSerializerState {
   constructor(nodes, marks, options) {
     this.nodes = nodes;
     this.marks = marks;
