@@ -11,4 +11,8 @@ export default class Text extends Node {
       group: 'inline'
     };
   }
+
+  get markdownToken() {
+    return null;
+  }
 }

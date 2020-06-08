@@ -25,10 +25,6 @@ export default class BulletList extends Node {
     };
   }
 
-  get markdownToken() {
-    return { block: 'bullet_list' };
-  }
-
   // commands({ type, schema }) {
   //   return () => toggleList(type, schema.nodes.list_item);
   // }

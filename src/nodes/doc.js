@@ -11,4 +11,8 @@ export default class Doc extends Node {
       content: 'block+'
     };
   }
+
+  get markdownToken() {
+    return null;
+  }
 }

@@ -19,10 +19,6 @@ export default class Paragraph extends Node {
     };
   }
 
-  get markdownToken() {
-    return { block: 'paragraph' };
-  }
-
   command({ type }) {
     return () => setBlockType(type);
   }

@@ -15,10 +15,6 @@ export default class ListItem extends Node {
     };
   }
 
-  get markdownToken() {
-    return { block: 'list_item' };
-  }
-
   // keys({ type }) {
   //   return {
   //     Enter: splitListItem(type),

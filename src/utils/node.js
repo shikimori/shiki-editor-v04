@@ -5,6 +5,10 @@ export default class Node extends Extension {
     super(options);
   }
 
+  get name() {
+    return null;
+  }
+
   get type() {
     return 'node';
   }
@@ -18,7 +22,7 @@ export default class Node extends Extension {
   }
 
   get markdownToken() {
-    return null;
+    return { block: this.name };
   }
 
   command() {
