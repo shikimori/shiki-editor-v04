@@ -60,7 +60,7 @@ export default function ({ schema, commands, activeChecks }) {
 
   ['bullet_list', 'blockquote', 'code_block'].forEach(type => {
     if (!schema.nodes[type]) { return; }
-    marks.push(buildMenuItem(type));
+    blocks.push(buildMenuItem(type));
   });
   // blocks.push(liftItem);
 
