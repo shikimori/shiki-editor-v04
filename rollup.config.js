@@ -17,6 +17,6 @@ module.exports = {
     babel({ babelHelpers: 'bundled' }),
     resolve(),
     buble()
-  ]
-  // external(id) { return !/^[\.\/]/.test(id); } // eslint-disable-line
+  ],
+  external(id) { return !/^[\.\/]/.test(id); } // eslint-disable-line
 };
