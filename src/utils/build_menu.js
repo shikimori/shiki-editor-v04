@@ -43,32 +43,24 @@ export default function ({ schema, commands, activeChecks }) {
   const undos = [undoItem, redoItem];
   const blocks = [];
 
+  function buildMenuItem(type) {
+    return new MenuItem({
+      title: () => I18n.t(`frontend.shiki_editor.${type}`),
+      icon: icons[type],
+      enable: () => true,
+      active: activeChecks[type],
+      run: commands[type]
+    });
+  }
+
   ['strong', 'em', 'underline', 'deleted', 'code_inline'].forEach(type => {
     if (!schema.marks[type]) { return; }
-
-    marks.push(
-      new MenuItem({
-        title: () => I18n.t(`frontend.shiki_editor.${type}`),
-        icon: icons[type],
-        enable: () => true,
-        active: activeChecks[type],
-        run: commands[type]
-      })
-    );
+    marks.push(buildMenuItem(type));
   });
 
   ['bullet_list', 'blockquote', 'code_block'].forEach(type => {
     if (!schema.nodes[type]) { return; }
-
-    blocks.push(
-      new MenuItem({
-        title: () => I18n.t('frontend.shiki_editor.code_block'),
-        icon: icons[type],
-        enable: () => true,
-        active: activeChecks[type],
-        run: commands[type]
-      })
-    );
+    marks.push(buildMenuItem(type));
   });
   // blocks.push(liftItem);
 
