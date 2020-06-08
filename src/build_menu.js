@@ -8,24 +8,6 @@ import {
 } from 'prosemirror-menu';
 import icons from './utils/icons';
 // import { TextSelection } from 'prosemirror-state';
-import { wrapInList } from 'prosemirror-schema-list';
-
-function cmdItem(cmd, options) {
-  const passedOptions = {
-    label: options.title,
-    run: cmd
-  };
-  for (const prop in options) passedOptions[prop] = options[prop]; // eslint-disable-line
-  if ((!options.enable || options.enable === true) && !options.select) {
-    passedOptions[options.enable ? 'enable' : 'select'] = state => cmd(state);
-  }
-
-  return new MenuItem(passedOptions);
-}
-
-function wrapListItem(nodeType, options) {
-  return cmdItem(wrapInList(nodeType, options.attrs), options);
-}
 
 // const canInsert = nodeType => state => {
 //   const { $from } = state.selection;
@@ -76,14 +58,6 @@ export function buildMenu({ schema, commands, activeChecks }) {
     );
   });
 
-  if (schema.nodes.bullet_list) {
-    blocks.push(
-      wrapListItem(schema.nodes.bullet_list, {
-        title: () => I18n.t('frontend.shiki_editor.list'),
-        icon: icons.bulletList
-      })
-    );
-  }
   if (schema.nodes.blockquote) {
     blocks.push(
       wrapItem(schema.nodes.blockquote, {
@@ -92,7 +66,7 @@ export function buildMenu({ schema, commands, activeChecks }) {
       })
     );
   }
-  ['code_block'].forEach(type => {
+  ['bullet_list', 'code_block'].forEach(type => {
     if (!schema.nodes[type]) { return; }
 
     blocks.push(

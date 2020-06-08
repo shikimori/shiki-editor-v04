@@ -4,6 +4,7 @@ import { icons } from 'prosemirror-menu';
 export default {
   ...icons,
   code_inline: icons.code,
+  bullet_list: icons.bulletList,
   bold: {
     width: 384,
     height: 512,

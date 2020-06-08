@@ -1,5 +1,7 @@
-import Node from '../utils/node';
 import { wrappingInputRule } from 'prosemirror-inputrules';
+
+import Node from '../utils/node';
+import { toggleList } from '../commands';
 
 export default class BulletList extends Node {
   get name() {
@@ -25,15 +27,9 @@ export default class BulletList extends Node {
     };
   }
 
-  // commands({ type, schema }) {
-  //   return () => toggleList(type, schema.nodes.list_item);
-  // }
-
-  // keys({ type, schema }) {
-  //   return {
-  //     'Shift-Ctrl-8': toggleList(type, schema.nodes.list_item)
-  //   };
-  // }
+  commands({ type, schema }) {
+    return () => toggleList(type, schema.nodes.list_item);
+  }
 
   inputRules({ type }) {
     return [
