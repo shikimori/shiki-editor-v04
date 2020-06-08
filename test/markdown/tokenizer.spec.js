@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Tokenizer } from '../../src/markdown/tokenizer';
+import { MarkdownTokenizer } from '../../src/markdown';
 
 function text(content) {
   return [{
@@ -18,26 +18,26 @@ function text(content) {
   }];
 }
 
-describe('Tokenizer', () => {
+describe('MarkdownTokenizer', () => {
   it('<empty>', () => {
-    expect(Tokenizer.parse('')).to.eql([]);
+    expect(MarkdownTokenizer.parse('')).to.eql([]);
   });
 
   describe('parahraphs', () => {
     it('z', () => {
-      expect(Tokenizer.parse('z')).to.eql([
+      expect(MarkdownTokenizer.parse('z')).to.eql([
         ...text('z')
       ]);
     });
 
     it('zzz', () => {
-      expect(Tokenizer.parse('zzz')).to.eql([
+      expect(MarkdownTokenizer.parse('zzz')).to.eql([
         ...text('zzz')
       ]);
     });
 
     it('zzz\\nxxx', () => {
-      expect(Tokenizer.parse('zzz\nxxx')).to.eql([
+      expect(MarkdownTokenizer.parse('zzz\nxxx')).to.eql([
         ...text('zzz'),
         ...text('xxx')
       ]);
@@ -47,7 +47,7 @@ describe('Tokenizer', () => {
   describe('marks', () => {
     describe('strong', () => {
       it('[b]zxc[/b]', () => {
-        expect(Tokenizer.parse('[b]zxc[/b]')).to.eql([{
+        expect(MarkdownTokenizer.parse('[b]zxc[/b]')).to.eql([{
           content: '',
           type: 'paragraph_open'
         }, {
@@ -70,7 +70,7 @@ describe('Tokenizer', () => {
       });
 
       it('a[b]zxc[/b]A', () => {
-        expect(Tokenizer.parse('a[b]zxc[/b]A')).to.eql([{
+        expect(MarkdownTokenizer.parse('a[b]zxc[/b]A')).to.eql([{
           content: '',
           type: 'paragraph_open'
         }, {
@@ -101,7 +101,7 @@ describe('Tokenizer', () => {
 
     describe('underline', () => {
       it('[u]zxc[/u]', () => {
-        expect(Tokenizer.parse('[u]zxc[/u]')).to.eql([{
+        expect(MarkdownTokenizer.parse('[u]zxc[/u]')).to.eql([{
           content: '',
           type: 'paragraph_open'
         }, {
@@ -126,7 +126,7 @@ describe('Tokenizer', () => {
 
     describe('deleted', () => {
       it('[s]zxc[/s]', () => {
-        expect(Tokenizer.parse('[s]zxc[/s]')).to.eql([{
+        expect(MarkdownTokenizer.parse('[s]zxc[/s]')).to.eql([{
           content: '',
           type: 'paragraph_open'
         }, {
@@ -151,7 +151,7 @@ describe('Tokenizer', () => {
 
     describe('inline_code', () => {
       it('`zxc`', () => {
-        expect(Tokenizer.parse('`zxc`')).to.eql([{
+        expect(MarkdownTokenizer.parse('`zxc`')).to.eql([{
           content: '',
           type: 'paragraph_open'
         }, {
@@ -168,7 +168,7 @@ describe('Tokenizer', () => {
       });
 
       it('``zxc```', () => {
-        expect(Tokenizer.parse('``zxc```')).to.eql([{
+        expect(MarkdownTokenizer.parse('``zxc```')).to.eql([{
           content: '',
           type: 'paragraph_open'
         }, {
@@ -188,7 +188,7 @@ describe('Tokenizer', () => {
       });
 
       it('a`zxc`A', () => {
-        expect(Tokenizer.parse('a`zxc`A')).to.eql([{
+        expect(MarkdownTokenizer.parse('a`zxc`A')).to.eql([{
           content: '',
           type: 'paragraph_open'
         }, {
@@ -211,7 +211,7 @@ describe('Tokenizer', () => {
       });
 
       it('z`zxc', () => {
-        expect(Tokenizer.parse('z`zxc')).to.eql([
+        expect(MarkdownTokenizer.parse('z`zxc')).to.eql([
           ...text('z`zxc')
         ]);
       });
@@ -221,7 +221,7 @@ describe('Tokenizer', () => {
   describe('nodes', () => {
     describe('blockquote', () => {
       it('> a', () => {
-        expect(Tokenizer.parse('> a')).to.eql([{
+        expect(MarkdownTokenizer.parse('> a')).to.eql([{
           content: '',
           type: 'blockquote_open'
         },
@@ -233,7 +233,7 @@ describe('Tokenizer', () => {
       });
 
       it('> a\\n> b\\n> c', () => {
-        expect(Tokenizer.parse('> a\n> b\n> c')).to.eql([{
+        expect(MarkdownTokenizer.parse('> a\n> b\n> c')).to.eql([{
           content: '',
           type: 'blockquote_open'
         },
@@ -247,7 +247,7 @@ describe('Tokenizer', () => {
       });
 
       it('> > a', () => {
-        expect(Tokenizer.parse('> > a')).to.eql([{
+        expect(MarkdownTokenizer.parse('> > a')).to.eql([{
           content: '',
           type: 'blockquote_open'
         }, {
@@ -265,7 +265,7 @@ describe('Tokenizer', () => {
       });
 
       it('> > a\\n> b', () => {
-        expect(Tokenizer.parse('> > a\n> b')).to.eql([{
+        expect(MarkdownTokenizer.parse('> > a\n> b')).to.eql([{
           content: '',
           type: 'blockquote_open'
         }, {
@@ -287,7 +287,7 @@ describe('Tokenizer', () => {
 
     describe('bullet_list', () => {
       it('- a', () => {
-        expect(Tokenizer.parse('- a')).to.eql([{
+        expect(MarkdownTokenizer.parse('- a')).to.eql([{
           content: '',
           type: 'bullet_list_open'
         }, {
@@ -305,7 +305,7 @@ describe('Tokenizer', () => {
       });
 
       it('- a\\n- b', () => {
-        expect(Tokenizer.parse('- a\n- b')).to.eql([{
+        expect(MarkdownTokenizer.parse('- a\n- b')).to.eql([{
           content: '',
           type: 'bullet_list_open'
         }, {
@@ -331,7 +331,7 @@ describe('Tokenizer', () => {
       });
 
       it('- test\\nn  zxc', () => {
-        expect(Tokenizer.parse('- test\n  zxc')).to.eql([{
+        expect(MarkdownTokenizer.parse('- test\n  zxc')).to.eql([{
           content: '',
           type: 'bullet_list_open'
         }, {
@@ -350,7 +350,7 @@ describe('Tokenizer', () => {
       });
 
       it('- > test', () => {
-        expect(Tokenizer.parse('- > test')).to.eql([{
+        expect(MarkdownTokenizer.parse('- > test')).to.eql([{
           content: '',
           type: 'bullet_list_open'
         }, {
@@ -374,7 +374,7 @@ describe('Tokenizer', () => {
       });
 
       it('[*] a', () => {
-        expect(Tokenizer.parse('[*] a')).to.eql([{
+        expect(MarkdownTokenizer.parse('[*] a')).to.eql([{
           content: '',
           type: 'bullet_list_open'
         }, {
@@ -392,7 +392,7 @@ describe('Tokenizer', () => {
       });
 
       it('[*]a', () => {
-        expect(Tokenizer.parse('[*]a')).to.eql([{
+        expect(MarkdownTokenizer.parse('[*]a')).to.eql([{
           content: '',
           type: 'bullet_list_open'
         }, {
@@ -412,14 +412,14 @@ describe('Tokenizer', () => {
 
     describe('code_block', () => {
       it('```\\nzxc\\nvbn\\n```', () => {
-        expect(Tokenizer.parse('```\nzxc\nvbn\n```')).to.eql([{
+        expect(MarkdownTokenizer.parse('```\nzxc\nvbn\n```')).to.eql([{
           content: 'zxc\nvbn',
           type: 'code_block'
         }]);
       });
 
       it('qwe\\n```\\nzxc\\nvbn\\n```\\nrty', () => {
-        expect(Tokenizer.parse('qwe\n```\nzxc\nvbn\n```\nrty')).to.eql([
+        expect(MarkdownTokenizer.parse('qwe\n```\nzxc\nvbn\n```\nrty')).to.eql([
           ...text('qwe'),
           {
             content: 'zxc\nvbn',
@@ -430,13 +430,13 @@ describe('Tokenizer', () => {
       });
 
       it('```\\nzxc', () => {
-        expect(Tokenizer.parse('```\nzxc')).to.eql([{
+        expect(MarkdownTokenizer.parse('```\nzxc')).to.eql([{
           content: 'zxc',
           type: 'code_block'
         }]);
       });
       it('```ruby\\nzxc\\n```', () => {
-        expect(Tokenizer.parse('```ruby\nzxc\n```')).to.eql([{
+        expect(MarkdownTokenizer.parse('```ruby\nzxc\n```')).to.eql([{
           content: 'zxc',
           type: 'code_block',
           attrs: [['language', 'ruby']]

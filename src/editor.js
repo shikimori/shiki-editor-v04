@@ -10,7 +10,6 @@ import { keymap } from 'prosemirror-keymap';
 import { baseKeymap, joinBackward } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
 
-
 import {
   Doc,
   Text,

@@ -84,26 +84,3 @@ export default class MarkdownParser {
 //   //     alt: token.children[0] && token.children[0].content || null
 //   //   }) },
 //   // hardbreak: { node: 'hard_break' },
-// 
-//   paragraph: { block: 'paragraph' },
-//   blockquote: { block: 'blockquote' },
-//   list_item: { block: 'list_item' },
-//   bullet_list: { block: 'bullet_list' },
-//   code_block: {
-//     block: 'code_block',
-//     getAttrs: token => ({
-//       language: token.attrGet('language')
-//     })
-//   },
-// 
-//   em: { mark: 'em' },
-//   strong: { mark: 'strong' },
-//   del: { mark: 'deleted' },
-//   underline: { mark: 'underline' },
-//   code_inline: { mark: 'code' }
-//   // link: { mark: 'link',
-//   //   getAttrs: token => ({
-//   //     href: token.attrGet('href'),
-//   //     title: token.attrGet('title') || null
-//   //   }) },
-// };
