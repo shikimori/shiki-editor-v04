@@ -1,6 +1,6 @@
 import { wrappingInputRule } from 'prosemirror-inputrules';
 
-import Node from '../utils/node';
+import { Node, nodeIsActive } from '../utils';
 import { toggleList } from '../commands';
 
 export default class BulletList extends Node {
@@ -27,13 +27,17 @@ export default class BulletList extends Node {
     };
   }
 
-  commands({ type, schema }) {
-    return () => toggleList(type, schema.nodes.list_item);
-  }
-
   inputRules({ type }) {
     return [
       wrappingInputRule(/^\s*([-+*])\s$/, type)
     ];
+  }
+
+  commands({ type, schema }) {
+    return () => toggleList(type, schema.nodes.list_item);
+  }
+
+  activeCheck({ type }) {
+    return () => nodeIsActive(type);
   }
 }

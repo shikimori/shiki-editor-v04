@@ -1,7 +1,7 @@
 import { textblockTypeInputRule } from 'prosemirror-inputrules';
 
-import Node from '../utils/node';
-import toggleBlockType from '../commands/toggle_block_type';
+import { Node, nodeIsActive } from '../utils';
+import { toggleBlockType } from '../commands';
 
 export default class CodeBlock extends Node {
   get name() {
@@ -58,12 +58,6 @@ export default class CodeBlock extends Node {
   }
 
   activeCheck({ type }) {
-    return () => state => {
-      const { $from, to, node } = state.selection;
-      if (node) {
-        return node.type === type;
-      }
-      return to <= $from.end() && $from.parent.type === type;
-    };
+    return () => nodeIsActive(type);
   }
 }

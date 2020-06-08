@@ -1,7 +1,7 @@
 // https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-utils/src/utils/nodeIsActive.js
 import { findParentNode, findSelectedNodeOfType } from 'prosemirror-utils';
 
-export default function nodeIsActive(state, type, attrs = {}) {
+export default (type, attrs = {}) => (state, _dispatch, _view) => {
   const predicate = node => node.type === type;
   const node = findSelectedNodeOfType(type)(state.selection) ||
     findParentNode(predicate)(state.selection);
@@ -11,4 +11,4 @@ export default function nodeIsActive(state, type, attrs = {}) {
   }
 
   return node.node.hasMarkup(type, { ...node.node.attrs, ...attrs });
-}
+};
