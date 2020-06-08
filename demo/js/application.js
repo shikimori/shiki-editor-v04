@@ -10,8 +10,8 @@
 //
 // import markdownit from 'markdown-it';
 //
-// const markdownTokenizer = markdownit('commonmark', { html: false });
-// window.markdownTokenizer = markdownTokenizer;
+// const markdownParserTokenizer = markdownit('commonmark', { html: false });
+// window.markdownParserTokenizer = markdownParserTokenizer;
 // window.Tokenizer = Tokenizer;
 import ShikiEditor from '../../src/editor';
 

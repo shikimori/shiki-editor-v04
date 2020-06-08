@@ -17,4 +17,13 @@ export default class Strong extends Mark {
       'Mod-b': (state, dispatch) => this.command({ type })()(state, dispatch)
     };
   }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[b]',
+      close: '[/b]',
+      mixable: true,
+      expelEnclosingWhitespace: true
+    };
+  }
 }

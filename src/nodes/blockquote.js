@@ -39,4 +39,8 @@ export default class Blockquote extends Node {
       wrappingInputRule(/^\s*>\s$/, type)
     ];
   }
+
+  markdownSerialize(state, node) {
+    state.wrapBlock('> ', null, node, () => state.renderContent(node));
+  }
 }

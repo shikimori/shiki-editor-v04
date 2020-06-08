@@ -12,7 +12,11 @@ export default class Text extends Node {
     };
   }
 
-  get markdownToken() {
+  get markdownParserToken() {
     return null;
+  }
+
+  markdownSerialize(state, node) {
+    state.text(node.text);
   }
 }

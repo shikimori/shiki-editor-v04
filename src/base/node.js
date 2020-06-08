@@ -13,15 +13,19 @@ export default class Node extends Extension {
     return null;
   }
 
-  get markdownToken() {
-    return { block: this.name };
-  }
-
   command({ type: _type }) {
     return () => _state => {};
   }
 
   activeCheck({ type: _type }) {
     return () => _state => {};
+  }
+
+  get markdownParserToken() {
+    return { block: this.name };
+  }
+
+  markdownSerialize(_state, _node) {
+    return null;
   }
 }

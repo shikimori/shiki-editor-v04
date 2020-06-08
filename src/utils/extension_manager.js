@@ -134,13 +134,33 @@ export default class ExtensionManager {
     ]), []);
   }
 
-  markdownTokens() {
+  markdownParserTokens() {
     return this.extensions
-      .filter(extension => extension.markdownToken)
+      .filter(extension => extension.markdownParserToken)
       .reduce((memo, extension) => {
-        memo[extension.name] = extension.markdownToken;
+        memo[extension.name] = extension.markdownParserToken;
         return memo;
       }, {});
+  }
+
+  markdownSerializerTokens() {
+    const nodes = this.extensions
+      .filter(extension => extension.markdownSerialize)
+      .reduce((memo, extension) => {
+        const { name, markdownSerialize } = extension;
+        memo[name] = markdownSerialize;
+        return memo;
+      }, {});
+
+    const marks = this.extensions
+      .filter(extension => extension.markdownSerializerToken)
+      .reduce((memo, extension) => {
+        const { name, markdownSerializerToken } = extension;
+        memo[name] = markdownSerializerToken;
+        return memo;
+      }, {});
+
+    return { nodes, marks };
   }
 
   activeChecks({ schema, view }) {

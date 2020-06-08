@@ -17,4 +17,13 @@ export default class Em extends Mark {
       'Mod-i': (state, dispatch) => this.command({ type })()(state, dispatch)
     };
   }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[i]',
+      close: '[/i]',
+      mixable: true,
+      expelEnclosingWhitespace: true
+    };
+  }
 }

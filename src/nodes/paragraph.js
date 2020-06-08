@@ -22,4 +22,16 @@ export default class Paragraph extends Node {
   command({ type }) {
     return () => setBlockType(type);
   }
+
+  markdownSerialize(state, node) {
+    if (node.content.content.length) {
+      state.renderInline(node);
+      state.closeBlock(node);
+    } else {
+      if (!state.atBlank) {
+        state.closeBlock(node);
+      }
+      state.write('\n');
+    }
+  }
 }

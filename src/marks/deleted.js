@@ -11,4 +11,13 @@ export default class Em extends Mark {
       toDOM: () => ['del', 0]
     };
   }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[s]',
+      close: '[/s]',
+      mixable: true,
+      expelEnclosingWhitespace: true
+    };
+  }
 }

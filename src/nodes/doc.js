@@ -12,7 +12,7 @@ export default class Doc extends Node {
     };
   }
 
-  get markdownToken() {
+  get markdownParserToken() {
     return null;
   }
 }

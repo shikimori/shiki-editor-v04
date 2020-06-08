@@ -47,4 +47,8 @@ export default class BulletList extends Node {
       'Shift-Ctrl-8': toggleList(type, schema.nodes.list_item)
     };
   }
+
+  markdownSerialize(state, node) {
+    state.renderList(node, '  ', () => (node.attrs.bullet || '-') + ' ');
+  }
 }

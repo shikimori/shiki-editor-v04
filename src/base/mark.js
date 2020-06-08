@@ -17,15 +17,19 @@ export default class Mark extends Extension {
     return null;
   }
 
-  get markdownToken() {
-    return { mark: this.name };
-  }
-
   command({ type }) {
     return () => toggleMark(type);
   }
 
   activeCheck(type, state) {
     return markIsActive(type, state);
+  }
+
+  get markdownParserToken() {
+    return { mark: this.name };
+  }
+
+  markdownSerializerToken() {
+    return null;
   }
 }

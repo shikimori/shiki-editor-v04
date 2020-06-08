@@ -30,8 +30,8 @@ import {
 import { ExtensionManager, Emitter, buildMenu } from './utils';
 
 import { MarkdownParser } from './markdown/from_markdown';
+import { MarkdownSerializer } from './markdown/to_markdown';
 import { Tokenizer } from './markdown/tokenizer';
-import { shikiMarkdownSerializer } from './markdown/to_markdown';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -49,12 +49,14 @@ export default class ShikiEditor extends Emitter {
     };
 
     this.extensions = this.createExtensions();
-    this.markdownTokens = this.extensions.markdownTokens();
 
     this.nodes = this.createNodes();
     this.marks = this.createMarks();
     this.schema = this.createSchema();
-    this.textParser = this.createTextParser();
+
+    this.markdownParser = this.createMarkdownParser();
+    this.markdownSerializer = this.createMarkdownSerializer();
+
     this.keymaps = this.createKeymaps();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
@@ -108,12 +110,17 @@ export default class ShikiEditor extends Emitter {
     });
   }
 
-  createTextParser() {
+  createMarkdownParser() {
     return new MarkdownParser(
       this.schema,
       Tokenizer,
-      this.markdownTokens
+      this.extensions.markdownParserTokens()
     );
+  }
+
+  createMarkdownSerializer() {
+    const { nodes, marks } = this.extensions.markdownSerializerTokens();
+    return new MarkdownSerializer(nodes, marks);
   }
 
   createPlugins() {
@@ -222,7 +229,7 @@ export default class ShikiEditor extends Emitter {
   createState() {
     return EditorState.create({
       schema: this.schema,
-      doc: this.textParser.parse(this.options.content),
+      doc: this.markdownParser.parse(this.options.content),
       plugins: []
     });
   }
@@ -273,6 +280,6 @@ export default class ShikiEditor extends Emitter {
   }
 
   exportMarkdown() {
-    return shikiMarkdownSerializer.serialize(this.state.doc);
+    return this.markdownSerializer.serialize(this.state.doc);
   }
 }

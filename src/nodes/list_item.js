@@ -26,4 +26,8 @@ export default class ListItem extends Node {
       'Shift-Tab': liftListItem(type)
     };
   }
+
+  markdownSerialize(state, node) {
+    state.renderContent(node);
+  }
 }

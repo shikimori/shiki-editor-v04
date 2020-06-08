@@ -37,15 +37,6 @@ export default class CodeBlock extends Node {
     };
   }
 
-  get markdownToken() {
-    return {
-      block: 'code_block',
-      getAttrs: token => ({
-        language: token.attrGet('language')
-      })
-    };
-  }
-
   command({ schema, type }) {
     return () => toggleBlockType(type, schema.nodes.paragraph, {});
   }
@@ -60,5 +51,22 @@ export default class CodeBlock extends Node {
         language: match[0].match(/`+(\w*)/)[1] || ''
       }))
     ];
+  }
+
+  get markdownParserToken() {
+    return {
+      block: 'code_block',
+      getAttrs: token => ({
+        language: token.attrGet('language')
+      })
+    };
+  }
+
+  markdownSerialize(state, node) {
+    state.write('```' + (node.attrs.language || '') + '\n');
+    state.text(node.textContent, false);
+    state.ensureNewLine();
+    state.write('```');
+    state.closeBlock(node);
   }
 }

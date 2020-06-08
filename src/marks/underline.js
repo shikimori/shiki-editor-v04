@@ -17,4 +17,13 @@ export default class Underline extends Mark {
       'Mod-u': (state, dispatch) => this.command({ type })()(state, dispatch)
     };
   }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[u]',
+      close: '[/u]',
+      mixable: true,
+      expelEnclosingWhitespace: true
+    };
+  }
 }
