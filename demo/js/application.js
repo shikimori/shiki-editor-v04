@@ -13,9 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const editor = new ShikiEditor({ node, content: textarea.value });
     editor.on('update', () => textarea.value = editor.exportMarkdown());
 
-    const onTextareaKeypress = () => {
+    const onTextareaKeypress = () =>
       delay().then(() => editor.setContent(textarea.value));
-    };
 
     textarea.addEventListener('keypress', onTextareaKeypress);
     textarea.addEventListener('keydown', onTextareaKeypress);
