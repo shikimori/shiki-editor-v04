@@ -22,8 +22,8 @@ export default class Blockquote extends Node {
     return () => toggleWrap(type, schema.nodes.paragraph);
   }
 
-  activeCheck({ type }) {
-    return () => nodeIsActive(type);
+  activeCheck(type, state) {
+    return nodeIsActive(type, state);
   }
 
   keys({ type }) {

@@ -4,7 +4,7 @@ import { nodeIsActive } from '../utils';
 
 export default function (type, toggletype, attrs = {}) {
   return (state, dispatch, view) => {
-    const isActive = nodeIsActive(type)(state, type, attrs);
+    const isActive = nodeIsActive(type, state, attrs);
 
     if (isActive) {
       return setBlockType(toggletype)(state, dispatch, view);

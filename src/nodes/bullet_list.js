@@ -31,8 +31,8 @@ export default class BulletList extends Node {
     return () => toggleList(type, schema.nodes.list_item);
   }
 
-  activeCheck({ type }) {
-    return () => nodeIsActive(type);
+  activeCheck(type, state) {
+    return nodeIsActive(type, state);
   }
 
   inputRules({ type }) {

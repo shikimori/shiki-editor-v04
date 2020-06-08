@@ -24,7 +24,7 @@ export default class Mark extends Extension {
     return () => toggleMark(type);
   }
 
-  activeCheck({ type }) {
-    return () => markIsActive(type);
+  activeCheck(type, state) {
+    return markIsActive(type, state);
   }
 }

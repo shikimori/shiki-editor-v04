@@ -49,8 +49,8 @@ export default class CodeBlock extends Node {
     return () => toggleBlockType(type, schema.nodes.paragraph, {});
   }
 
-  activeCheck({ type }) {
-    return () => nodeIsActive(type);
+  activeCheck(type, state) {
+    return nodeIsActive(type, state);
   }
 
   inputRules({ type }) {

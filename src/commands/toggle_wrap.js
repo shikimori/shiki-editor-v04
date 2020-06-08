@@ -4,7 +4,7 @@ import { nodeIsActive } from '../utils';
 
 export default function (type) {
   return (state, dispatch, view) => {
-    const isActive = nodeIsActive(type)(state);
+    const isActive = nodeIsActive(type, state);
 
     if (isActive) {
       return lift(state, dispatch);
