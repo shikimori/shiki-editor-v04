@@ -2,14 +2,13 @@
 
 import { bind } from 'decko';
 
-import { history } from 'prosemirror-history';
+import { history, undo, redo } from 'prosemirror-history';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Schema } from 'prosemirror-model';
 import { keymap } from 'prosemirror-keymap';
 import { baseKeymap, joinBackward } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
-import { undo, redo } from 'prosemirror-history';
 
 import {
   Doc,
@@ -17,7 +16,8 @@ import {
   Paragraph,
   CodeBlock,
   BulltList,
-  ListItem
+  ListItem,
+  Blockquote
 } from './nodes';
 import {
   Strong,
@@ -84,6 +84,7 @@ export default class ShikiEditor {
       new CodeBlock(),
       new BulltList(),
       new ListItem(),
+      new Blockquote(),
       ...this.options.extensions
     ], this);
   }

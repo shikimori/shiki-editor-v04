@@ -1,7 +1,6 @@
 import {
   MenuItem,
-  wrapItem,
-  liftItem,
+  // liftItem,
   undoItem,
   redoItem,
   menuBar
@@ -58,15 +57,7 @@ export function buildMenu({ schema, commands, activeChecks }) {
     );
   });
 
-  if (schema.nodes.blockquote) {
-    blocks.push(
-      wrapItem(schema.nodes.blockquote, {
-        title: () => I18n.t('frontend.shiki_editor.blockquote'),
-        icon: icons.blockquote
-      })
-    );
-  }
-  ['bullet_list', 'code_block'].forEach(type => {
+  ['bullet_list', 'blockquote', 'code_block'].forEach(type => {
     if (!schema.nodes[type]) { return; }
 
     blocks.push(
@@ -79,7 +70,7 @@ export function buildMenu({ schema, commands, activeChecks }) {
       })
     );
   });
-  blocks.push(liftItem);
+  // blocks.push(liftItem);
 
   return menuBar({
     floating: true,

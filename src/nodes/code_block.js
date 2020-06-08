@@ -45,19 +45,19 @@ export default class CodeBlock extends Node {
     };
   }
 
-  inputRules({ type }) {
-    return [
-      textblockTypeInputRule(/^```\w* $/, type, match => ({
-        language: match[0].match(/`+(\w*)/)[1] || ''
-      }))
-    ];
-  }
-
   command({ schema, type }) {
     return () => toggleBlockType(type, schema.nodes.paragraph, {});
   }
 
   activeCheck({ type }) {
     return () => nodeIsActive(type);
+  }
+
+  inputRules({ type }) {
+    return [
+      textblockTypeInputRule(/^```\w* $/, type, match => ({
+        language: match[0].match(/`+(\w*)/)[1] || ''
+      }))
+    ];
   }
 }

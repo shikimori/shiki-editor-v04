@@ -27,17 +27,23 @@ export default class BulletList extends Node {
     };
   }
 
-  inputRules({ type }) {
-    return [
-      wrappingInputRule(/^\s*([-+*])\s$/, type)
-    ];
-  }
-
   command({ type, schema }) {
     return () => toggleList(type, schema.nodes.list_item);
   }
 
   activeCheck({ type }) {
     return () => nodeIsActive(type);
+  }
+
+  inputRules({ type }) {
+    return [
+      wrappingInputRule(/^\s*([-+*])\s$/, type)
+    ];
+  }
+
+  keys({ type, schema }) {
+    return {
+      'Shift-Ctrl-8': toggleList(type, schema.nodes.list_item)
+    };
   }
 }
