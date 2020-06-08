@@ -24,7 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const node = container.querySelector('.prosemirror-container');
     const textarea = container.querySelector('textarea');
 
-    new ShikiEditor({ node, content: textarea.value });
+    const editor = new ShikiEditor({ node, content: textarea.value });
+
+    editor.on('update', () => textarea.value = editor.exportMarkdown());
   });
 });
 // document.addEventListener('DOMContentLoaded', () => {

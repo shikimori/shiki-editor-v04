@@ -31,6 +31,7 @@ import { ExtensionManager, Emitter, buildMenu } from './utils';
 
 import { MarkdownParser } from './markdown/from_markdown';
 import { Tokenizer } from './markdown/tokenizer';
+import { shikiMarkdownSerializer } from './markdown/to_markdown';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -269,5 +270,9 @@ export default class ShikiEditor extends Emitter {
     }
 
     this.emit('update', { transaction });
+  }
+
+  exportMarkdown() {
+    return shikiMarkdownSerializer.serialize(this.state.doc);
   }
 }
