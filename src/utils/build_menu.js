@@ -5,7 +5,7 @@ import {
   redoItem,
   menuBar
 } from 'prosemirror-menu';
-import icons from './utils/icons';
+import icons from './icons';
 // import { TextSelection } from 'prosemirror-state';
 
 // const canInsert = nodeType => state => {
@@ -38,7 +38,7 @@ import icons from './utils/icons';
 undoItem.spec.title = () => I18n.t('frontend.shiki_editor.undo');
 redoItem.spec.title = () => I18n.t('frontend.shiki_editor.redo');
 
-export function buildMenu({ schema, commands, activeChecks }) {
+export default function ({ schema, commands, activeChecks }) {
   const marks = [];
   const undos = [undoItem, redoItem];
   const blocks = [];

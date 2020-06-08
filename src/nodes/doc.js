@@ -1,5 +1,5 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Nodes/Doc.js
-import Node from '../utils/node';
+import { Node } from '../base';
 
 export default class Doc extends Node {
   get name() {

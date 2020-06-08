@@ -1,4 +1,4 @@
-import { Mark } from '../utils';
+import { Mark } from '../base';
 
 export default class Em extends Mark {
   get name() {

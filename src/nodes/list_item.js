@@ -1,4 +1,4 @@
-import Node from '../utils/node';
+import { Node } from '../base';
 import {
   splitListItem,
   liftListItem,

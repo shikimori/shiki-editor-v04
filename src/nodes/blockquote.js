@@ -1,6 +1,6 @@
 import { wrappingInputRule } from 'prosemirror-inputrules';
 
-import { Node } from '../utils';
+import { Node } from '../base';
 import { nodeIsActive } from '../checks';
 import { toggleWrap } from '../commands';
 

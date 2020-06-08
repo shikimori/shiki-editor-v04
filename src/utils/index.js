@@ -1,11 +1,7 @@
-import Extension from './extension';
 import ExtensionManager from './extension_manager';
-import Mark from './mark';
-import Node from './node';
+import buildMenu from './build_menu';
 
 export {
-  Extension,
   ExtensionManager,
-  Mark,
-  Node
+  buildMenu
 };

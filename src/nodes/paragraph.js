@@ -1,6 +1,6 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Nodes/Paragraph.js
 import { setBlockType } from 'prosemirror-commands';
-import Node from '../utils/node';
+import { Node } from '../base';
 
 export default class Paragraph extends Node {
   get name() {

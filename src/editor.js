@@ -26,11 +26,10 @@ import {
   Deleted,
   CodeInline
 } from './marks';
-import { ExtensionManager } from './utils';
+import { ExtensionManager, buildMenu } from './utils';
 
 import { MarkdownParser } from './markdown/from_markdown';
 import { Tokenizer } from './markdown/tokenizer';
-import { buildMenu } from './build_menu';
 
 export default class ShikiEditor {
   options = {
