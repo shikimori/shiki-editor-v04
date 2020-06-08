@@ -1,5 +1,9 @@
 import Node from '../utils/node';
-// import { splitListItem, liftListItem, sinkListItem } from 'tiptap-commands';
+import {
+  splitListItem,
+  liftListItem,
+  sinkListItem
+} from 'prosemirror-schema-list';
 
 export default class ListItem extends Node {
   get name() {
@@ -15,11 +19,11 @@ export default class ListItem extends Node {
     };
   }
 
-  // keys({ type }) {
-  //   return {
-  //     Enter: splitListItem(type),
-  //     Tab: sinkListItem(type),
-  //     'Shift-Tab': liftListItem(type)
-  //   };
-  // }
+  keys({ type }) {
+    return {
+      'Shift-Enter': splitListItem(type),
+      Tab: sinkListItem(type),
+      'Shift-Tab': liftListItem(type)
+    };
+  }
 }
