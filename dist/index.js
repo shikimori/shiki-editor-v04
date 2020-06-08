@@ -2919,6 +2919,18 @@ var ShikiEditor = (_class = (_temp = /*#__PURE__*/function (_Emitter) {
       });
     }
   }, {
+    key: "setContent",
+    value: function setContent(content) {
+      var emitUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var _this$state = this.state,
+          doc = _this$state.doc,
+          tr = _this$state.tr;
+      var document = this.markdownParser.parse(content);
+      var selection = prosemirrorState.TextSelection.create(doc, 0, doc.content.size);
+      var transaction = tr.setSelection(selection).replaceSelectionWith(document, false).setMeta('preventUpdate', !emitUpdate);
+      this.view.dispatch(transaction);
+    }
+  }, {
     key: "dispatchTransaction",
     value: function dispatchTransaction(transaction) {
       var _this$state$applyTran = this.state.applyTransaction(transaction),
