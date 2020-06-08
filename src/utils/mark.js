@@ -12,13 +12,9 @@ export default class Mark extends Extension {
     return 'mark';
   }
 
-  get name() {
-    return null;
-  }
-
-  get view() {
-    return null;
-  }
+  // get view() {
+  //   return null;
+  // }
 
   get schema() {
     return null;

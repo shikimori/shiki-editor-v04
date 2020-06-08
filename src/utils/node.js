@@ -5,16 +5,8 @@ export default class Node extends Extension {
     super(options);
   }
 
-  get name() {
-    return null;
-  }
-
   get type() {
     return 'node';
-  }
-
-  get view() {
-    return null;
   }
 
   get schema() {
@@ -26,6 +18,10 @@ export default class Node extends Extension {
   }
 
   command() {
+    return () => {};
+  }
+
+  activeCheck({ type: _type }) {
     return () => {};
   }
 }
