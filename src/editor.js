@@ -10,6 +10,7 @@ import { keymap } from 'prosemirror-keymap';
 import { baseKeymap, joinBackward } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
 
+
 import {
   Doc,
   Text,
@@ -26,12 +27,12 @@ import {
   Deleted,
   CodeInline
 } from './marks';
-import { ExtensionManager, buildMenu } from './utils';
+import { ExtensionManager, Emitter, buildMenu } from './utils';
 
 import { MarkdownParser } from './markdown/from_markdown';
 import { Tokenizer } from './markdown/tokenizer';
 
-export default class ShikiEditor {
+export default class ShikiEditor extends Emitter {
   options = {
     node: null,
     extensions: [],
@@ -39,6 +40,8 @@ export default class ShikiEditor {
   }
 
   constructor(options) {
+    super(options);
+
     this.options = {
       ...this.options,
       ...options
@@ -260,11 +263,11 @@ export default class ShikiEditor {
     //   state: this.state,
     //   transaction
     // });
-    //
-    // if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
-    //   return;
-    // }
-    //
-    // this.emitUpdate(transaction);
+
+    if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
+      return;
+    }
+
+    this.emit('update', { transaction });
   }
 }

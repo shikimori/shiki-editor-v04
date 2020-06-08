@@ -21,10 +21,10 @@ window.I18n = {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.editor-container').forEach(container => {
-    const editor = container.querySelector('.prosemirror-container');
+    const node = container.querySelector('.prosemirror-container');
     const textarea = container.querySelector('textarea');
 
-    new ShikiEditor({ node: editor, content: textarea.value });
+    new ShikiEditor({ node, content: textarea.value });
   });
 });
 // document.addEventListener('DOMContentLoaded', () => {
