@@ -3,7 +3,7 @@
 import { bind } from 'decko';
 
 import { history, undo, redo } from 'prosemirror-history';
-import { EditorState } from 'prosemirror-state';
+import { EditorState, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Schema } from 'prosemirror-model';
 import { keymap } from 'prosemirror-keymap';
@@ -196,6 +196,18 @@ export default class ShikiEditor extends Emitter {
       schema: this.schema,
       view: this.view
     });
+  }
+
+  setContent(content, emitUpdate = false) {
+    const { doc, tr } = this.state;
+    const document = this.markdownParser.parse(content);
+    const selection = TextSelection.create(doc, 0, doc.content.size);
+    const transaction = tr
+      .setSelection(selection)
+      .replaceSelectionWith(document, false)
+      .setMeta('preventUpdate', !emitUpdate);
+
+    this.view.dispatch(transaction);
   }
 
   @bind
