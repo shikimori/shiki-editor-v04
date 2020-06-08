@@ -1,5 +1,5 @@
 import Token from './token';
-import { flatten } from 'lodash';
+import flatten from 'lodash/flatten';
 
 export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
