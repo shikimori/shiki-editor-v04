@@ -29,7 +29,7 @@ export default class MarkdownTokenizer {
       this.parseLine('');
     }
 
-    return this.tokens |> flatten;
+    return flatten(this.tokens);
   }
 
   next(steps = 1) {
