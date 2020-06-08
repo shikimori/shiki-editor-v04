@@ -1,6 +1,7 @@
 import { wrappingInputRule } from 'prosemirror-inputrules';
 
-import { Node, nodeIsActive } from '../utils';
+import { Node } from '../utils';
+import { nodeIsActive } from '../checks';
 import { toggleList } from '../commands';
 
 export default class BulletList extends Node {

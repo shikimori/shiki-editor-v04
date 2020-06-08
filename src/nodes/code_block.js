@@ -1,6 +1,7 @@
 import { textblockTypeInputRule } from 'prosemirror-inputrules';
 
-import { Node, nodeIsActive } from '../utils';
+import { Node } from '../utils';
+import { nodeIsActive } from '../checks';
 import { toggleBlockType } from '../commands';
 
 export default class CodeBlock extends Node {

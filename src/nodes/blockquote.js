@@ -1,6 +1,8 @@
-import { Node, nodeIsActive } from '../utils';
-import { toggleWrap } from '../commands';
 import { wrappingInputRule } from 'prosemirror-inputrules';
+
+import { Node } from '../utils';
+import { nodeIsActive } from '../checks';
+import { toggleWrap } from '../commands';
 
 export default class Blockquote extends Node {
   get name() {

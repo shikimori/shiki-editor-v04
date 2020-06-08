@@ -1,6 +1,6 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-commands/src/commands/toggleWrap.js
 import { wrapIn, lift } from 'prosemirror-commands';
-import { nodeIsActive } from '../utils';
+import { nodeIsActive } from '../checks';
 
 export default function (type) {
   return (state, dispatch, view) => {
