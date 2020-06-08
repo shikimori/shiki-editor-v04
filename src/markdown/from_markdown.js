@@ -1,5 +1,5 @@
 /* eslint-disable */
-// https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
+// based on https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
 
 import { Mark } from 'prosemirror-model';
 
@@ -224,7 +224,7 @@ export class MarkdownParser {
 // :: MarkdownParser
 // A parser parsing unextended [CommonMark](http://commonmark.org/),
 // without inline HTML, and producing a document in the basic schema.
-const tokens = {
+export const tokens = {
   // ordered_list: { block: 'ordered_list', getAttrs: token => ({ order: +token.attrGet('start') || 1 }) },
   // heading: { block: 'heading', getAttrs: token => ({ level: +token.tag.slice(1) }) },
   // fence: { block: 'code_block', getAttrs: token => ({ params: token.info || '' }) },

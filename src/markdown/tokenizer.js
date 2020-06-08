@@ -123,12 +123,12 @@ export class Tokenizer {
         return;
 
       case '[s]':
-        inlineTokens.push(this.tagOpen('del'));
+        inlineTokens.push(this.tagOpen('deleted'));
         this.next(3);
         return;
 
       case '[/s]':
-        inlineTokens.push(this.tagClose('del'));
+        inlineTokens.push(this.tagClose('deleted'));
         this.next(4);
         return;
 

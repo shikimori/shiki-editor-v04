@@ -1,16 +1,6 @@
-// https://github.com/markdown-it/markdown-it/blob/master/lib/token.js
+// based on https://github.com/markdown-it/markdown-it/blob/master/lib/token.js
 
-/**
- * class Token
- * */
-
-/**
- * new Token(type, tag, nesting)
- *
- * Create new token and fill passed properties.
- * */
 export class Token {
-  // constructor(type, tag, content, nesting, children = null) {
   constructor(type, content, children = null) {
     /**
     * Token#type -> String
