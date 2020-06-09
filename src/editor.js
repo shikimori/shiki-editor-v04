@@ -14,10 +14,11 @@ import {
   Doc,
   Text,
   Paragraph,
-  CodeBlock,
+  Blockquote,
   BulltList,
+  CodeBlock,
+  Image,
   ListItem,
-  Blockquote
 } from './nodes';
 import {
   Strong,
@@ -87,10 +88,11 @@ export default class ShikiEditor extends Emitter {
       new Underline(),
       new Deleted(),
       new CodeInline(),
-      new CodeBlock(),
-      new BulltList(),
-      new ListItem(),
       new Blockquote(),
+      new BulltList(),
+      new CodeBlock(),
+      new Image(),
+      new ListItem(),
       ...this.options.extensions
     ], this);
   }

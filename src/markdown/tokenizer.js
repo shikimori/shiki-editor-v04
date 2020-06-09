@@ -136,6 +136,12 @@ export default class MarkdownTokenizer {
         this.next(4);
         return;
 
+      case '[img]':
+        if (this.processInlineImage(this.bbcode)) {
+          return;
+        }
+        break;
+
       default:
         break;
     }
@@ -159,7 +165,7 @@ export default class MarkdownTokenizer {
     let { index } = this;
     let tag = '`';
     let isFirstSymbolPassed = false;
-    let startIndex;
+    let startIndex = index;
 
     while (index <= this.text.length) {
       index += 1;
@@ -187,6 +193,36 @@ export default class MarkdownTokenizer {
       if (isEnd) {
         return false;
       }
+    }
+
+    return false;
+  }
+
+  processInlineImage(tagStart) {
+    let index = this.index + this.bbcode.length;
+    const tagEnd = '[/img]';
+    const startIndex = index;
+
+    while (index <= this.text.length) {
+      const isEnd = this.text[index] === '\n' || this.text[index] === undefined;
+
+      if (this.text[index] === '[' &&
+          this.text.slice(index, index + tagEnd.length) === tagEnd
+      ) {
+        const src = this.text.slice(startIndex, index);
+        const token = new Token('image');
+        token.attrSet('src', src);
+
+        this.inlineTokens.push(token);
+        this.next(src.length + tagStart.length + tagEnd.length);
+        return true;
+      }
+
+      if (isEnd) {
+        return false;
+      }
+
+      index += 1;
     }
 
     return false;

@@ -443,5 +443,25 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
     });
+
+    describe('image', () => {
+      it('[img]https://test.com[/img]', () => {
+        expect(MarkdownTokenizer.parse('[img]https://test.com[/img]')).to.eql([{
+          content: '',
+          type: 'paragraph_open'
+        }, {
+          content: '[img]https://test.com[/img]',
+          type: 'inline',
+          children: [{
+            content: undefined,
+            type: 'image',
+            attrs: [['src', 'https://test.com']]
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close'
+        }]);
+      });
+    });
   });
 });
