@@ -18,7 +18,7 @@ export default class Node extends Extension {
   }
 
   activeCheck({ type: _type }) {
-    return () => _state => {};
+    return false;
   }
 
   get markdownParserToken() {

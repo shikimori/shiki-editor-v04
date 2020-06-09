@@ -42,6 +42,7 @@ export default function ({ schema, commands, activeChecks }) {
   const marks = [];
   const undos = [undoItem, redoItem];
   const blocks = [];
+  const uploads = [];
 
   function buildMenuItem(type) {
     return new MenuItem({
@@ -58,6 +59,11 @@ export default function ({ schema, commands, activeChecks }) {
     marks.push(buildMenuItem(type));
   });
 
+  ['image'].forEach(type => {
+    if (!schema.nodes[type]) { return; }
+    uploads.push(buildMenuItem(type));
+  });
+
   ['bullet_list', 'blockquote', 'code_block'].forEach(type => {
     if (!schema.nodes[type]) { return; }
     blocks.push(buildMenuItem(type));
@@ -66,6 +72,6 @@ export default function ({ schema, commands, activeChecks }) {
 
   return menuBar({
     floating: true,
-    content: [marks, undos, blocks]
+    content: [marks, undos, uploads, blocks]
   });
 }
