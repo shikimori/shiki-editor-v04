@@ -1,4 +1,8 @@
+// based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/nodes/Image.js
 import { Node } from '../base';
+import { nodeInputRule } from '../commands';
+
+const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
 export default class Image extends Node {
   get name() {
@@ -34,6 +38,15 @@ export default class Image extends Node {
         src: token.attrGet('src')
       })
     };
+  }
+
+  inputRules({ type }) {
+    return [
+      nodeInputRule(IMAGE_INPUT_REGEX, type, match => {
+        const [, src] = match;
+        return { src };
+      })
+    ];
   }
 
   // command({ type }) {
