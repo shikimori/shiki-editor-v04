@@ -61,7 +61,9 @@ function attrs(spec, token) {
 // Code content is represented as a single token with a `content`
 // property in Markdown-it.
 function noOpenClose(type) {
-  return type == 'code_inline' || type == 'code_block' || type == 'fence';
+  return type == 'code_inline' ||
+    type == 'code_block' ||
+    type == 'fence';
 }
 
 function withoutTrailingNewline(str) {

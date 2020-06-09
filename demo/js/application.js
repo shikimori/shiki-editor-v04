@@ -1,9 +1,12 @@
 import delay from 'delay';
+import markdownit from 'markdown-it';
 import ShikiEditor from '../../src/editor';
 
 window.I18n = {
   t: key => `:${key}`
 };
+
+window.markdownTokenizer = markdownit('commonmark', { html: false });
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.editor-container').forEach(container => {
