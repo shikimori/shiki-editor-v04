@@ -49,9 +49,19 @@ export default class Image extends Node {
     ];
   }
 
-  // command({ type }) {
-  //   return () => setBlockType(type);
-  // }
+  command({ type }) {
+    return () => (state, dispatch) => {
+      const src = prompt(I18n.t('frontend.shiki_editor.prompt.image_url'));
+
+      if (src !== null) {
+        const { selection } = state;
+        const position = selection.$cursor ? selection.$cursor.pos : selection.$to.pos;
+        const node = type.create({ src });
+        const transaction = state.tr.insert(position, node);
+        dispatch(transaction);
+      }
+    };
+  }
 
   markdownSerialize(state, node) {
     state.write(`[img]${state.esc(node.attrs.src)}[/img]`);
