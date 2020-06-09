@@ -158,12 +158,12 @@ export default class MarkdownTokenizer {
   processInlineCode() {
     let { index } = this;
     let tag = '`';
-    let startIndex = this;
     let isFirstSymbolPassed = false;
+    let startIndex;
 
     while (index <= this.text.length) {
       index += 1;
-      const isEnd = this.char1 === '\n' || this.char1 === undefined;
+      const isEnd = this.text[index] === '\n' || this.text[index] === undefined;
 
       if (!isFirstSymbolPassed) {
         if (this.text[index] === '`') {
