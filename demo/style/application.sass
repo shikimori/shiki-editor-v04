@@ -1,5 +1,5 @@
 // shikimori globals
-$media_width: 235px
+@import ./globals.scss
 
 // shikimori mixins
 @import ./mixins/flex_column
@@ -7,8 +7,12 @@ $media_width: 235px
 @import ./mixins/responsive
 @import ./mixins/media
 @import ./mixins/media_marker
+@import ./mixins/image_editable
 @import ./mixins/ellipsis2
 @import ./mixins/shikimori
+@import ./mixins/margins
+@import ./mixins/link
+@import ./mixins/icons
 // shikimori blocks
 @import ./blocks/b-quote-v2
 @import ./blocks/b-list
@@ -16,6 +20,10 @@ $media_width: 235px
 @import ./blocks/b-image
 
 @import ./prosemirror
+
+@font-face
+  font-family: 'shikimori'
+  src: url(https://github.com/shikimori/shikimori/raw/master/app/assets/fonts/shikimori.woff2) format('woff2')
 
 *
   box-sizing: border-box
