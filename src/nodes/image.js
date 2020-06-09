@@ -13,15 +13,17 @@ export default class Image extends Node {
       },
       group: 'inline',
       draggable: true,
-      parseDOM: [
-        {
-          tag: 'img[src]',
-          getAttrs: dom => ({
-            src: dom.getAttribute('src')
-          })
-        }
-      ],
-      toDOM: node => ['img', node.attrs]
+      parseDOM: [{
+        tag: 'a.b-image',
+        getAttrs: dom => ({
+          src: dom.getAttribute('href')
+        })
+      }],
+      toDOM: node => [
+        'a',
+        { class: 'b-image unprocessed', href: node.attrs.src },
+        ['img', node.attrs]
+      ]
     };
   }
 
