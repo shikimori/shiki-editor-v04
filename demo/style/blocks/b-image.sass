@@ -1,0 +1,54 @@
+.b-image
+  +media
+
+  &:not(.no-zoom)
+    cursor: zoom-in !important
+
+  &:hover
+    img
+      opacity: 0.85
+
+  &.fixed
+    margin-bottom: 0
+
+    img
+      width: $media_width
+
+  &.no-zoom:hover
+    img
+      opacity: 1
+
+  &.unprocessed img,
+  &.check-width img
+    max-width: $media_width !important
+    max-height: $media_width !important
+
+  .normalized_width
+    max-width: $media_width !important
+
+  .normalized_height
+    max-height: $media_width !important
+
+  .marker
+    +media_marker
+    letter-spacing: 0.25px
+
+    &:empty:before
+      display: none
+
+    &:before
+      +shikimori('🔍')
+      font-size: 12px
+      line-height: 20px
+      padding: 0 5px 0 1px
+
+img
+  &.check-width
+    max-width: $media_width !important
+    max-height: $media_width !important
+
+  &.normalized_width
+    max-width: $media_width !important
+
+  &.normalized_height
+    max-height: $media_width !important

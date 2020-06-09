@@ -29,7 +29,7 @@ export default class Image extends Node {
     return {
       node: 'image',
       getAttrs: token => ({
-        language: token.attrGet('src')
+        src: token.attrGet('src')
       })
     };
   }
