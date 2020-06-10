@@ -8,10 +8,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const common = require('./webpack.config.common.js');
 const chunks = require('./webpack.config.chunks.js');
 
+// const BundleAnalyzerPlugin =
+//   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 module.exports = merge(common, {
   mode: 'production',
   optimization: {
-    minimize: true
+    minimize: true,
+    ...chunks
   },
   module: {
     rules: [
@@ -40,6 +44,6 @@ module.exports = merge(common, {
       cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: true
     })
-  ],
-  ...chunks
+    // new BundleAnalyzerPlugin()
+  ]
 });
