@@ -14,7 +14,7 @@ export default class Em extends Mark {
 
   keys({ type }) {
     return {
-      'Mod-i': (state, dispatch) => this.command({ type })()(state, dispatch)
+      'Mod-i': (state, dispatch) => this.commands({ type })()(state, dispatch)
     };
   }
 

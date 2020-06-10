@@ -14,7 +14,7 @@ export default class Strong extends Mark {
 
   keys({ type }) {
     return {
-      'Mod-b': (state, dispatch) => this.command({ type })()(state, dispatch)
+      'Mod-b': (state, dispatch) => this.commands({ type })()(state, dispatch)
     };
   }
 

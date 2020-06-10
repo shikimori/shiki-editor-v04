@@ -28,7 +28,7 @@ export default class BulletList extends Node {
     };
   }
 
-  command({ type, schema }) {
+  commands({ type, schema }) {
     return () => toggleList(type, schema.nodes.list_item);
   }
 

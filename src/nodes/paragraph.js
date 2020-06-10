@@ -19,7 +19,7 @@ export default class Paragraph extends Node {
     };
   }
 
-  command({ type }) {
+  commands({ type }) {
     return () => setBlockType(type);
   }
 

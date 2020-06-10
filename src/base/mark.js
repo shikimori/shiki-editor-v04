@@ -17,7 +17,7 @@ export default class Mark extends Extension {
     return null;
   }
 
-  command({ type }) {
+  commands({ type }) {
     return () => toggleMark(type);
   }
 

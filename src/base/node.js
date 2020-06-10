@@ -13,7 +13,7 @@ export default class Node extends Extension {
     return null;
   }
 
-  command({ type: _type }) {
+  commands({ type: _type }) {
     return () => _state => {};
   }
 
