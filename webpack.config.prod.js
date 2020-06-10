@@ -6,6 +6,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const common = require('./webpack.config.common.js');
+const chunks = require('./webpack.config.chunks.js');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -39,5 +40,6 @@ module.exports = merge(common, {
       cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: true
     })
-  ]
+  ],
+  ...chunks
 });

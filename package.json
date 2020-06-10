@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "rollup -c",
+    "build:prod": "webpack --config webpack.config.prod.js",
     "lint": "./node_modules/.bin/eslint src/**/*.js test/**/*.js",
     "start": "webpack-dev-server --config webpack.config.dev.js",
     "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config.test.js test/**/*.spec.js --recursive"
@@ -68,6 +69,7 @@
     "rollup": "^2.15.0",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.0.1",
+    "vue": "^2.6.11",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.9.0",
@@ -85,7 +87,22 @@
     "prosemirror-state": "^1.3.3",
     "prosemirror-tables": "^1.1.0",
     "prosemirror-utils": "^0.9.6",
-    "prosemirror-view": "^1.14.13"
+    "prosemirror-view": "^1.14.13",
+    "vue": "^2.6.11"
   },
-  "dependencies": {}
+  "dependencies": {
+    "decko": "^1.2.0",
+    "lodash": "^4.17.15",
+    "prosemirror-inputrules": "^1.1.2",
+    "prosemirror-keymap": "^1.1.4",
+    "prosemirror-menu": "^1.1.4",
+    "prosemirror-model": "^1.10.0",
+    "prosemirror-schema-basic": "^1.1.2",
+    "prosemirror-schema-list": "^1.1.2",
+    "prosemirror-state": "^1.3.3",
+    "prosemirror-tables": "^1.1.0",
+    "prosemirror-utils": "^0.9.6",
+    "prosemirror-view": "^1.14.13",
+    "vue": "^2.6.11"
+  }
 }
