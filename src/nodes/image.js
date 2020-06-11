@@ -1,6 +1,7 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/nodes/Image.js
 import { Node } from '../base';
 import { nodeInputRule } from '../commands';
+import ImageApp from '../vue/image';
 
 const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
@@ -47,23 +48,7 @@ export default class Image extends Node {
   }
 
   get view() {
-    return {
-      props: ['node', 'updateAttrs'],
-      methods: {
-        onChange() {
-          debugger;
-          // this.updateAttrs({
-          //   done: !this.node.attrs.done,
-          // })
-        }
-      },
-      template: `
-        <a class='b-image unprocessed' :href='node.attrs.src'>
-          <div class='controls'><div class='delete' /></div>
-          <img :src='node.attrs.src'>
-        </a>
-      `
-    };
+    return ImageApp;
   }
 
   inputRules({ type }) {

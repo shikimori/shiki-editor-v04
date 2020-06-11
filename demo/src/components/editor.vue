@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import Editor from '../../../src/editor';
 import EditorContent from '../../../src/vue/editor_content';
 
@@ -21,7 +22,7 @@ export default {
       editor: new Editor({
         extensions: [],
         content: this.content
-      }),
+      }, Vue),
       editorContent: this.content
     };
   },

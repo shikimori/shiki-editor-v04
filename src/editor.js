@@ -46,13 +46,14 @@ export default class ShikiEditor extends Emitter {
     content: ''
   }
 
-  constructor(options) {
+  constructor(options, Vue) {
     super(options);
 
     this.options = {
       ...this.options,
       ...options
     };
+    this.Vue = Vue;
 
     this.extensions = this.createExtensions();
     this.element = this.options.element || document.createElement('div');
@@ -227,7 +228,7 @@ export default class ShikiEditor extends Emitter {
             view,
             getPos,
             decorations
-          });
+          }, this.Vue);
         };
 
         return {
