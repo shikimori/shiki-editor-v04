@@ -15,7 +15,7 @@ module.exports = {
   node: {
     fs: 'empty'
   },
-  entry: ['./demo/js/application.js', './demo/style/reset.sass', './demo/style/application.sass'],
+  entry: ['./demo/js/application.js'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js'
@@ -26,43 +26,9 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
-      },
-      {
-        test: /\.html$/,
-        loader: 'raw-loader'
-      },
-      {
-        test: /\.(pdf|gif|png|jpe?g|svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: 'static/'
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts/'
-          }
-        }]
       }
     ]
   },
-  plugins: [
-    new CopyWebpackPlugin([
-      {
-        from: './demo/static/',
-        to: './static/'
-      }
-    ]),
-    ...generateHTMLPlugins()
-  ],
   stats: {
     colors: true
   },

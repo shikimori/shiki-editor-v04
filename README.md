@@ -6,7 +6,7 @@
 yarn install
 cd demo
 yarn install
-yarn run
+yarn start
 ```
 
 Open http://localhost:8088/ in browser.
