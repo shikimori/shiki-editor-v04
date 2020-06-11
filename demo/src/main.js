@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import App from './app.vue';
+import Demo from './demo.vue';
 
 Vue.config.productionTip = false;
 
@@ -8,5 +8,5 @@ window.I18n = {
 };
 
 new Vue({
-  render: h => h(App)
+  render: h => h(Demo)
 }).$mount('#app');
