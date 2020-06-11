@@ -1,7 +1,5 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Editor.js
 
-import { bind } from 'decko';
-
 import { history, undo, redo } from 'prosemirror-history';
 import { EditorState, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
@@ -180,7 +178,7 @@ export default class ShikiEditor extends Emitter {
   createView() {
     return new EditorView(this.element, {
       state: this.createState(),
-      dispatchTransaction: this.dispatchTransaction
+      dispatchTransaction: this.dispatchTransaction.bind(this)
     });
   }
 
@@ -267,7 +265,6 @@ export default class ShikiEditor extends Emitter {
     });
   }
 
-  @bind
   dispatchTransaction(transaction) {
     const { state } = this.state.applyTransaction(transaction);
     this.view.updateState(state);
