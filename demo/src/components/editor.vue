@@ -6,8 +6,7 @@
 
 <script>
 import Vue from 'vue';
-// import { Editor, EditorContent } from '../../../src';
-import { Editor, EditorContent } from '../../../dist/index.es';
+import { Editor, EditorContent } from '../../../src';
 
 export default {
   name: 'Editor',
