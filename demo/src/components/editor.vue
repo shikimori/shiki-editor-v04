@@ -30,6 +30,11 @@ export default {
       return Vue;
     }
   },
+  watch: {
+    content() {
+      this.editor.setContent(this.content);
+    }
+  },
   beforeDestroy() {
     this.editor.destroy();
   }
@@ -39,5 +44,7 @@ export default {
 <style scoped lang='sass'>
 </style>
 <style lang='sass'>
+@import 'node_modules/reset-css/sass/reset'
 @import @/stylesheets/application.sass
+@import @/stylesheets/prosemirror.sass
 </style>
