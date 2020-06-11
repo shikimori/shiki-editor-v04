@@ -1,3 +1,3 @@
-import ShikiEditor from './editor';
+import Editor from './editor';
 
-export { ShikiEditor };
+export { Editor };

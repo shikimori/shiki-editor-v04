@@ -13,6 +13,10 @@ export default class Node extends Extension {
     return null;
   }
 
+  get view() {
+    return null;
+  }
+
   commands({ type: _type }) {
     return () => _state => {};
   }
