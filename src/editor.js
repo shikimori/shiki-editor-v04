@@ -42,7 +42,6 @@ import {
 
 export default class ShikiEditor extends Emitter {
   options = {
-    node: null,
     extensions: [],
     content: ''
   }
@@ -56,6 +55,7 @@ export default class ShikiEditor extends Emitter {
     };
 
     this.extensions = this.createExtensions();
+    this.element = this.options.element || document.createElement('div');
 
     this.nodes = this.createNodes();
     this.marks = this.createMarks();
@@ -83,11 +83,17 @@ export default class ShikiEditor extends Emitter {
     return this.view?.state;
   }
 
-  createExtensions() {
-    return new ExtensionManager([
+  get builtInExtensions() {
+    return [
       new Doc(),
       new Text(),
-      new Paragraph(),
+      new Paragraph()
+    ];
+  }
+
+  createExtensions() {
+    return new ExtensionManager([
+      ...this.builtInExtensions,
       new Strong(),
       new Em(),
       new Underline(),
@@ -171,7 +177,7 @@ export default class ShikiEditor extends Emitter {
   }
 
   createView() {
-    return new EditorView(this.options.node, {
+    return new EditorView(this.element, {
       state: this.createState(),
       dispatchTransaction: this.dispatchTransaction
     });
@@ -241,6 +247,23 @@ export default class ShikiEditor extends Emitter {
       .setMeta('preventUpdate', !emitUpdate);
 
     this.view.dispatch(transaction);
+  }
+
+  setParentComponent(component = null) {
+    if (!component) {
+      return;
+    }
+
+    this.view.setProps({
+      nodeViews: this.initNodeViews({
+        parent: component,
+        extensions: [
+          ...this.builtInExtensions,
+          ...this.options.extensions
+        ],
+        editable: this.options.editable
+      })
+    });
   }
 
   @bind

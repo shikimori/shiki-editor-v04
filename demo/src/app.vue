@@ -2,19 +2,19 @@
   <div class='container'>
     <div class='fc-2'>
       <div class='f-column'>
-        <Editor content='text1' />
-        <textarea rows='10' style='width: 100%' v-model='text1' />
+        <Editor :content='text1' />
+        <textarea v-model='text1' rows='10' style='width: 100%' />
       </div>
       <div class='f-column'>
-        <Editor content='text2'/>
-        <textarea rows='10' style='width: 100%' v-model='text2' />
+        <Editor :content='text2' />
+        <textarea v-model='text2' rows='10' style='width: 100%' />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Editor from './components/editor'
+import Editor from './components/editor';
 
 export default {
   name: 'App',
@@ -49,8 +49,10 @@ test
 > > nope
 > yes`
   })
-}
+};
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
+textarea
+  margin-top: 30px
 </style>
