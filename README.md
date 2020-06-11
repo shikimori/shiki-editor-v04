@@ -1,15 +1,12 @@
 [![Build Status](https://travis-ci.org/shikimori/shiki-editor.svg?branch=master)](https://travis-ci.org/shikimori/shiki-editor)
 
-### Installation
+### Installation & Run
 
 ```sh
 yarn install
-```
-
-### Run
-
-```sh
+cd demo
+yarn install
 yarn run
 ```
 
-Open http://localhost:9009/ in browser.
+Open http://localhost:8088/ in browser.
