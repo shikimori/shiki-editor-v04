@@ -81,7 +81,7 @@ export default class ShikiEditor extends Emitter {
   }
 
   get state() {
-    return this.view?.state;
+    return this.view ? this.view.state : undefined;
   }
 
   get builtInExtensions() {
