@@ -282,4 +282,9 @@ export default class ShikiEditor extends Emitter {
   exportMarkdown() {
     return this.markdownSerializer.serialize(this.state.doc);
   }
+
+  destroy() {
+    if (!this.view) { return; }
+    this.view.destroy();
+  }
 }
