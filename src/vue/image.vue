@@ -1,17 +1,20 @@
 <template>
-  <a
-    class='b-image unprocessed'
+  <span
+    class='b-image unprocessed no-zoom'
     :class='{ "is-prosemirror-selected": selected }'
-    :href='node.attrs.src'
+    :data-src='node.attrs.src'
+    @click='select'
   >
     <div class='controls'>
       <div class='delete' @click='remove' />
     </div>
     <img :src='node.attrs.src'>
-  </a>
+  </span>
 </template>
 
 <script>
+import { NodeSelection } from 'prosemirror-state';
+
 export default {
   props: {
     node: { type: Object, required: true },
@@ -21,11 +24,20 @@ export default {
   },
   methods: {
     remove(e) {
+      e.stopImmediatePropagation();
 
-      e.preventDefault();
-      const position = this.getPos();
       this.view.dispatch(
-        this.view.state.tr.delete(position, position + 1)
+        this.view.state.tr.delete(
+          this.getPos(),
+          this.getPos() + 1
+        )
+      );
+    },
+    select() {
+      this.view.dispatch(
+        this.view.state.tr.setSelection(
+          new NodeSelection(this.view.state.tr.doc.resolve(this.getPos()))
+        )
       );
     }
   }
@@ -41,10 +53,5 @@ export default {
 .b-image:hover .controls,
 .b-image.is-prosemirror-selected .controls {
   display: block;
-}
-
-.b-image:hover img,
-.b-image.is-prosemirror-selected img {
-  opacity: 1 !important;
 }
 </style>
