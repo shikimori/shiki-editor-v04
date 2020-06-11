@@ -1,0 +1,10 @@
+
+.b-image[data-v-1dc8d709]:hover,
+.b-image.is-prosemirror-selected[data-v-1dc8d709] {
+  outline: 3px solid #2b8acc;
+  z-index: 10;
+}
+.b-image:hover .controls[data-v-1dc8d709],
+.b-image.is-prosemirror-selected .controls[data-v-1dc8d709] {
+  display: block;
+}

@@ -14,6 +14,7 @@ var prosemirrorCommands = require('prosemirror-commands');
 var prosemirrorInputrules = require('prosemirror-inputrules');
 var prosemirrorUtils = require('prosemirror-utils');
 var prosemirrorSchemaList = require('prosemirror-schema-list');
+var vue = require('vue');
 var prosemirrorMenu = require('prosemirror-menu');
 var flatten = _interopDefault(require('lodash/flatten'));
 
@@ -390,8 +391,8 @@ var Mark = /*#__PURE__*/function (_Extension) {
   }
 
   _createClass(Mark, [{
-    key: "command",
-    value: function command(_ref) {
+    key: "commands",
+    value: function commands(_ref) {
       var type = _ref.type;
       return function () {
         return prosemirrorCommands.toggleMark(type);
@@ -443,8 +444,8 @@ var Node = /*#__PURE__*/function (_Extension) {
   }
 
   _createClass(Node, [{
-    key: "command",
-    value: function command(_ref) {
+    key: "commands",
+    value: function commands(_ref) {
       var _type = _ref.type;
       return function () {
         return function (_state) {};
@@ -454,9 +455,7 @@ var Node = /*#__PURE__*/function (_Extension) {
     key: "activeCheck",
     value: function activeCheck(_ref2) {
       var _type = _ref2.type;
-      return function () {
-        return function (_state) {};
-      };
+      return false;
     }
   }, {
     key: "markdownSerialize",
@@ -470,6 +469,11 @@ var Node = /*#__PURE__*/function (_Extension) {
     }
   }, {
     key: "schema",
+    get: function get() {
+      return null;
+    }
+  }, {
+    key: "view",
     get: function get() {
       return null;
     }
@@ -568,8 +572,8 @@ var Paragraph = /*#__PURE__*/function (_Node) {
   }
 
   _createClass(Paragraph, [{
-    key: "command",
-    value: function command(_ref) {
+    key: "commands",
+    value: function commands(_ref) {
       var type = _ref.type;
       return function () {
         return prosemirrorCommands.setBlockType(type);
@@ -613,6 +617,19 @@ var Paragraph = /*#__PURE__*/function (_Node) {
 
   return Paragraph;
 }(Node);
+
+function nodeInputRule (regexp, type, getAttrs) {
+  return new prosemirrorInputrules.InputRule(regexp, function (state, match, start, end) {
+    var attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
+    var tr = state.tr;
+
+    if (match[0]) {
+      tr.replaceWith(start - 1, end, type.create(attrs));
+    }
+
+    return tr;
+  });
+}
 
 // https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-commands/src/commands/toggleBlockType.js
 function toggleBlockType (type, toggletype) {
@@ -684,6 +701,164 @@ function toggleWrap (type) {
   };
 }
 
+var Blockquote = /*#__PURE__*/function (_Node) {
+  _inherits(Blockquote, _Node);
+
+  var _super = _createSuper(Blockquote);
+
+  function Blockquote() {
+    _classCallCheck(this, Blockquote);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Blockquote, [{
+    key: "commands",
+    value: function commands(_ref) {
+      var type = _ref.type,
+          schema = _ref.schema;
+      return function () {
+        return toggleWrap(type, schema.nodes.paragraph);
+      };
+    }
+  }, {
+    key: "activeCheck",
+    value: function activeCheck(type, state) {
+      return nodeIsActive(type, state);
+    }
+  }, {
+    key: "keys",
+    value: function keys(_ref2) {
+      var type = _ref2.type;
+      return {
+        'Ctrl->': toggleWrap(type)
+      };
+    }
+  }, {
+    key: "inputRules",
+    value: function inputRules(_ref3) {
+      var type = _ref3.type;
+      return [prosemirrorInputrules.wrappingInputRule(/^\s*>\s$/, type)];
+    }
+  }, {
+    key: "markdownSerialize",
+    value: function markdownSerialize(state, node) {
+      state.wrapBlock('> ', null, node, function () {
+        return state.renderContent(node);
+      });
+    }
+  }, {
+    key: "name",
+    get: function get() {
+      return 'blockquote';
+    }
+  }, {
+    key: "schema",
+    get: function get() {
+      return {
+        content: 'block*',
+        group: 'block',
+        defining: true,
+        draggable: false,
+        parseDOM: [{
+          tag: 'blockquote'
+        }],
+        toDOM: function toDOM() {
+          return ['blockquote', {
+            "class": 'b-quote-v2'
+          }, 0];
+        }
+      };
+    }
+  }]);
+
+  return Blockquote;
+}(Node);
+
+var BulletList = /*#__PURE__*/function (_Node) {
+  _inherits(BulletList, _Node);
+
+  var _super = _createSuper(BulletList);
+
+  function BulletList() {
+    _classCallCheck(this, BulletList);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(BulletList, [{
+    key: "commands",
+    value: function commands(_ref) {
+      var type = _ref.type,
+          schema = _ref.schema;
+      return function () {
+        return toggleList(type, schema.nodes.list_item);
+      };
+    }
+  }, {
+    key: "activeCheck",
+    value: function activeCheck(type, state) {
+      return nodeIsActive(type, state);
+    }
+  }, {
+    key: "inputRules",
+    value: function inputRules(_ref2) {
+      var type = _ref2.type;
+      return [prosemirrorInputrules.wrappingInputRule(/^\s*([-+*])\s$/, type)];
+    }
+  }, {
+    key: "keys",
+    value: function keys(_ref3) {
+      var type = _ref3.type,
+          schema = _ref3.schema;
+      return {
+        'Shift-Ctrl-8': toggleList(type, schema.nodes.list_item)
+      };
+    }
+  }, {
+    key: "markdownSerialize",
+    value: function markdownSerialize(state, node) {
+      state.renderList(node, '  ', function () {
+        return (node.attrs.bullet || '-') + ' ';
+      });
+    }
+  }, {
+    key: "name",
+    get: function get() {
+      return 'bullet_list';
+    }
+  }, {
+    key: "schema",
+    get: function get() {
+      return {
+        content: 'list_item+',
+        group: 'block',
+        attrs: {
+          tight: {
+            "default": false
+          }
+        },
+        parseDOM: [{
+          tag: 'ul',
+          getAttrs: function getAttrs(dom) {
+            return {
+              tight: dom.hasAttribute('data-tight')
+            };
+          }
+        }],
+        toDOM: function toDOM(node) {
+          return ['ul', {
+            'data-tight': node.attrs.tight ? 'true' : null,
+            "class": 'b-list'
+          }, 0];
+        }
+      };
+    }
+  }]);
+
+  return BulletList;
+}(Node);
+
 var CodeBlock = /*#__PURE__*/function (_Node) {
   _inherits(CodeBlock, _Node);
 
@@ -696,8 +871,8 @@ var CodeBlock = /*#__PURE__*/function (_Node) {
   }
 
   _createClass(CodeBlock, [{
-    key: "command",
-    value: function command(_ref) {
+    key: "commands",
+    value: function commands(_ref) {
       var schema = _ref.schema,
           type = _ref.type;
       return function () {
@@ -782,88 +957,168 @@ var CodeBlock = /*#__PURE__*/function (_Node) {
   return CodeBlock;
 }(Node);
 
-var BulletList = /*#__PURE__*/function (_Node) {
-  _inherits(BulletList, _Node);
+//
+var script = {
+  props: {
+    node: {
+      type: Object,
+      required: true
+    },
+    getPos: {
+      type: Function,
+      required: true
+    },
+    view: {
+      type: Object,
+      required: true
+    },
+    selected: {
+      type: Boolean,
+      required: true
+    }
+  },
+  methods: {
+    remove: function remove(e) {
+      e.stopImmediatePropagation();
+      this.view.dispatch(this.view.state.tr["delete"](this.getPos(), this.getPos() + 1));
+    },
+    select: function select() {
+      this.view.dispatch(this.view.state.tr.setSelection(new prosemirrorState.NodeSelection(this.view.state.tr.doc.resolve(this.getPos()))));
+    }
+  }
+};
 
-  var _super = _createSuper(BulletList);
+var _withId = /*#__PURE__*/vue.withScopeId("data-v-1dc8d709");
 
-  function BulletList() {
-    _classCallCheck(this, BulletList);
+vue.pushScopeId("data-v-1dc8d709");
+var _hoisted_1 = { class: "controls" };
+vue.popScopeId();
+
+var render = /*#__PURE__*/_withId(function render(_ctx, _cache) {
+  return (vue.openBlock(), vue.createBlock("span", {
+    class: ["b-image unprocessed no-zoom", { "is-prosemirror-selected": _ctx.selected }],
+    "data-src": _ctx.node.attrs.src,
+    onClick: _cache[2] || (_cache[2] = function ($event) { return (_ctx.select($event)); })
+  }, [
+    vue.createVNode("div", _hoisted_1, [
+      vue.createVNode("div", {
+        class: "delete",
+        onClick: _cache[1] || (_cache[1] = function ($event) { return (_ctx.remove($event)); })
+      })
+    ]),
+    vue.createVNode("img", {
+      src: _ctx.node.attrs.src
+    }, null, 8 /* PROPS */, ["src"])
+  ], 10 /* CLASS, PROPS */, ["data-src"]))
+});
+
+script.render = render;
+script.__scopeId = "data-v-1dc8d709";
+script.__file = "src/vue/image.vue";
+
+var IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
+
+var Image = /*#__PURE__*/function (_Node) {
+  _inherits(Image, _Node);
+
+  var _super = _createSuper(Image);
+
+  function Image() {
+    _classCallCheck(this, Image);
 
     return _super.apply(this, arguments);
   }
 
-  _createClass(BulletList, [{
-    key: "command",
-    value: function command(_ref) {
-      var type = _ref.type,
-          schema = _ref.schema;
-      return function () {
-        return toggleList(type, schema.nodes.list_item);
-      };
-    }
-  }, {
-    key: "activeCheck",
-    value: function activeCheck(type, state) {
-      return nodeIsActive(type, state);
-    }
-  }, {
+  _createClass(Image, [{
     key: "inputRules",
-    value: function inputRules(_ref2) {
-      var type = _ref2.type;
-      return [prosemirrorInputrules.wrappingInputRule(/^\s*([-+*])\s$/, type)];
+    value: function inputRules(_ref) {
+      var type = _ref.type;
+      return [nodeInputRule(IMAGE_INPUT_REGEX, type, function (match) {
+        var _match = _slicedToArray(match, 2),
+            src = _match[1];
+
+        return {
+          src: src
+        };
+      })];
     }
   }, {
-    key: "keys",
-    value: function keys(_ref3) {
-      var type = _ref3.type,
-          schema = _ref3.schema;
-      return {
-        'Shift-Ctrl-8': toggleList(type, schema.nodes.list_item)
+    key: "commands",
+    value: function commands(_ref2) {
+      var type = _ref2.type;
+      return function () {
+        return function (state, dispatch) {
+          var src = prompt(I18n.t('frontend.shiki_editor.prompt.image_url'));
+
+          if (src !== null) {
+            var selection = state.selection;
+            var position = selection.$cursor ? selection.$cursor.pos : selection.$to.pos;
+            var node = type.create({
+              src: src
+            });
+            var transaction = state.tr.insert(position, node);
+            dispatch(transaction);
+          }
+        };
       };
     }
   }, {
     key: "markdownSerialize",
     value: function markdownSerialize(state, node) {
-      state.renderList(node, '  ', function () {
-        return (node.attrs.bullet || '-') + ' ';
-      });
+      state.write("[img]".concat(state.esc(node.attrs.src), "[/img]"));
     }
   }, {
     key: "name",
     get: function get() {
-      return 'bullet_list';
+      return 'image';
     }
   }, {
     key: "schema",
     get: function get() {
       return {
-        content: 'list_item+',
-        group: 'block',
+        inline: true,
         attrs: {
-          tight: {
-            "default": false
-          }
+          src: {}
         },
+        group: 'inline',
+        draggable: true,
         parseDOM: [{
-          tag: 'ul',
+          tag: 'span.b-image',
           getAttrs: function getAttrs(dom) {
             return {
-              tight: dom.hasAttribute('data-tight')
+              src: dom.getAttribute('data-src')
             };
           }
         }],
         toDOM: function toDOM(node) {
-          return ['ul', {
-            'data-tight': node.attrs.tight ? 'true' : null,
-            "class": 'b-list'
-          }, 0];
+          return ['span', {
+            "class": 'b-image unprocessed no-zoom',
+            'data-src': node.attrs.src
+          }, // { class: 'b-image unprocessed', href: node.attrs.src },
+          ['img', node.attrs] ];
         }
       };
     }
+  }, {
+    key: "markdownParserToken",
+    get: function get() {
+      return {
+        node: 'image',
+        getAttrs: function getAttrs(token) {
+          return {
+            src: token.attrGet('src')
+          };
+        }
+      };
+    }
+  }, {
+    key: "view",
+    get: function get() {
+      return script;
+    }
   }]);
 
-  return BulletList;
+  return Image;
 }(Node);
 
 var ListItem = /*#__PURE__*/function (_Node) {
@@ -916,80 +1171,6 @@ var ListItem = /*#__PURE__*/function (_Node) {
   return ListItem;
 }(Node);
 
-var Blockquote = /*#__PURE__*/function (_Node) {
-  _inherits(Blockquote, _Node);
-
-  var _super = _createSuper(Blockquote);
-
-  function Blockquote() {
-    _classCallCheck(this, Blockquote);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(Blockquote, [{
-    key: "command",
-    value: function command(_ref) {
-      var type = _ref.type,
-          schema = _ref.schema;
-      return function () {
-        return toggleWrap(type, schema.nodes.paragraph);
-      };
-    }
-  }, {
-    key: "activeCheck",
-    value: function activeCheck(type, state) {
-      return nodeIsActive(type, state);
-    }
-  }, {
-    key: "keys",
-    value: function keys(_ref2) {
-      var type = _ref2.type;
-      return {
-        'Ctrl->': toggleWrap(type)
-      };
-    }
-  }, {
-    key: "inputRules",
-    value: function inputRules(_ref3) {
-      var type = _ref3.type;
-      return [prosemirrorInputrules.wrappingInputRule(/^\s*>\s$/, type)];
-    }
-  }, {
-    key: "markdownSerialize",
-    value: function markdownSerialize(state, node) {
-      state.wrapBlock('> ', null, node, function () {
-        return state.renderContent(node);
-      });
-    }
-  }, {
-    key: "name",
-    get: function get() {
-      return 'blockquote';
-    }
-  }, {
-    key: "schema",
-    get: function get() {
-      return {
-        content: 'block*',
-        group: 'block',
-        defining: true,
-        draggable: false,
-        parseDOM: [{
-          tag: 'blockquote'
-        }],
-        toDOM: function toDOM() {
-          return ['blockquote', {
-            "class": 'b-quote-v2'
-          }, 0];
-        }
-      };
-    }
-  }]);
-
-  return Blockquote;
-}(Node);
-
 var Strong = /*#__PURE__*/function (_Mark) {
   _inherits(Strong, _Mark);
 
@@ -1009,7 +1190,7 @@ var Strong = /*#__PURE__*/function (_Mark) {
       var type = _ref.type;
       return {
         'Mod-b': function ModB(state, dispatch) {
-          return _this.command({
+          return _this.commands({
             type: type
           })()(state, dispatch);
         }
@@ -1066,7 +1247,7 @@ var Em = /*#__PURE__*/function (_Mark) {
       var type = _ref.type;
       return {
         'Mod-i': function ModI(state, dispatch) {
-          return _this.command({
+          return _this.commands({
             type: type
           })()(state, dispatch);
         }
@@ -1123,7 +1304,7 @@ var Underline = /*#__PURE__*/function (_Mark) {
       var type = _ref.type;
       return {
         'Mod-u': function ModU(state, dispatch) {
-          return _this.command({
+          return _this.commands({
             type: type
           })()(state, dispatch);
         }
@@ -1505,12 +1686,12 @@ var ExtensionManager = /*#__PURE__*/function () {
       var schema = _ref5.schema,
           view = _ref5.view;
       return this.extensions.filter(function (extension) {
-        return extension.command;
-      }).reduce(function (memo, extension) {
+        return extension.commands;
+      }).reduce(function (allCommands, extension) {
         var name = extension.name,
             type = extension.type;
         var commands = {};
-        var value = extension.command(_objectSpread2({
+        var value = extension.commands(_objectSpread2({
           schema: schema
         }, ['node', 'mark'].includes(type) ? {
           type: schema["".concat(type, "s")][name]
@@ -1551,7 +1732,7 @@ var ExtensionManager = /*#__PURE__*/function () {
           handle(name, value);
         }
 
-        return _objectSpread2(_objectSpread2({}, memo), commands);
+        return _objectSpread2(_objectSpread2({}, allCommands), commands);
       }, {});
     }
   }, {
@@ -1610,6 +1791,258 @@ var ExtensionManager = /*#__PURE__*/function () {
   return ExtensionManager;
 }();
 
+//  based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-utils/src/utils/getMarkRange.js
+function getMarkRange() {
+  var $pos = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+  if (!$pos || !type) {
+    return false;
+  }
+
+  var start = $pos.parent.childAfter($pos.parentOffset);
+
+  if (!start.node) {
+    return false;
+  }
+
+  var link = start.node.marks.find(function (mark) {
+    return mark.type === type;
+  });
+
+  if (!link) {
+    return false;
+  }
+
+  var startIndex = $pos.index();
+  var startPos = $pos.start() + start.offset;
+  var endIndex = startIndex + 1;
+  var endPos = startPos + start.node.nodeSize;
+
+  while (startIndex > 0 && link.isInSet($pos.parent.child(startIndex - 1).marks)) {
+    startIndex -= 1;
+    startPos -= $pos.parent.child(startIndex).nodeSize;
+  }
+
+  while (endIndex < $pos.parent.childCount && link.isInSet($pos.parent.child(endIndex).marks)) {
+    endPos += $pos.parent.child(endIndex).nodeSize;
+    endIndex += 1;
+  }
+
+  return {
+    from: startPos,
+    to: endPos
+  };
+}
+
+var ComponentView = /*#__PURE__*/function () {
+  function ComponentView(component, _ref, Vue) {
+    var editor = _ref.editor,
+        extension = _ref.extension,
+        parent = _ref.parent,
+        node = _ref.node,
+        view = _ref.view,
+        decorations = _ref.decorations,
+        getPos = _ref.getPos;
+
+    _classCallCheck(this, ComponentView);
+
+    this.component = component;
+    this.editor = editor;
+    this.extension = extension;
+    this.parent = parent;
+    this.node = node;
+    this.view = view;
+    this.decorations = decorations;
+    this.isNode = !!this.node.marks;
+    this.isMark = !this.isNode;
+    this.getPos = this.isMark ? this.getMarkPos : getPos;
+    this.captureEvents = true;
+    this.Vue = Vue;
+    this.dom = this.createDOM();
+    this.contentDOM = this.vm.$refs.content;
+  }
+
+  _createClass(ComponentView, [{
+    key: "createDOM",
+    value: function createDOM() {
+      var _this = this;
+
+      var Component = this.Vue.extend(this.component);
+      var props = {
+        editor: this.editor,
+        node: this.node,
+        view: this.view,
+        getPos: function getPos() {
+          return _this.getPos();
+        },
+        decorations: this.decorations,
+        selected: false,
+        options: this.extension.options,
+        updateAttrs: function updateAttrs(attrs) {
+          return _this.updateAttrs(attrs);
+        }
+      };
+
+      if (typeof this.extension.setSelection === 'function') {
+        this.setSelection = this.extension.setSelection;
+      }
+
+      if (typeof this.extension.update === 'function') {
+        this.update = this.extension.update;
+      }
+
+      this.vm = new Component({
+        parent: this.parent,
+        propsData: props
+      }).$mount();
+      return this.vm.$el;
+    }
+  }, {
+    key: "update",
+    value: function update(node, decorations) {
+      if (node.type !== this.node.type) {
+        return false;
+      }
+
+      if (node === this.node && this.decorations === decorations) {
+        return true;
+      }
+
+      this.node = node;
+      this.decorations = decorations;
+      this.updateComponentProps({
+        node: node,
+        decorations: decorations
+      });
+      return true;
+    }
+  }, {
+    key: "updateComponentProps",
+    value: function updateComponentProps(props) {
+      var _this2 = this;
+
+      if (!this.vm._props) {
+        return;
+      } // Update props in component
+      // TODO: Avoid mutating a prop directly.
+      // Maybe there is a better way to do this?
+
+
+      var originalSilent = this.Vue.config.silent;
+      this.Vue.config.silent = true;
+      Object.entries(props).forEach(function (_ref2) {
+        var _ref3 = _slicedToArray(_ref2, 2),
+            key = _ref3[0],
+            value = _ref3[1];
+
+        _this2.vm._props[key] = value;
+      }); // this.vm._props.node = node
+      // this.vm._props.decorations = decorations
+
+      this.Vue.config.silent = originalSilent;
+    }
+  }, {
+    key: "updateAttrs",
+    value: function updateAttrs(attrs) {
+      if (!this.view.editable) {
+        return;
+      }
+
+      var state = this.view.state;
+      var type = this.node.type;
+      var pos = this.getPos();
+
+      var newAttrs = _objectSpread2(_objectSpread2({}, this.node.attrs), attrs);
+
+      var transaction = this.isMark ? state.tr.removeMark(pos.from, pos.to, type).addMark(pos.from, pos.to, type.create(newAttrs)) : state.tr.setNodeMarkup(pos, null, newAttrs);
+      this.view.dispatch(transaction);
+    } // prevent a full re-render of the vue component on update
+    // we'll handle prop updates in `update()`
+
+  }, {
+    key: "ignoreMutation",
+    value: function ignoreMutation(mutation) {
+      // allow leaf nodes to be selected
+      if (mutation.type === 'selection') {
+        return false;
+      }
+
+      if (!this.contentDOM) {
+        return true;
+      }
+
+      return !this.contentDOM.contains(mutation.target);
+    } // disable (almost) all prosemirror event listener for node views
+
+  }, {
+    key: "stopEvent",
+    value: function stopEvent(event) {
+      var _this3 = this;
+
+      if (typeof this.extension.stopEvent === 'function') {
+        return this.extension.stopEvent(event);
+      }
+
+      var draggable = !!this.extension.schema.draggable; // support a custom drag handle
+
+      if (draggable && event.type === 'mousedown') {
+        var dragHandle = event.target.closest && event.target.closest('[data-drag-handle]');
+        var isValidDragHandle = dragHandle && (this.dom === dragHandle || this.dom.contains(dragHandle));
+
+        if (isValidDragHandle) {
+          this.captureEvents = false;
+          document.addEventListener('dragend', function () {
+            _this3.captureEvents = true;
+          }, {
+            once: true
+          });
+        }
+      }
+
+      var isCopy = event.type === 'copy';
+      var isPaste = event.type === 'paste';
+      var isCut = event.type === 'cut';
+      var isDrag = event.type.startsWith('drag') || event.type === 'drop';
+
+      if (draggable && isDrag || isCopy || isPaste || isCut) {
+        return false;
+      }
+
+      return this.captureEvents;
+    }
+  }, {
+    key: "selectNode",
+    value: function selectNode() {
+      this.updateComponentProps({
+        selected: true
+      });
+    }
+  }, {
+    key: "deselectNode",
+    value: function deselectNode() {
+      this.updateComponentProps({
+        selected: false
+      });
+    }
+  }, {
+    key: "getMarkPos",
+    value: function getMarkPos() {
+      var pos = this.view.posAtDOM(this.dom);
+      var resolvedPos = this.view.state.doc.resolve(pos);
+      var range = getMarkRange(resolvedPos, this.node.type);
+      return range;
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.vm.$destroy();
+    }
+  }]);
+
+  return ComponentView;
+}();
+
 var icons = _objectSpread2(_objectSpread2({}, prosemirrorMenu.icons), {}, {
   code_inline: prosemirrorMenu.icons.code,
   bullet_list: prosemirrorMenu.icons.bulletList,
@@ -1627,6 +2060,11 @@ var icons = _objectSpread2(_objectSpread2({}, prosemirrorMenu.icons), {}, {
     width: 448,
     height: 512,
     path: 'M 39.30162,88.303422 H 70.084683 V 279.0001 c 0,80.88106 69.050237,146.68975 153.915297,146.68975 84.86506,0 153.91531,-65.80869 153.91531,-146.68975 V 88.303422 h 30.78306 A 15.391532,14.668975 0 0 0 424.0899,73.634447 V 58.965471 A 15.391532,14.668975 0 0 0 408.69835,44.296496 H 285.5661 a 15.391532,14.668975 0 0 0 -15.39153,14.668975 v 14.668976 a 15.391532,14.668975 0 0 0 15.39153,14.668975 h 30.78307 V 279.0001 a 92.349194,88.013856 0 0 1 -184.69838,0 V 88.303422 h 30.78306 A 15.391532,14.668975 0 0 0 177.82539,73.634447 V 58.965471 A 15.391532,14.668975 0 0 0 162.43385,44.296496 H 39.30162 A 15.391532,14.668975 0 0 0 23.910089,58.965471 V 73.634447 A 15.391532,14.668975 0 0 0 39.30162,88.303422 Z M 424.0899,469.69677 H 23.910089 A 15.391532,14.668975 0 0 0 8.5185578,484.36576 v 14.66897 A 15.391532,14.668975 0 0 0 23.910089,513.70371 H 424.0899 a 15.391532,14.668975 0 0 0 15.39152,-14.66898 V 484.36576 A 15.391532,14.668975 0 0 0 424.0899,469.69677 Z'
+  },
+  image: {
+    width: 1000,
+    height: 1000,
+    path: 'M 857.137 669.491 L 757.137 669.491 L 633.137 819.491 L 419.137 669.491 L 239.137 669.491 C 204.471 669.491 174.471 656.491 149.137 630.491 C 123.804 604.491 111.137 574.158 111.137 539.491 L 111.137 379.491 L 3.137 675.491 C -3.529 700.825 3.804 718.158 25.137 727.491 L 705.137 975.491 C 729.137 982.158 745.804 974.158 755.137 951.491 Z M 963.137 579.491 C 973.804 579.491 982.804 575.491 990.137 567.491 C 997.471 559.491 1001.137 550.158 1001.137 539.491 L 1001.137 67.491 C 1001.137 56.825 997.471 47.491 990.137 39.491 C 982.804 31.491 973.804 27.491 963.137 27.491 L 239.137 27.491 C 228.471 27.491 219.471 31.491 212.137 39.491 C 204.804 47.491 201.137 56.825 201.137 67.491 L 201.137 539.491 C 201.137 550.158 204.804 559.491 212.137 567.491 C 219.471 575.491 228.471 579.491 239.137 579.491 L 963.137 579.491 Z M 907.137 127.491 L 907.137 289.491 L 835.137 449.491 L 669.137 389.491 L 539.137 257.491 L 401.137 427.491 L 309.137 213.491 L 309.137 127.491 L 907.137 127.491 Z'
   },
   code_block: {
     width: 1810,
@@ -1674,6 +2112,7 @@ function buildMenu (_ref) {
   var marks = [];
   var undos = [prosemirrorMenu.undoItem, prosemirrorMenu.redoItem];
   var blocks = [];
+  var uploads = [];
 
   function buildMenuItem(type) {
     return new prosemirrorMenu.MenuItem({
@@ -1696,6 +2135,13 @@ function buildMenu (_ref) {
 
     marks.push(buildMenuItem(type));
   });
+  ['image'].forEach(function (type) {
+    if (!schema.nodes[type]) {
+      return;
+    }
+
+    uploads.push(buildMenuItem(type));
+  });
   ['bullet_list', 'blockquote', 'code_block'].forEach(function (type) {
     if (!schema.nodes[type]) {
       return;
@@ -1706,7 +2152,7 @@ function buildMenu (_ref) {
 
   return prosemirrorMenu.menuBar({
     floating: true,
-    content: [marks, undos, blocks]
+    content: [marks, undos, uploads, blocks]
   });
 }
 
@@ -2579,6 +3025,13 @@ var MarkdownTokenizer = /*#__PURE__*/function () {
           inlineTokens.push(this.tagClose('deleted'));
           this.next(4);
           return;
+
+        case '[img]':
+          if (this.processInlineImage(this.bbcode)) {
+            return;
+          }
+
+          break;
       }
 
       if (this.char1 === '`') {
@@ -2600,12 +3053,12 @@ var MarkdownTokenizer = /*#__PURE__*/function () {
     value: function processInlineCode() {
       var index = this.index;
       var tag = '`';
-      var startIndex = this;
       var isFirstSymbolPassed = false;
+      var startIndex = index;
 
       while (index <= this.text.length) {
         index += 1;
-        var isEnd = this.char1 === '\n' || this.char1 === undefined;
+        var isEnd = this.text[index] === '\n' || this.text[index] === undefined;
 
         if (!isFirstSymbolPassed) {
           if (this.text[index] === '`') {
@@ -2628,6 +3081,34 @@ var MarkdownTokenizer = /*#__PURE__*/function () {
         if (isEnd) {
           return false;
         }
+      }
+
+      return false;
+    }
+  }, {
+    key: "processInlineImage",
+    value: function processInlineImage(tagStart) {
+      var index = this.index + this.bbcode.length;
+      var tagEnd = '[/img]';
+      var startIndex = index;
+
+      while (index <= this.text.length) {
+        var isEnd = this.text[index] === '\n' || this.text[index] === undefined;
+
+        if (this.text[index] === '[' && this.text.slice(index, index + tagEnd.length) === tagEnd) {
+          var src = this.text.slice(startIndex, index);
+          var token = new Token('image');
+          token.attrSet('src', src);
+          this.inlineTokens.push(token);
+          this.next(src.length + tagStart.length + tagEnd.length);
+          return true;
+        }
+
+        if (isEnd) {
+          return false;
+        }
+
+        index += 1;
       }
 
       return false;
@@ -2773,19 +3254,20 @@ var ShikiEditor = (_class = (_temp = /*#__PURE__*/function (_Emitter) {
 
   var _super = _createSuper(ShikiEditor);
 
-  function ShikiEditor(options) {
+  function ShikiEditor(options, Vue) {
     var _this;
 
     _classCallCheck(this, ShikiEditor);
 
     _this = _super.call(this, options);
     _this.options = {
-      node: null,
       extensions: [],
       content: ''
     };
     _this.options = _objectSpread2(_objectSpread2({}, _this.options), options);
+    _this.Vue = Vue;
     _this.extensions = _this.createExtensions();
+    _this.element = _this.options.element || document.createElement('div');
     _this.nodes = _this.createNodes();
     _this.marks = _this.createMarks();
     _this.schema = _this.createSchema();
@@ -2809,7 +3291,7 @@ var ShikiEditor = (_class = (_temp = /*#__PURE__*/function (_Emitter) {
   _createClass(ShikiEditor, [{
     key: "createExtensions",
     value: function createExtensions() {
-      return new ExtensionManager([new Doc(), new Text(), new Paragraph(), new Strong(), new Em(), new Underline(), new Em$1(), new CodeInline(), new CodeBlock(), new BulletList(), new ListItem(), new Blockquote()].concat(_toConsumableArray(this.options.extensions)), this);
+      return new ExtensionManager([].concat(_toConsumableArray(this.builtInExtensions), _toConsumableArray(this.options.extensions)), this);
     }
   }, {
     key: "createNodes",
@@ -2881,7 +3363,7 @@ var ShikiEditor = (_class = (_temp = /*#__PURE__*/function (_Emitter) {
   }, {
     key: "createView",
     value: function createView() {
-      return new prosemirrorView.EditorView(this.options.node, {
+      return new prosemirrorView.EditorView(this.element, {
         state: this.createState(),
         dispatchTransaction: this.dispatchTransaction
       });
@@ -2919,6 +3401,34 @@ var ShikiEditor = (_class = (_temp = /*#__PURE__*/function (_Emitter) {
       });
     }
   }, {
+    key: "initNodeViews",
+    value: function initNodeViews(_ref) {
+      var _this2 = this;
+
+      var parent = _ref.parent,
+          extensions = _ref.extensions;
+      return extensions.filter(function (extension) {
+        return ['node', 'mark'].includes(extension.type);
+      }).filter(function (extension) {
+        return extension.view;
+      }).reduce(function (nodeViews, extension) {
+        var nodeView = function nodeView(node, view, getPos, decorations) {
+          var component = extension.view;
+          return new ComponentView(component, {
+            editor: _this2,
+            extension: extension,
+            parent: parent,
+            node: node,
+            view: view,
+            getPos: getPos,
+            decorations: decorations
+          }, _this2.Vue);
+        };
+
+        return _objectSpread2(_objectSpread2({}, nodeViews), {}, _defineProperty({}, extension.name, nodeView));
+      }, {});
+    }
+  }, {
     key: "setContent",
     value: function setContent(content) {
       var emitUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -2929,6 +3439,23 @@ var ShikiEditor = (_class = (_temp = /*#__PURE__*/function (_Emitter) {
       var selection = prosemirrorState.TextSelection.create(doc, 0, doc.content.size);
       var transaction = tr.setSelection(selection).replaceSelectionWith(document, false).setMeta('preventUpdate', !emitUpdate);
       this.view.dispatch(transaction);
+    }
+  }, {
+    key: "setParentComponent",
+    value: function setParentComponent() {
+      var component = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (!component) {
+        return;
+      }
+
+      this.view.setProps({
+        nodeViews: this.initNodeViews({
+          parent: component,
+          extensions: [].concat(_toConsumableArray(this.builtInExtensions), _toConsumableArray(this.options.extensions)),
+          editable: this.options.editable
+        })
+      });
     }
   }, {
     key: "dispatchTransaction",
@@ -2952,16 +3479,62 @@ var ShikiEditor = (_class = (_temp = /*#__PURE__*/function (_Emitter) {
       return this.markdownSerializer.serialize(this.state.doc);
     }
   }, {
+    key: "destroy",
+    value: function destroy() {
+      if (!this.view) {
+        return;
+      }
+
+      this.view.destroy();
+    }
+  }, {
     key: "state",
     get: function get() {
       var _this$view;
 
       return (_this$view = this.view) === null || _this$view === void 0 ? void 0 : _this$view.state;
     }
+  }, {
+    key: "builtInExtensions",
+    get: function get() {
+      return [new Doc(), new Text(), new Paragraph(), new Strong(), new Em(), new Underline(), new Em$1(), new CodeInline(), new Blockquote(), new BulletList(), new CodeBlock(), new Image(), new ListItem()];
+    }
   }]);
 
   return ShikiEditor;
 }(Emitter), _temp), (_applyDecoratedDescriptor(_class.prototype, "dispatchTransaction", [decko.bind], Object.getOwnPropertyDescriptor(_class.prototype, "dispatchTransaction"), _class.prototype)), _class);
 
-exports.ShikiEditor = ShikiEditor;
+var editor_content = {
+  props: {
+    editor: {
+      type: Object,
+      required: true
+    }
+  },
+  watch: {
+    editor: {
+      immediate: true,
+      handler: function handler(editor) {
+        var _this = this;
+
+        if (editor && editor.element) {
+          this.$nextTick(function () {
+            _this.$el.appendChild(editor.element.firstChild);
+
+            editor.setParentComponent(_this);
+          });
+        }
+      }
+    }
+  },
+  render: function render(createElement) {
+    return createElement('div');
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.editor.element = this.$el;
+  }
+};
+
+exports.Editor = ShikiEditor;
+exports.EditorContent = editor_content;
 //# sourceMappingURL=index.js.map

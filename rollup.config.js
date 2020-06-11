@@ -1,6 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve';
+import css from 'rollup-plugin-css-only';
 import buble from '@rollup/plugin-buble';
 import babel from '@rollup/plugin-babel';
+import vue from 'rollup-plugin-vue';
 
 module.exports = {
   input: './src/index.js',
@@ -14,6 +16,8 @@ module.exports = {
     sourcemap: true
   }],
   plugins: [
+    vue(),
+    css(),
     babel({ babelHelpers: 'bundled' }),
     resolve(),
     buble()

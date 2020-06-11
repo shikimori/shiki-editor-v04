@@ -1,7 +1,7 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/nodes/Image.js
 import { Node } from '../base';
 import { nodeInputRule } from '../commands';
-import ImageApp from '../vue/image';
+import ImageApp from '../vue/image.vue';
 
 const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
