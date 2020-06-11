@@ -152,7 +152,8 @@ export default class MarkdownTokenizer {
       }
     }
 
-    if (inlineTokens[inlineTokens.length - 1]?.type !== 'text') {
+    const prevToken = inlineTokens[inlineTokens.length - 1];
+    if (!prevToken || prevToken.type !== 'text') {
       inlineTokens.push(new Token('text', ''));
     }
     const token = inlineTokens[inlineTokens.length - 1];
