@@ -65,7 +65,6 @@
     "prosemirror-utils": "^0.9.6",
     "prosemirror-view": "^1.14.13",
     "raw-loader": "^4.0.1",
-    "reset-css": "5.0.1",
     "rollup": "^2.15.0",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.0.1",
