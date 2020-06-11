@@ -2,7 +2,7 @@
   "name": "shiki-editor",
   "title": "Shikimori text editor",
   "description": "Shikimori text editor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/index.es.js",
   "author": "morr",
   "license": "OSL-3.0",
