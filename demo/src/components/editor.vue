@@ -1,10 +1,11 @@
 <template>
   <div>
-    <EditorContent :editor='editor' />
+    <EditorContent :editor='editor' :vue='Vue' />
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import Editor from '../../../src/editor';
 import EditorContent from '../../../src/vue/editor_content';
 
@@ -23,6 +24,11 @@ export default {
         content: this.content
       })
     };
+  },
+  computed: {
+    Vue() {
+      return Vue;
+    }
   },
   beforeDestroy() {
     this.editor.destroy();

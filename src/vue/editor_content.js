@@ -1,9 +1,7 @@
 export default {
   props: {
-    editor: {
-      default: null,
-      type: Object
-    }
+    vue: { type: Function, required: true },
+    editor: { type: Object, required: true }
   },
 
   watch: {
@@ -13,7 +11,7 @@ export default {
         if (editor && editor.element) {
           this.$nextTick(() => {
             this.$el.appendChild(editor.element.firstChild);
-            editor.setParentComponent(this);
+            editor.setParentComponent(this, this.vue);
           });
         }
       }

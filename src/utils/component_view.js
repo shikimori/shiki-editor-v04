@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import getMarkRange from './get_mark_range';
 
 export default class ComponentView {
@@ -10,7 +8,8 @@ export default class ComponentView {
     node,
     view,
     decorations,
-    getPos
+    getPos,
+    Vue
   }) {
     this.component = component;
     this.editor = editor;
@@ -25,10 +24,11 @@ export default class ComponentView {
     this.captureEvents = true;
     this.dom = this.createDOM();
     this.contentDOM = this.vm.$refs.content;
+    this.Vue = Vue;
   }
 
   createDOM() {
-    const Component = Vue.extend(this.component);
+    const Component = this.Vue.extend(this.component);
     const props = {
       editor: this.editor,
       node: this.node,
@@ -84,15 +84,15 @@ export default class ComponentView {
     // Update props in component
     // TODO: Avoid mutating a prop directly.
     // Maybe there is a better way to do this?
-    const originalSilent = Vue.config.silent;
-    Vue.config.silent = true;
+    const originalSilent = this.Vue.config.silent;
+    this.Vue.config.silent = true;
 
     Object.entries(props).forEach(([key, value]) => {
       this.vm._props[key] = value;
     });
     // this.vm._props.node = node
     // this.vm._props.decorations = decorations
-    Vue.config.silent = originalSilent;
+    this.Vue.config.silent = originalSilent;
   }
 
   updateAttrs(attrs) {

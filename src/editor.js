@@ -249,13 +249,14 @@ export default class ShikiEditor extends Emitter {
     this.view.dispatch(transaction);
   }
 
-  setParentComponent(component = null) {
+  setParentComponent(component = null, Vue) {
     if (!component) {
       return;
     }
 
     this.view.setProps({
       nodeViews: this.initNodeViews({
+        Vue,
         parent: component,
         extensions: [
           ...this.builtInExtensions,
