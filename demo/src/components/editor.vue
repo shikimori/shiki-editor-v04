@@ -22,7 +22,8 @@ export default {
       editor: new Editor({
         extensions: [],
         content: this.content
-      })
+      }),
+      editorContent: this.content
     };
   },
   computed: {
@@ -32,8 +33,16 @@ export default {
   },
   watch: {
     content() {
-      this.editor.setContent(this.content);
+      if (this.content !== this.editorContent) {
+        this.editor.setContent(this.content);
+      }
     }
+  },
+  created() {
+    this.editor.on('update', () => {
+      this.editorContent = this.editor.exportMarkdown();
+      this.$emit('update', this.editorContent);
+    });
   },
   beforeDestroy() {
     this.editor.destroy();

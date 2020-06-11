@@ -2,12 +2,18 @@
   <div class='container'>
     <div class='fc-2'>
       <div class='f-column'>
-        <Editor :content='text1' />
-        <textarea v-model='text1' rows='10' style='width: 100%' />
+        <Editor
+          :content='text1'
+          @update='(value) => text1 = value'
+        />
+        <textarea v-model='text1' rows='10' />
       </div>
       <div class='f-column'>
-        <Editor :content='text2' />
-        <textarea v-model='text2' rows='10' style='width: 100%' />
+        <Editor
+          :content='text2'
+          @update='(value) => text2 = value'
+        />
+        <textarea v-model='text2' rows='10' />
       </div>
     </div>
   </div>
@@ -55,4 +61,5 @@ test
 <style scoped lang='sass'>
 textarea
   margin-top: 30px
+  width: 100%
 </style>
