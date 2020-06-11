@@ -25,13 +25,14 @@ export default class Image extends Node {
       }],
       toDOM: node => [
         'a',
-        { class: 'b-image unprocessed', href: node.attrs.src },
-        ['img', node.attrs],
-        [
-          'div',
-          { class: 'controls' },
-          ['div', { class: 'delete' }]
-        ]
+        { class: 'b-image unprocessed' },
+        // { class: 'b-image unprocessed', href: node.attrs.src },
+        ['img', node.attrs]
+        // [
+        //   'div',
+        //   { class: 'controls' },
+        //   ['div', { class: 'delete' }]
+        // ]
       ]
     };
   }
@@ -42,6 +43,26 @@ export default class Image extends Node {
       getAttrs: token => ({
         src: token.attrGet('src')
       })
+    };
+  }
+
+  get view() {
+    return {
+      props: ['node', 'updateAttrs'],
+      methods: {
+        onChange() {
+          debugger;
+          // this.updateAttrs({
+          //   done: !this.node.attrs.done,
+          // })
+        }
+      },
+      template: `
+        <a class='b-image unprocessed' :href='node.attrs.src'>
+          <div class='controls'><div class='delete' /></div>
+          <img :src='node.attrs.src'>
+        </a>
+      `
     };
   }
 

@@ -1,6 +1,5 @@
 export default {
   props: {
-    vue: { type: Function, required: true },
     editor: { type: Object, required: true }
   },
 
@@ -11,7 +10,7 @@ export default {
         if (editor && editor.element) {
           this.$nextTick(() => {
             this.$el.appendChild(editor.element.firstChild);
-            editor.setParentComponent(this, this.vue);
+            editor.setParentComponent(this);
           });
         }
       }

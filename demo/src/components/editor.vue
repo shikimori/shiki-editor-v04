@@ -1,11 +1,10 @@
 <template>
   <div>
-    <EditorContent :editor='editor' :vue='Vue' />
+    <EditorContent :editor='editor' />
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
 import Editor from '../../../src/editor';
 import EditorContent from '../../../src/vue/editor_content';
 
@@ -25,11 +24,6 @@ export default {
       }),
       editorContent: this.content
     };
-  },
-  computed: {
-    Vue() {
-      return Vue;
-    }
   },
   watch: {
     content() {

@@ -87,13 +87,7 @@ export default class ShikiEditor extends Emitter {
     return [
       new Doc(),
       new Text(),
-      new Paragraph()
-    ];
-  }
-
-  createExtensions() {
-    return new ExtensionManager([
-      ...this.builtInExtensions,
+      new Paragraph(),
       new Strong(),
       new Em(),
       new Underline(),
@@ -103,7 +97,13 @@ export default class ShikiEditor extends Emitter {
       new BulltList(),
       new CodeBlock(),
       new Image(),
-      new ListItem(),
+      new ListItem()
+    ];
+  }
+
+  createExtensions() {
+    return new ExtensionManager([
+      ...this.builtInExtensions,
       ...this.options.extensions
     ], this);
   }
@@ -249,14 +249,13 @@ export default class ShikiEditor extends Emitter {
     this.view.dispatch(transaction);
   }
 
-  setParentComponent(component = null, Vue) {
+  setParentComponent(component = null) {
     if (!component) {
       return;
     }
 
     this.view.setProps({
       nodeViews: this.initNodeViews({
-        Vue,
         parent: component,
         extensions: [
           ...this.builtInExtensions,
