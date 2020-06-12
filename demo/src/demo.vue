@@ -33,12 +33,12 @@ export default {
   data: () => ({
     text1: `**test**
 `,
-    text2: `B[b]old[/b]
-I[i]talic[/i]
-U[u]nderlined[/u]
-S[s]triked[/s]
-C\`ode\`
-L[url=https://github.com/shikimori/shiki-editor]ink[/url]
+    text2: `B[b]old tex[/b]t
+I[i]talic tex[/i]t
+U[u]nderlined tex[/u]t
+S[s]triked tex[/s]t
+C\`ode tex\`t
+L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
 Image
 [img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
 \`\`\`
