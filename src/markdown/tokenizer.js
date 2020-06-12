@@ -200,14 +200,12 @@ export default class MarkdownTokenizer {
   }
 
   processInlineCode() {
-    let { index } = this;
+    let index = this.index + 1;
     let tag = '`';
     let isFirstSymbolPassed = false;
     let startIndex = index;
 
     while (index <= this.text.length) {
-      index += 1;
-
       const char = this.text[index];
       const isEnd = char === '\n' || char === undefined;
 
@@ -217,22 +215,23 @@ export default class MarkdownTokenizer {
         } else {
           startIndex = index;
           isFirstSymbolPassed = true;
+          break;
         }
-        continue;
-      }
-
-      if (char === '`' &&
-          this.text.slice(index, index + tag.length) === tag
-      ) {
-        const code = this.text.slice(startIndex, index);
-        this.inlineTokens.push(new Token('code_inline', code));
-        this.next(code.length + tag.length * 2);
-        return true;
       }
 
       if (isEnd) {
         return false;
       }
+
+      index += 1;
+    }
+
+
+    const code = extractUntil(this.text, tag, startIndex);
+    if (code ) {
+      this.inlineTokens.push(new Token('code_inline', code));
+      this.next(code.length + tag.length * 2);
+      return true;
     }
 
     return false;

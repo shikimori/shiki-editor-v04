@@ -1,13 +1,5 @@
-const MAX_BBCODE_SIZE = 10;
-
-export function extractBbCode(text, startIndex) {
-  const sequence = extractUntil(
-    text,
-    ']',
-    startIndex,
-    startIndex + MAX_BBCODE_SIZE
-  );
-
+export function extractBbCode(text, startIndex, maxIndex) {
+  const sequence = extractUntil(text, ']', startIndex, maxIndex);
   return sequence ? sequence + ']' : null;
 }
 
