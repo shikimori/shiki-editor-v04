@@ -21,7 +21,7 @@ export default class MarkdownTokenizer {
 
     this.tokens = [];
     this.inlineTokens = [];
-    this.marksStack = []
+    this.marksStack = [];
   }
 
   static parse(text) {
@@ -48,6 +48,10 @@ export default class MarkdownTokenizer {
     return this.char1 === '[' ?
       extractBbCode(this.text, this.index, this.index + this.MAX_BBCODE_SIZE) :
       null;
+  }
+
+  get lastMark() {
+    return this.marksStack[this.marksStack.length - 1];
   }
 
   get seq2() {
@@ -125,7 +129,7 @@ export default class MarkdownTokenizer {
   }
 
   processInline() {
-    const { inlineTokens, bbcode, seq5 } = this;
+    const { inlineTokens, bbcode, seq2, seq5 } = this;
 
     switch (bbcode) {
       case '[b]':
@@ -180,6 +184,15 @@ export default class MarkdownTokenizer {
       }
     }
 
+    if (seq2 === '**') {
+      if (this.lastMark !== seq2) {
+        this.processMarkOpen('strong', seq2);
+      } else {
+        this.processMarkClose('strong', seq2, seq2);
+      }
+      return;
+    }
+
     if (seq5 === '[url=') {
       if (this.processInlineLink(seq5)) {
         return;
@@ -203,9 +216,7 @@ export default class MarkdownTokenizer {
   }
 
   processMarkClose(type, bbcode, openBbcode) {
-    const priorMark = this.marksStack[this.marksStack.length - 1];
-
-    if (priorMark === openBbcode) {
+    if (this.lastMark === openBbcode) {
       this.marksStack.pop();
       this.inlineTokens.push(this.tagClose(type));
       this.next(bbcode.length);
