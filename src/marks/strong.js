@@ -33,8 +33,8 @@ export default class Strong extends Mark {
 
   get markdownSerializerToken() {
     return {
-      open: '**',
-      close: '**',
+      open: '[b]',
+      close: '[/b]',
       mixable: true,
       expelEnclosingWhitespace: true
     };
