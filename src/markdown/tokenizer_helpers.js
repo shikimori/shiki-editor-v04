@@ -12,7 +12,7 @@ export function extractBbCode(text, startIndex) {
 }
 
 export function extractUntil(text, startIndex, sequence, maxIndex) {
-  for (let i = startIndex + 1; i <= maxIndex || text.length; i++) {
+  for (let i = startIndex + 1; i <= (maxIndex || text.length); i++) {
     const char = text[i];
     const isEnd = char === '\n' || char === undefined;
 
