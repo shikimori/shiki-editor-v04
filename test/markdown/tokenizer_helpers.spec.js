@@ -1,10 +1,20 @@
 import { expect } from 'chai';
 import {
   extractBbCode,
-  extractUntil
+  extractUntil,
+  hasInlineSequence
 } from '../../src/markdown/tokenizer_helpers';
 
 describe('tokenizer_helpers', () => {
+  it('extractBbCode', () => {
+    expect(extractBbCode('test[zxc]qwe', 4)).to.eq('[zxc]');
+    expect(extractBbCode('test[zxc]qwe', 1)).to.eq('est[zxc]');
+
+    expect(extractBbCode('test[zxcqwe', 1)).to.eq(null);
+
+    expect(extractBbCode('test[zxc\n]qwe', 1)).to.eq(null);
+  });
+
   it('extractUntil', () => {
     expect(extractUntil('te1st', '1', 0)).to.eq('te');
     expect(extractUntil('te1st', '1', 1)).to.eq('e');
@@ -18,12 +28,16 @@ describe('tokenizer_helpers', () => {
     expect(extractUntil('te1st', '1', 0, 1)).to.eq(null);
   });
 
-  it('extractBbCode', () => {
-    expect(extractBbCode('test[zxc]qwe', 4)).to.eq('[zxc]');
-    expect(extractBbCode('test[zxc]qwe', 1)).to.eq('est[zxc]');
+  it('hasInlineSequence', () => {
+    expect(hasInlineSequence('te1st', '1', 0)).to.eq(true);
+    expect(hasInlineSequence('te1st', '1', 1)).to.eq(true);
+    expect(hasInlineSequence('te1st', '1', 2)).to.eq(false);
 
-    expect(extractBbCode('test[zxcqwe', 1)).to.eq(null);
+    expect(hasInlineSequence('te1st', 'st', 0)).to.eq(true);
 
-    expect(extractBbCode('test[zxc\n]qwe', 1)).to.eq(null);
+    expect(hasInlineSequence('te1\nst', 'st', 0)).to.eq(false);
+
+    expect(hasInlineSequence('te1st', '1', 0, 99)).to.eq(true);
+    expect(hasInlineSequence('te1st', '1', 0, 1)).to.eq(false);
   });
 });
