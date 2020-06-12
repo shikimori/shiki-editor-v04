@@ -231,7 +231,6 @@ export default class MarkdownTokenizer {
       index += 1;
     }
 
-
     const code = extractUntil(this.text, tag, startIndex);
     if (code) {
       this.inlineTokens.push(new Token('code_inline', code));

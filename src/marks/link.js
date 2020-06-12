@@ -18,9 +18,7 @@ export default class Link extends Mark {
   get schema() {
     return {
       attrs: {
-        href: {
-          default: null
-        }
+        href: { default: '' }
       },
       inclusive: false,
       parseDOM: [
@@ -33,7 +31,9 @@ export default class Link extends Mark {
       ],
       toDOM: node => ['a', {
         ...node.attrs,
-        rel: 'noopener noreferrer nofollow'
+        class: 'b-link',
+        rel: 'noopener noreferrer nofollow',
+        target: '_blank'
       }, 0]
     };
   }
@@ -78,5 +78,14 @@ export default class Link extends Mark {
         }
       })
     ];
+  }
+
+  get markdownParserToken() {
+    return {
+      mark: 'link',
+      getAttrs: token => ({
+        href: token.attrGet('href')
+      })
+    };
   }
 }
