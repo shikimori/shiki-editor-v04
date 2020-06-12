@@ -23,7 +23,8 @@ import {
   Em,
   Underline,
   Deleted,
-  CodeInline
+  CodeInline,
+  Link
 } from './marks';
 import {
   ExtensionManager,
@@ -89,6 +90,7 @@ export default class ShikiEditor extends Emitter {
       new Paragraph(),
       new Strong(),
       new Em(),
+      new Link(),
       new Underline(),
       new Deleted(),
       new CodeInline(),

@@ -29,16 +29,16 @@ export default {
   },
   data: () => ({
     text1: `qwe
-123 [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img] 456
-zxc
-[img]https://s1.1zoom.ru/big3/276/376565-alexfas01.jpg[/img]`,
+https://kawai.shikimori.one/system/users/x160/1.png
+[url=https://ya.ru]test[/url]
+`,
     text2: `aa [u]te[/u]st
 test0[i]test1[b]test2[/b]test3[/i]test4[s]test5[/s]test6\`test7\`
 \`\`\`
 code block
 \`\`\`
 zzz
-[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img]
+[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
 xxx
 \`\`\`css
 css code block
