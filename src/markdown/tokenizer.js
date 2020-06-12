@@ -202,10 +202,12 @@ export default class MarkdownTokenizer {
 
     while (index <= this.text.length) {
       index += 1;
-      const isEnd = this.text[index] === '\n' || this.text[index] === undefined;
+
+      const char = this.text[index];
+      const isEnd = char === '\n' || char === undefined;
 
       if (!isFirstSymbolPassed) {
-        if (this.text[index] === '`') {
+        if (char === '`') {
           tag += '`';
         } else {
           startIndex = index;
@@ -214,7 +216,7 @@ export default class MarkdownTokenizer {
         continue;
       }
 
-      if (this.text[index] === '`' &&
+      if (char === '`' &&
           this.text.slice(index, index + tag.length) === tag
       ) {
         const code = this.text.slice(startIndex, index);
