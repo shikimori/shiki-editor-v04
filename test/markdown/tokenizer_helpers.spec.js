@@ -6,16 +6,16 @@ import {
 
 describe('tokenizer_helpers', () => {
   it('extractUntil', () => {
-    expect(extractUntil('te1st', 0, '1')).to.eq('te');
-    expect(extractUntil('te1st', 1, '1')).to.eq('e');
-    expect(extractUntil('te1st', 2, '1')).to.eq(null);
+    expect(extractUntil('te1st', '1', 0)).to.eq('te');
+    expect(extractUntil('te1st', '1', 1)).to.eq('e');
+    expect(extractUntil('te1st', '1', 2)).to.eq(null);
 
-    expect(extractUntil('te1st', 0, 'st')).to.eq('te1');
+    expect(extractUntil('te1st', 'st', 0)).to.eq('te1');
 
-    expect(extractUntil('te1\nst', 0, 'st')).to.eq(null);
+    expect(extractUntil('te1\nst', 'st', 0)).to.eq(null);
 
-    expect(extractUntil('te1st', 0, '1', 99)).to.eq('te');
-    expect(extractUntil('te1st', 0, '1', 1)).to.eq(null);
+    expect(extractUntil('te1st', '1', 0, 99)).to.eq('te');
+    expect(extractUntil('te1st', '1', 0, 1)).to.eq(null);
   });
 
   it('extractBbCode', () => {

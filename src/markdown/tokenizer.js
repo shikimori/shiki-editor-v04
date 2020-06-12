@@ -1,7 +1,10 @@
 import Token from './token';
 import flatten from 'lodash/flatten';
 
-import { extractBbCode } from './tokenizer_helpers';
+import {
+  extractBbCode,
+  extractUntil
+} from './tokenizer_helpers';
 
 export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
@@ -10,6 +13,8 @@ export default class MarkdownTokenizer {
     list_item: 'li',
     underline: 'span'
   }
+  MAX_BBCODE_SIZE = 10;
+  MAX_URL_SIZE = 512;
 
   constructor(text) {
     this.text = text;
@@ -40,7 +45,7 @@ export default class MarkdownTokenizer {
 
   get bbcode() {
     return this.char1 === '[' ?
-      extractBbCode(this.text, this.index) :
+      extractBbCode(this.text, this.index, this.index + this.MAX_BBCODE_SIZE) :
       null;
   }
 
@@ -239,28 +244,15 @@ export default class MarkdownTokenizer {
   processInlineImage(tagStart) {
     let index = this.index + tagStart.length;
     const tagEnd = '[/img]';
-    const startIndex = index;
 
-    while (index <= this.text.length) {
-      const isEnd = this.text[index] === '\n' || this.text[index] === undefined;
+    const src = extractUntil(this.text, tagEnd, index, index + 255);
 
-      if (this.text[index] === '[' &&
-          this.text.slice(index, index + tagEnd.length) === tagEnd
-      ) {
-        const src = this.text.slice(startIndex, index);
-        const token = new Token('image');
-        token.attrSet('src', src);
-
-        this.inlineTokens.push(token);
-        this.next(src.length + tagStart.length + tagEnd.length);
-        return true;
-      }
-
-      if (isEnd) {
-        return false;
-      }
-
-      index += 1;
+    if (src) {
+      const token = new Token('image');
+      token.attrSet('src', src);
+      this.inlineTokens.push(token);
+      this.next(src.length + tagStart.length + tagEnd.length);
+      return true;
     }
 
     return false;

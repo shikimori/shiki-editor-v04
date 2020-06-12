@@ -3,15 +3,15 @@ const MAX_BBCODE_SIZE = 10;
 export function extractBbCode(text, startIndex) {
   const sequence = extractUntil(
     text,
-    startIndex,
     ']',
+    startIndex,
     startIndex + MAX_BBCODE_SIZE
   );
 
   return sequence ? sequence + ']' : null;
 }
 
-export function extractUntil(text, startIndex, sequence, maxIndex) {
+export function extractUntil(text, sequence, startIndex, maxIndex) {
   for (let i = startIndex + 1; i <= (maxIndex || text.length); i++) {
     const char = text[i];
     const isEnd = char === '\n' || char === undefined;
