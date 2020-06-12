@@ -184,25 +184,25 @@ export default class MarkdownTokenizer {
         break;
     }
 
-    if (seq2 === '**' && seq3 !== '***') {
-      if (this.lastMark !== seq2) {
-        if (this.processMarkOpen('strong', '**', '**')) { return; }
-      } else {
-        if (this.processMarkClose('strong', '**', '**')) { return; }
-      }
-    }
+    // if (seq2 === '**' && seq3 !== '***') {
+    //   if (this.lastMark !== seq2) {
+    //     if (this.processMarkOpen('strong', '**', '**')) { return; }
+    //   } else {
+    //     if (this.processMarkClose('strong', '**', '**')) { return; }
+    //   }
+    // }
 
     if (char1 === '`') {
       if (this.processInlineCode()) { return; }
     }
 
-    if (char1 == '*' && seq2 !== '**') {
-      if (this.lastMark !== char1) {
-        if (this.processMarkOpen('em', '*', '*')) { return; }
-      } else {
-        if (this.processMarkClose('em', '*', '*')) { return; }
-      }
-    }
+    // if (char1 == '*' && seq2 !== '**') {
+    //   if (this.lastMark !== char1) {
+    //     if (this.processMarkOpen('em', '*', '*')) { return; }
+    //   } else {
+    //     if (this.processMarkClose('em', '*', '*')) { return; }
+    //   }
+    // }
 
     if (seq5 === '[url=') {
       if (this.processInlineLink(seq5)) { return; }
