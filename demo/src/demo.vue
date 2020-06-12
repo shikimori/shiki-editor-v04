@@ -22,6 +22,9 @@
 <script>
 import Editor from './components/editor';
 
+import markdownit from 'markdown-it';
+window.markdownTokenizer = markdownit('commonmark', { html: false });
+
 export default {
   name: 'App',
   components: {
