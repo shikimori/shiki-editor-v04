@@ -69,6 +69,12 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
+      it('[b]z', () => {
+        expect(MarkdownTokenizer.parse('[b]z')).to.eql([
+          ...text('[b]z')
+        ]);
+      });
+
       it('z[/b]', () => {
         expect(MarkdownTokenizer.parse('z[/b]')).to.eql([
           ...text('z[/b]')
@@ -96,6 +102,18 @@ describe('MarkdownTokenizer', () => {
           content: '',
           type: 'paragraph_close'
         }]);
+      });
+
+      it('**z', () => {
+        expect(MarkdownTokenizer.parse('**z')).to.eql([
+          ...text('**z')
+        ]);
+      });
+
+      it('z**', () => {
+        expect(MarkdownTokenizer.parse('z**')).to.eql([
+          ...text('z**')
+        ]);
       });
 
       it('a[b]zxc[/b]A', () => {

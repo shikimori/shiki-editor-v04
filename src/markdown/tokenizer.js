@@ -3,7 +3,8 @@ import flatten from 'lodash/flatten';
 
 import {
   extractBbCode,
-  extractUntil
+  extractUntil,
+  hasInlineSequence
 } from './tokenizer_helpers';
 
 export default class MarkdownTokenizer {
@@ -140,45 +141,43 @@ export default class MarkdownTokenizer {
 
     switch (bbcode) {
       case '[b]':
-        this.processMarkOpen('strong', bbcode);
-        return;
+        if (this.processMarkOpen('strong', '[b]', '[/b]')) { return; };
+        break;
 
       case '[/b]':
-        if (this.processMarkClose('strong', bbcode, '[b]')) { return; }
+        if (this.processMarkClose('strong', '[b]', '[/b]')) { return; }
         break;
 
       case '[i]':
-        this.processMarkOpen('em', bbcode);
-        return;
+        if (this.processMarkOpen('em', '[i]', '[/i]')) { return; };
+        break;
 
       case '[/i]':
-        if (this.processMarkClose('em', bbcode, '[i]')) { return; }
+        if (this.processMarkClose('em', '[i]', '[/i]')) { return; }
         break;
 
       case '[u]':
-        this.processMarkOpen('underline', bbcode);
-        return;
+        if (this.processMarkOpen('underline', '[u]', '[/u]')) { return; };
+        break;
 
       case '[/u]':
-        if (this.processMarkClose('underline', bbcode, '[u]')) { return; }
+        if (this.processMarkClose('underline', '[u]', '[/u]')) { return; }
         break;
 
       case '[s]':
-        this.processMarkOpen('deleted', bbcode);
-        return;
+        if (this.processMarkOpen('deleted', '[s]', '[/s]')) { return; };
+        break;
 
       case '[/s]':
-        if (this.processMarkClose('deleted', bbcode, '[s]')) { return; }
+        if (this.processMarkClose('deleted', '[s]', '[/s]')) { return; }
         break;
 
       case '[/url]':
-        if (this.processMarkClose('link', bbcode, '[url]')) { return; }
+        if (this.processMarkClose('link', '[url]', '[/url]')) { return; }
         break;
 
       case '[img]':
-        if (this.processInlineImage(bbcode)) {
-          return;
-        }
+        if (this.processInlineImage(bbcode)) { return; }
         break;
 
       default:
@@ -187,11 +186,10 @@ export default class MarkdownTokenizer {
 
     if (seq2 === '**' && seq3 !== '***') {
       if (this.lastMark !== seq2) {
-        this.processMarkOpen('strong', seq2);
+        if (this.processMarkOpen('strong', '**', '**')) { return; }
       } else {
-        this.processMarkClose('strong', seq2, seq2);
+        if (this.processMarkClose('strong', '**', '**')) { return; }
       }
-      return;
     }
 
     if (char1 === '`') {
@@ -200,17 +198,14 @@ export default class MarkdownTokenizer {
 
     if (char1 == '*' && seq2 !== '**') {
       if (this.lastMark !== char1) {
-        this.processMarkOpen('em', char1);
+        if (this.processMarkOpen('em', '*', '*')) { return; }
       } else {
-        this.processMarkClose('em', char1, char1);
+        if (this.processMarkClose('em', '*', '*')) { return; }
       }
-      return;
     }
 
     if (seq5 === '[url=') {
-      if (this.processInlineLink(seq5)) {
-        return;
-      }
+      if (this.processInlineLink(seq5)) { return; }
     }
 
     const prevToken = inlineTokens[inlineTokens.length - 1];
@@ -223,21 +218,22 @@ export default class MarkdownTokenizer {
     this.next();
   }
 
-  processMarkOpen(type, bbcode) {
-    this.marksStack.push(bbcode);
+  processMarkOpen(type, openBbcode, closeBbcode) {
+    if (!hasInlineSequence(this.text, closeBbcode, this.index)) { return false; }
+
+    this.marksStack.push(openBbcode);
     this.inlineTokens.push(this.tagOpen(type));
-    this.next(bbcode.length);
+    this.next(openBbcode.length);
+    return true;
   }
 
-  processMarkClose(type, bbcode, openBbcode) {
-    if (this.lastMark === openBbcode) {
-      this.marksStack.pop();
-      this.inlineTokens.push(this.tagClose(type));
-      this.next(bbcode.length);
-      return true;
-    }
+  processMarkClose(type, openBbcode, closeBbcode) {
+    if (this.lastMark !== openBbcode) { return false; }
 
-    return false;
+    this.marksStack.pop();
+    this.inlineTokens.push(this.tagClose(type));
+    this.next(closeBbcode.length);
+    return true;
   }
 
   processInlineCode() {
