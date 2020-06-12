@@ -50,6 +50,17 @@ export default {
   outline: 2px solid #1d78b7;
   z-index: 10;
 }
+.b-image:hover:before,
+.b-image.is-prosemirror-selected:before {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  bottom: 0;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 .b-image:hover .controls,
 .b-image.is-prosemirror-selected .controls {
   display: block;
