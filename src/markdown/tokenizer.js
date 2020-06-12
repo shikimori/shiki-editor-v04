@@ -35,13 +35,33 @@ export default class MarkdownTokenizer {
   next(steps = 1) {
     this.index += steps;
     this.char1 = this.text[this.index];
-
-    this.seq2 = this.char1 + this.text[this.index + 1];
-    this.seq3 = this.seq2 + this.text[this.index + 2];
-    this.seq4 = this.seq3 + this.text[this.index + 3];
-
-    this.bbcode = this.char1 === '[' ? this.extractBbCode() : null;
   }
+
+  get bbcode() {
+    return this.char1 === '[' ? this.extractBbCode() : null;
+  }
+  get seq2() {
+    return this.char1 + this.text[this.index + 1];
+  }
+  get seq3() {
+    return this.char1 +
+      this.text[this.index + 1] +
+      this.text[this.index + 2]
+  }
+  get seq4() {
+    return this.char1 +
+      this.text[this.index + 1] +
+      this.text[this.index + 2] +
+      this.text[this.index + 3];
+  }
+  get seq5() {
+    return this.char1 +
+      this.text[this.index + 1] +
+      this.text[this.index + 2] +
+      this.text[this.index + 3] +
+      this.text[this.index + 4];
+  }
+
 
   parseLine(nestedSequence) {
     const startIndex = this.index;
@@ -93,12 +113,12 @@ export default class MarkdownTokenizer {
   }
 
   processInline() {
-    const { inlineTokens } = this;
+    const { inlineTokens, bbcode, seq5 } = this;
 
-    switch (this.bbcode) {
+    switch (bbcode) {
       case '[b]':
         inlineTokens.push(this.tagOpen('strong'));
-        this.next(this.bbcode.length);
+        this.next(bbcode.length);
         return;
 
       case '[/b]':
@@ -137,7 +157,7 @@ export default class MarkdownTokenizer {
         return;
 
       case '[img]':
-        if (this.processInlineImage(this.bbcode)) {
+        if (this.processInlineImage(bbcode)) {
           return;
         }
         break;
@@ -148,6 +168,12 @@ export default class MarkdownTokenizer {
 
     if (this.char1 === '`') {
       if (this.processInlineCode()) {
+        return;
+      }
+    }
+
+    if (seq5 === '[url=') {
+      if (this.processInlineLink(seq5)) {
         return;
       }
     }
@@ -199,8 +225,11 @@ export default class MarkdownTokenizer {
     return false;
   }
 
+  processInlineLink(seq) {
+  }
+
   processInlineImage(tagStart) {
-    let index = this.index + this.bbcode.length;
+    let index = this.index + tagStart.length;
     const tagEnd = '[/img]';
     const startIndex = index;
 

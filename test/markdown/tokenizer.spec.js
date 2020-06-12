@@ -216,6 +216,32 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
     });
+
+    describe('link', () => {
+      it('[url=https://ya.ru]zxc[/url]', () => {
+        expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([{
+          content: '',
+          type: 'paragraph_open'
+        }, {
+          content: '[url=https://ya.ru]zxc[/url]',
+          type: 'inline',
+          children: [{
+            content: '',
+            type: 'link_open',
+            attrs: [['href', 'https://ya.ru']]
+          }, {
+            content: 'zxc',
+            type: 'text'
+          }, {
+            content: '',
+            type: 'link_close'
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close'
+        }]);
+      });
+    });
   });
 
   describe('nodes', () => {
