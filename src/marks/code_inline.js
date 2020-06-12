@@ -1,4 +1,5 @@
 import { Mark } from '../base';
+import { markInputRule, markPasteRule } from '../commands';
 
 export default class CodeInline extends Mark {
   get name() {
@@ -22,6 +23,18 @@ export default class CodeInline extends Mark {
       },
       escape: false
     };
+  }
+
+  inputRules({ type }) {
+    return [
+      markInputRule(/(?:`)([^`]+)(?:`)$/, type)
+    ];
+  }
+
+  pasteRules({ type }) {
+    return [
+      markPasteRule(/(?:`)([^`]+)(?:`)/g, type)
+    ];
   }
 }
 
