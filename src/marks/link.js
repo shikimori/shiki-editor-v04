@@ -88,4 +88,13 @@ export default class Link extends Mark {
       })
     };
   }
+
+  get markdownSerializerToken() {
+    return {
+      open(_state, mark, _parent, _index) {
+        return `[url=${mark.attrs.href}]`;
+      },
+      close: '[/url]'
+    };
+  }
 }
