@@ -1,5 +1,5 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/marks/Link.js
-export { Plugin } from 'prosemirror-state';
+import { Plugin } from 'prosemirror-state';
 import { Mark } from '../base';
 import { updateMark, removeMark, pasteRule } from '../commands';
 import { getMarkAttrs } from '../utils';
