@@ -20,8 +20,8 @@ export default class Em extends Mark {
 
   get markdownSerializerToken() {
     return {
-      open: '[i]',
-      close: '[/i]',
+      open: '*',
+      close: '*',
       mixable: true,
       expelEnclosingWhitespace: true
     };
