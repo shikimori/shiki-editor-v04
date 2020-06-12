@@ -21,6 +21,7 @@ export default class MarkdownTokenizer {
 
     this.tokens = [];
     this.inlineTokens = [];
+    this.marksStack = []
   }
 
   static parse(text) {
@@ -128,49 +129,40 @@ export default class MarkdownTokenizer {
 
     switch (bbcode) {
       case '[b]':
-        inlineTokens.push(this.tagOpen('strong'));
-        this.next(bbcode.length);
+        this.processMarkOpen('strong', bbcode);
         return;
 
       case '[/b]':
-        inlineTokens.push(this.tagClose('strong'));
-        this.next(bbcode.length);
-        return;
+        if (this.processMarkClose('strong', bbcode, '[b]')) { return; }
+        break;
 
       case '[i]':
-        inlineTokens.push(this.tagOpen('em'));
-        this.next(bbcode.length);
+        this.processMarkOpen('em', bbcode);
         return;
 
       case '[/i]':
-        inlineTokens.push(this.tagClose('em'));
-        this.next(bbcode.length);
-        return;
+        if (this.processMarkClose('em', bbcode, '[i]')) { return; }
+        break;
 
       case '[u]':
-        inlineTokens.push(this.tagOpen('underline'));
-        this.next(bbcode.length);
+        this.processMarkOpen('underline', bbcode);
         return;
 
       case '[/u]':
-        inlineTokens.push(this.tagClose('underline'));
-        this.next(bbcode.length);
-        return;
+        if (this.processMarkClose('underline', bbcode, '[u]')) { return; }
+        break;
 
       case '[s]':
-        inlineTokens.push(this.tagOpen('deleted'));
-        this.next(bbcode.length);
+        this.processMarkOpen('deleted', bbcode);
         return;
 
       case '[/s]':
-        inlineTokens.push(this.tagClose('deleted'));
-        this.next(bbcode.length);
-        return;
+        if (this.processMarkClose('deleted', bbcode, '[s]')) { return; }
+        break;
 
       case '[/url]':
-        inlineTokens.push(this.tagClose('link'));
-        this.next(bbcode.length);
-        return;
+        if (this.processMarkClose('link', bbcode, '[url]')) { return; }
+        break
 
       case '[img]':
         if (this.processInlineImage(bbcode)) {
@@ -189,7 +181,7 @@ export default class MarkdownTokenizer {
     }
 
     if (seq5 === '[url=') {
-      if (this.processInlineLink(seq5, inlineTokens)) {
+      if (this.processInlineLink(seq5)) {
         return;
       }
     }
@@ -202,6 +194,25 @@ export default class MarkdownTokenizer {
 
     token.content += this.char1;
     this.next();
+  }
+
+  processMarkOpen(type, bbcode) {
+    this.marksStack.push(bbcode);
+    this.inlineTokens.push(this.tagOpen(type));
+    this.next(bbcode.length);
+  }
+
+  processMarkClose(type, bbcode, openBbcode) {
+    const priorMark = this.marksStack[this.marksStack.length - 1];
+
+    if (priorMark === openBbcode) {
+      this.marksStack.pop();
+      this.inlineTokens.push(this.tagClose(type));
+      this.next(bbcode.length);
+      return true;
+    }
+
+    return false;
   }
 
   processInlineCode() {
@@ -241,12 +252,13 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineLink(seq, inlineTokens) {
+  processInlineLink(seq) {
     const url = extractUntil(this.text, ']', this.index + seq.length);
     if (url) {
       const token = this.tagOpen('link');
       token.attrSet('href', url);
-      inlineTokens.push(token);
+      this.marksStack.push('[url]');
+      this.inlineTokens.push(token);
       this.next(seq.length + url.length + ']'.length);
       return true;
     }
@@ -279,6 +291,7 @@ export default class MarkdownTokenizer {
     this.push(this.tagClose('paragraph'));
 
     this.inlineTokens = [];
+    this.marksStack = [];
   }
 
   processBlockQuote(nestedSequence, tagSequence) {

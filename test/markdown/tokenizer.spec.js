@@ -69,6 +69,35 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
+      it('z[/b]', () => {
+        expect(MarkdownTokenizer.parse('z[/b]')).to.eql([
+          ...text('z[/b]')
+        ]);
+      });
+
+      // it('**zxc**', () => {
+      //   expect(MarkdownTokenizer.parse('**zxc**')).to.eql([{
+      //     content: '',
+      //     type: 'paragraph_open'
+      //   }, {
+      //     content: '**zxc**',
+      //     type: 'inline',
+      //     children: [{
+      //       content: '',
+      //       type: 'strong_open'
+      //     }, {
+      //       content: 'zxc',
+      //       type: 'text'
+      //     }, {
+      //       content: '',
+      //       type: 'strong_close'
+      //     }]
+      //   }, {
+      //     content: '',
+      //     type: 'paragraph_close'
+      //   }]);
+      // });
+
       it('a[b]zxc[/b]A', () => {
         expect(MarkdownTokenizer.parse('a[b]zxc[/b]A')).to.eql([{
           content: '',
