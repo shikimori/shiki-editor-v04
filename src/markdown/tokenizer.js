@@ -162,7 +162,7 @@ export default class MarkdownTokenizer {
 
       case '[/url]':
         if (this.processMarkClose('link', bbcode, '[url]')) { return; }
-        break
+        break;
 
       case '[img]':
         if (this.processInlineImage(bbcode)) {

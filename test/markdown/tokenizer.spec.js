@@ -151,6 +151,12 @@ describe('MarkdownTokenizer', () => {
           type: 'paragraph_close'
         }]);
       });
+
+      it('z[/u]', () => {
+        expect(MarkdownTokenizer.parse('z[/u]')).to.eql([
+          ...text('z[/u]')
+        ]);
+      });
     });
 
     describe('deleted', () => {
@@ -175,6 +181,12 @@ describe('MarkdownTokenizer', () => {
           content: '',
           type: 'paragraph_close'
         }]);
+      });
+
+      it('z[/s]', () => {
+        expect(MarkdownTokenizer.parse('z[/s]')).to.eql([
+          ...text('z[/s]')
+        ]);
       });
     });
 
@@ -269,6 +281,12 @@ describe('MarkdownTokenizer', () => {
           content: '',
           type: 'paragraph_close'
         }]);
+      });
+
+      it('z[/url]', () => {
+        expect(MarkdownTokenizer.parse('z[/url]')).to.eql([
+          ...text('z[/url]')
+        ]);
       });
     });
   });
