@@ -54,7 +54,7 @@ export default function({ schema, commands, activeChecks }) {
     });
   }
 
-  ['strong', 'em', 'underline', 'deleted', 'code_inline'].forEach(type => {
+  ['strong', 'em', 'underline', 'deleted', 'link', 'code_inline'].forEach(type => {
     if (!schema.marks[type]) { return; }
     marks.push(buildMenuItem(type));
   });
