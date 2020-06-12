@@ -20,23 +20,14 @@ export default class Image extends Node {
       draggable: true,
       parseDOM: [{
         tag: 'span.b-image',
-        getAttrs: dom => ({
-          src: dom.getAttribute('data-src')
+        getAttrs: node => ({
+          src: node.children[0].src
         })
       }],
       toDOM: node => [
         'span',
-        {
-          class: 'b-image unprocessed no-zoom',
-          'data-src': node.attrs.src
-        },
-        // { class: 'b-image unprocessed', href: node.attrs.src },
+        { class: 'b-image unprocessed no-zoom' },
         ['img', node.attrs]
-        // [
-        //   'div',
-        //   { class: 'controls' },
-        //   ['div', { class: 'delete' }]
-        // ]
       ]
     };
   }
