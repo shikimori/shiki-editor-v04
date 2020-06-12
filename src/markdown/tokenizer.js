@@ -134,37 +134,42 @@ export default class MarkdownTokenizer {
 
       case '[/b]':
         inlineTokens.push(this.tagClose('strong'));
-        this.next(4);
+        this.next(bbcode.length);
         return;
 
       case '[i]':
         inlineTokens.push(this.tagOpen('em'));
-        this.next(3);
+        this.next(bbcode.length);
         return;
 
       case '[/i]':
         inlineTokens.push(this.tagClose('em'));
-        this.next(4);
+        this.next(bbcode.length);
         return;
 
       case '[u]':
         inlineTokens.push(this.tagOpen('underline'));
-        this.next(3);
+        this.next(bbcode.length);
         return;
 
       case '[/u]':
         inlineTokens.push(this.tagClose('underline'));
-        this.next(4);
+        this.next(bbcode.length);
         return;
 
       case '[s]':
         inlineTokens.push(this.tagOpen('deleted'));
-        this.next(3);
+        this.next(bbcode.length);
         return;
 
       case '[/s]':
         inlineTokens.push(this.tagClose('deleted'));
-        this.next(4);
+        this.next(bbcode.length);
+        return;
+
+      case '[/url]':
+        inlineTokens.push(this.tagClose('link'));
+        this.next(bbcode.length);
         return;
 
       case '[img]':
@@ -184,7 +189,7 @@ export default class MarkdownTokenizer {
     }
 
     if (seq5 === '[url=') {
-      if (this.processInlineLink(seq5)) {
+      if (this.processInlineLink(seq5, inlineTokens)) {
         return;
       }
     }
@@ -228,7 +233,7 @@ export default class MarkdownTokenizer {
 
 
     const code = extractUntil(this.text, tag, startIndex);
-    if (code ) {
+    if (code) {
       this.inlineTokens.push(new Token('code_inline', code));
       this.next(code.length + tag.length * 2);
       return true;
@@ -237,7 +242,17 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineLink(seq) {
+  processInlineLink(seq, inlineTokens) {
+    const url = extractUntil(this.text, ']', this.index + seq.length);
+    if (url) {
+      const token = this.tagOpen('link');
+      token.attrSet('href', url);
+      inlineTokens.push(token);
+      this.next(seq.length + url.length + ']'.length);
+      return true;
+    }
+
+    return false;
   }
 
   processInlineImage(tagStart) {
