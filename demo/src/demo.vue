@@ -31,7 +31,7 @@ export default {
     Editor
   },
   data: () => ({
-    text1: `https://kawai.shikimori.one/system/users/x160/1.png
+    text1: `[url=https://kawai.shikimori.one/system/users/x160/1.png]test url link[/url]
 `,
     text2: `B[b]old[/b]
 I[i]talic[/i]

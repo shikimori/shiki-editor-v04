@@ -39,12 +39,22 @@ export default class Link extends Mark {
   }
 
   commands({ type }) {
-    return attrs => {
-      if (attrs.href) {
-        return updateMark(type, attrs);
-      }
+    return state => {
+      let marks = [];
+      const { from, to } = state.selection;
 
-      return removeMark(type);
+      state.doc.nodesBetween(from, to, (node) => {
+        marks = [...marks, ...node.marks];
+      });
+
+      const mark = marks.find((markItem) => markItem.type.name === 'link');
+
+      if (mark && mark.attrs.href) {
+        return removeMark(type);
+      } else {
+        const href = prompt(I18n.t('frontend.shiki_editor.prompt.link_url'));
+        return updateMark(type, { href });
+      }
     };
   }
 
