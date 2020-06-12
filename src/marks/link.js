@@ -26,8 +26,8 @@ export default class Link extends Mark {
       parseDOM: [
         {
           tag: 'a[href]',
-          getAttrs: dom => ({
-            href: dom.getAttribute('href')
+          getAttrs: node => ({
+            href: node.getAttribute('href')
           })
         }
       ],

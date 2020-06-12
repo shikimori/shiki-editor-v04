@@ -38,7 +38,7 @@ import icons from './icons';
 undoItem.spec.title = () => I18n.t('frontend.shiki_editor.undo');
 redoItem.spec.title = () => I18n.t('frontend.shiki_editor.redo');
 
-export default function ({ schema, commands, activeChecks }) {
+export default function({ schema, commands, activeChecks }) {
   const marks = [];
   const undos = [undoItem, redoItem];
   const blocks = [];

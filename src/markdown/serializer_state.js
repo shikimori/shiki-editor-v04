@@ -187,7 +187,9 @@ export default class MarkdownSerializerState {
       while (keep < Math.min(active.length, len) && marks[keep].eq(active[keep])) keep++;
 
       // Close the marks that need to be closed
-      while (keep < active.length) this.text(this.markString(active.pop(), false, parent, index), false);
+      while (keep < active.length) {
+        this.text(this.markString(active.pop(), false, parent, index), false);
+      }
 
       // Output any previously expelled trailing whitespace outside the marks
       if (leading) this.text(leading);

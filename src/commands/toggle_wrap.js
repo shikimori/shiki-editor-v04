@@ -2,7 +2,7 @@
 import { wrapIn, lift } from 'prosemirror-commands';
 import { nodeIsActive } from '../checks';
 
-export default function (type) {
+export default function(type) {
   return (state, dispatch, view) => {
     const isActive = nodeIsActive(type, state);
 

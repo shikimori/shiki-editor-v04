@@ -1,4 +1,4 @@
-export default function (type, state) {
+export default function(type, state) {
   const { from, $from, to, empty } = state.selection;
   if (empty) {
     return type.isInSet(state.storedMarks || $from.marks());
