@@ -31,30 +31,28 @@ export default {
     Editor
   },
   data: () => ({
-    text1: `qwe
-https://kawai.shikimori.one/system/users/x160/1.png
-[url=https://ya.ru]test[/url]
+    text1: `https://kawai.shikimori.one/system/users/x160/1.png
 `,
-    text2: `aa [u]te[/u]st
-test0[i]test1[b]test2[/b]test3[/i]test4[s]test5[/s]test6\`test7\`
+    text2: `B[b]old[/b]
+I[i]talic[/i]
+U[u]nderlined[/u]
+S[s]triked[/s]
+C\`ode\`
+L[url=https://github.com/shikimori/shiki-editor]ink[/url]
+Image
+[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
 \`\`\`
 code block
 \`\`\`
-zzz
-[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
-xxx
 \`\`\`css
 css code block
 \`\`\`
-before \`inline code\` after
-- abc
+- Bulet List
 - def
-> - test
-- > nope
+> - quoted list
+- > list quoted
 
-test
-
-> n[b]op[/b]e
+> Quote
 > > nope
 > yes`
   })
