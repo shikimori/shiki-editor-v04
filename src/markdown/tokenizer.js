@@ -1,6 +1,8 @@
 import Token from './token';
 import flatten from 'lodash/flatten';
 
+import { extractBbCode } from './tokenizer_helpers';
+
 export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
     paragraph: 'p',
@@ -8,7 +10,6 @@ export default class MarkdownTokenizer {
     list_item: 'li',
     underline: 'span'
   }
-  MAX_BBCODE_SIZE = 10;
 
   constructor(text) {
     this.text = text;
@@ -38,16 +39,21 @@ export default class MarkdownTokenizer {
   }
 
   get bbcode() {
-    return this.char1 === '[' ? this.extractBbCode() : null;
+    return this.char1 === '[' ?
+      extractBbCode(this.text, this.index) :
+      null;
   }
+
   get seq2() {
     return this.char1 + this.text[this.index + 1];
   }
+
   get seq3() {
     return this.char1 +
       this.text[this.index + 1] +
-      this.text[this.index + 2]
+      this.text[this.index + 2];
   }
+
   get seq4() {
     return this.char1 +
       this.text[this.index + 1] +
@@ -364,14 +370,5 @@ export default class MarkdownTokenizer {
 
   isContinued(sequence) {
     return this.text.slice(this.index, this.index + sequence.length) === sequence;
-  }
-
-  extractBbCode() {
-    for (let i = this.index + 1; i < this.index + this.MAX_BBCODE_SIZE; i++) {
-      if (this.text[i] === ']') {
-        return this.text.slice(this.index, i + 1);
-      }
-    }
-    return null;
   }
 }
