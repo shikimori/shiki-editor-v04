@@ -54,6 +54,13 @@ export default class ComponentView {
       propsData: props
     }).$mount();
 
+    // const component = new Component({
+    //   parent: this.parent,
+    //   propsData: props
+    // });
+    // component._props = this.Vue.observable(props);
+    // this.vm = component.$mount();
+
     return this.vm.$el;
   }
 
