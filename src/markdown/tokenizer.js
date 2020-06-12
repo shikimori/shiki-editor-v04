@@ -129,7 +129,14 @@ export default class MarkdownTokenizer {
   }
 
   processInline() {
-    const { inlineTokens, bbcode, seq2, seq5 } = this;
+    const {
+      inlineTokens,
+      bbcode,
+      char1,
+      seq2,
+      seq3,
+      seq5
+    } = this;
 
     switch (bbcode) {
       case '[b]':
@@ -178,17 +185,24 @@ export default class MarkdownTokenizer {
         break;
     }
 
-    if (this.char1 === '`') {
-      if (this.processInlineCode()) {
-        return;
-      }
-    }
-
-    if (seq2 === '**') {
+    if (seq2 === '**' && seq3 !== '***') {
       if (this.lastMark !== seq2) {
         this.processMarkOpen('strong', seq2);
       } else {
         this.processMarkClose('strong', seq2, seq2);
+      }
+      return;
+    }
+
+    if (char1 === '`') {
+      if (this.processInlineCode()) { return; }
+    }
+
+    if (char1 == '*' && seq2 !== '**') {
+      if (this.lastMark !== char1) {
+        this.processMarkOpen('em', char1);
+      } else {
+        this.processMarkClose('em', char1, char1);
       }
       return;
     }
