@@ -128,6 +128,60 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
+    describe('em', () => {
+      it('[i]zxc[/i]', () => {
+        expect(MarkdownTokenizer.parse('[i]zxc[/i]')).to.eql([{
+          content: '',
+          type: 'paragraph_open'
+        }, {
+          content: '[i]zxc[/i]',
+          type: 'inline',
+          children: [{
+            content: '',
+            type: 'em_open'
+          }, {
+            content: 'zxc',
+            type: 'text'
+          }, {
+            content: '',
+            type: 'em_close'
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close'
+        }]);
+      });
+
+      it('z[/i]', () => {
+        expect(MarkdownTokenizer.parse('z[/i]')).to.eql([
+          ...text('z[/i]')
+        ]);
+      });
+
+      // it('**zxc**', () => {
+      //   expect(MarkdownTokenizer.parse('**zxc**')).to.eql([{
+      //     content: '',
+      //     type: 'paragraph_open'
+      //   }, {
+      //     content: '**zxc**',
+      //     type: 'inline',
+      //     children: [{
+      //       content: '',
+      //       type: 'strong_open'
+      //     }, {
+      //       content: 'zxc',
+      //       type: 'text'
+      //     }, {
+      //       content: '',
+      //       type: 'strong_close'
+      //     }]
+      //   }, {
+      //     content: '',
+      //     type: 'paragraph_close'
+      //   }]);
+      // });
+    });
+
     describe('underline', () => {
       it('[u]zxc[/u]', () => {
         expect(MarkdownTokenizer.parse('[u]zxc[/u]')).to.eql([{
