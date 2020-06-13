@@ -53,7 +53,9 @@ export default class Link extends Mark {
         return removeMark(type);
       } else {
         const href = prompt(I18n.t('frontend.shiki_editor.prompt.link_url'));
-        return updateMark(type, { href });
+        return href ?
+          updateMark(type, { href }) :
+          () => {};
       }
     };
   }
