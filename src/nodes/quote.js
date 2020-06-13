@@ -15,8 +15,8 @@ export default class Quote extends Node {
         comment_id: { default: undefined },
         message_id: { default: undefined },
         topic_id: { default: undefined },
-        user_id: { default: undefined },      
-        user_nickname: { default: undefined },
+        user_id: { default: undefined },
+        nickname: { default: undefined },
       },
       parseDOM: [{ tag: 'div.b-quote' }],
       toDOM() { return ['div', { class: 'b-quote' }, 0]; }
