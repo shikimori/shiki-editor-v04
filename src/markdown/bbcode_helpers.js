@@ -8,6 +8,7 @@ export function parseQuoteMeta(meta) {
     attributes.nickname = split[0];
   } else {
     const id = split[0].slice(1);
+
     switch (split[0][0]) {
       case 'c':
         attributes.comment_id = id;
@@ -19,6 +20,7 @@ export function parseQuoteMeta(meta) {
         attributes.topic_id = id;
         break;
     }
+
     attributes.user_id = split[1];
     attributes.nickname = split[2];
   }
