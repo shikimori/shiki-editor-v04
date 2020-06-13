@@ -17,12 +17,12 @@ export default class MarkdownTokenizer {
   MAX_BBCODE_SIZE = 10;
   MAX_URL_SIZE = 512;
 
-  constructor(text, index, endSequence) {
+  constructor(text, index, exitSequence) {
     this.text = text;
     this.index = index;
 
-    this.endSequence = endSequence;
-    this.isEndSequence = false;
+    this.exitSequence = exitSequence;
+    this.isExitSequence = false;
 
     this.tokens = [];
     this.inlineTokens = [];
@@ -39,6 +39,7 @@ export default class MarkdownTokenizer {
 
     while (this.index < this.text.length) {
       this.parseLine('');
+      if (this.isExitSequence) { break; }
     }
 
     return flatten(this.tokens);
@@ -48,11 +49,11 @@ export default class MarkdownTokenizer {
     this.index += steps;
     this.char1 = this.text[this.index];
 
-    if (this.endSequence) {
-      this.isEndSequence = this.char1 === this.endSequence[0] && (
-        this.endSequence.length === 1 ||
-        this.text.slice(this.index, this.index + this.endSequence.length) ===
-          this.endSequence
+    if (this.exitSequence) {
+      this.isExitSequence = this.char1 === this.exitSequence[0] && (
+        this.exitSequence.length === 1 ||
+        this.text.slice(this.index, this.index + this.exitSequence.length) ===
+          this.exitSequence
       );
     }
   }
@@ -99,6 +100,11 @@ export default class MarkdownTokenizer {
       const isStart = startIndex === this.index;
       const isEnd = char1 === '\n' || char1 === undefined;
 
+      if (this.isExitSequence) {
+        this.processParagraph(startIndex);
+        return;
+      }
+
       if (isEnd) {
         this.processParagraph(startIndex);
         this.next();
@@ -134,6 +140,17 @@ export default class MarkdownTokenizer {
             );
             break outer;
         }
+      }
+
+      if (bbcode === '[quote]') {
+        if (!isStart) {
+          this.processParagraph(startIndex);
+        }
+        this.processBlock('quote', bbcode, '[/quote]');
+        if (this.char1 === '\n' || this.char1 === undefined) {
+          this.next();
+        }
+        return;
       }
 
       this.processInline(bbcode);
@@ -188,10 +205,6 @@ export default class MarkdownTokenizer {
       case '[img]':
         if (this.processInlineImage(bbcode)) { return; }
         break;
-
-      case '[quote]':
-        this.processBlock('quote', bbcode, '[/quote]');
-        return;
 
       default:
         break;
@@ -317,17 +330,17 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processBlock(type, startSequence, endSequence) {
+  processBlock(type, startSequence, exitSequence) {
     this.next(startSequence.length);
     this.push(this.tagOpen(type));
 
-    const tokenizer = new MarkdownTokenizer(this.text, this.index, endSequence);
+    const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
     const tokens = tokenizer.parse();
 
     this.tokens = this.tokens.concat(tokens);
     this.index = tokenizer.index;
 
-    this.next(endSequence.length);
+    this.next(exitSequence.length);
     this.push(this.tagClose(type));
   }
 

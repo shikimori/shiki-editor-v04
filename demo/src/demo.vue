@@ -32,7 +32,7 @@ export default {
   },
   data: () => ({
     isColumn2: false,
-    text1: `test[quote]zxc[/quote]
+    text1: `[quote]zxc[/quote]
 `,
     text2: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
