@@ -16,7 +16,8 @@ import {
   BulltList,
   CodeBlock,
   Image,
-  ListItem
+  ListItem,
+  Quote
 } from './nodes';
 import {
   Strong,
@@ -98,7 +99,8 @@ export default class ShikiEditor extends Emitter {
       new BulltList(),
       new CodeBlock(),
       new Image(),
-      new ListItem()
+      new ListItem(),
+      new Quote()
     ];
   }
 

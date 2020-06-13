@@ -134,14 +134,12 @@ export default class MarkdownTokenizer {
       inlineTokens,
       bbcode,
       char1,
-      seq2,
-      seq3,
       seq5
     } = this;
 
     switch (bbcode) {
       case '[b]':
-        if (this.processMarkOpen('strong', '[b]', '[/b]')) { return; };
+        if (this.processMarkOpen('strong', '[b]', '[/b]')) { return; }
         break;
 
       case '[/b]':
@@ -149,7 +147,7 @@ export default class MarkdownTokenizer {
         break;
 
       case '[i]':
-        if (this.processMarkOpen('em', '[i]', '[/i]')) { return; };
+        if (this.processMarkOpen('em', '[i]', '[/i]')) { return; }
         break;
 
       case '[/i]':
@@ -157,7 +155,7 @@ export default class MarkdownTokenizer {
         break;
 
       case '[u]':
-        if (this.processMarkOpen('underline', '[u]', '[/u]')) { return; };
+        if (this.processMarkOpen('underline', '[u]', '[/u]')) { return; }
         break;
 
       case '[/u]':
@@ -165,7 +163,7 @@ export default class MarkdownTokenizer {
         break;
 
       case '[s]':
-        if (this.processMarkOpen('deleted', '[s]', '[/s]')) { return; };
+        if (this.processMarkOpen('deleted', '[s]', '[/s]')) { return; }
         break;
 
       case '[/s]':
@@ -179,6 +177,10 @@ export default class MarkdownTokenizer {
       case '[img]':
         if (this.processInlineImage(bbcode)) { return; }
         break;
+
+      case '[quote]':
+        this.processQuote(bbcode);
+        return;
 
       default:
         break;
@@ -304,6 +306,10 @@ export default class MarkdownTokenizer {
     return false;
   }
 
+  processQuote(bbcode) {
+    // this.inlineTokens.push(token);
+  }
+
   processParagraph(startIndex) {
     const text = this.text.slice(startIndex, this.index);
 
@@ -410,6 +416,7 @@ export default class MarkdownTokenizer {
   }
 
   isContinued(sequence) {
-    return this.text.slice(this.index, this.index + sequence.length) === sequence;
+    return this.text.slice(this.index, this.index + sequence.length) ===
+      sequence;
   }
 }

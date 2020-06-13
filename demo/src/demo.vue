@@ -8,7 +8,7 @@
         />
         <textarea v-model='text1' rows='10' />
       </div>
-      <div class='f-column'>
+      <div v-if='isColumn2' class='f-column'>
         <Editor
           :content='text2'
           @update='(value) => text2 = value'
@@ -31,7 +31,8 @@ export default {
     Editor
   },
   data: () => ({
-    text1: `**test**
+    isColumn2: false,
+    text1: `test[quote]zxc[/quote]
 `,
     text2: `B[b]old tex[/b]t
 I[i]talic tex[/i]t

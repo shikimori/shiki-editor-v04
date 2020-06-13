@@ -608,5 +608,30 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
     });
+
+    describe('quote', () => {
+      it('[quote]z[/quote]', () => {
+        expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([{
+          content: '',
+          type: 'quote_open'
+        }, {
+          content: '',
+          type: 'paragraph_open'
+        }, {
+          content: 'z',
+          type: 'inline',
+          children: [{
+            content: 'z',
+            type: 'text'
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close'
+        } {
+          content: '',
+          type: 'quote_close'
+        }]);
+      });
+    });
   });
 });
