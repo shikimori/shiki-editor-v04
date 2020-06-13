@@ -334,6 +334,8 @@ export default class MarkdownTokenizer {
     this.next(startSequence.length);
     this.push(this.tagOpen(type));
 
+    if (this.char1 === '\n') { this.next(); }
+
     const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
     const tokens = tokenizer.parse();
 
