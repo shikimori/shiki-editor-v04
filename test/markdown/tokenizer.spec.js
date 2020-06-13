@@ -3,7 +3,6 @@ import { MarkdownTokenizer } from '../../src/markdown';
 
 function text(content) {
   return [{
-    content: '',
     type: 'paragraph_open'
   }, {
     content,
@@ -13,7 +12,6 @@ function text(content) {
       type: 'text'
     }]
   }, {
-    content: '',
     type: 'paragraph_close'
   }];
 }
@@ -48,23 +46,19 @@ describe('MarkdownTokenizer', () => {
     describe('strong', () => {
       it('[b]zxc[/b]', () => {
         expect(MarkdownTokenizer.parse('[b]zxc[/b]')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '[b]zxc[/b]',
           type: 'inline',
           children: [{
-            content: '',
             type: 'strong_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            content: '',
             type: 'strong_close'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -83,23 +77,19 @@ describe('MarkdownTokenizer', () => {
 
       // it('**zxc**', () => {
       //   expect(MarkdownTokenizer.parse('**zxc**')).to.eql([{
-      //     content: '',
       //     type: 'paragraph_open'
       //   }, {
       //     content: '**zxc**',
       //     type: 'inline',
       //     children: [{
-      //       content: '',
       //       type: 'strong_open'
       //     }, {
       //       content: 'zxc',
       //       type: 'text'
       //     }, {
-      //       content: '',
       //       type: 'strong_close'
       //     }]
       //   }, {
-      //     content: '',
       //     type: 'paragraph_close'
       //   }]);
       // });
@@ -118,7 +108,6 @@ describe('MarkdownTokenizer', () => {
 
       it('a[b]zxc[/b]A', () => {
         expect(MarkdownTokenizer.parse('a[b]zxc[/b]A')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: 'a[b]zxc[/b]A',
@@ -127,20 +116,17 @@ describe('MarkdownTokenizer', () => {
             content: 'a',
             type: 'text'
           }, {
-            content: '',
             type: 'strong_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            content: '',
             type: 'strong_close'
           }, {
             content: 'A',
             type: 'text'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -149,23 +135,19 @@ describe('MarkdownTokenizer', () => {
     describe('em', () => {
       it('[i]zxc[/i]', () => {
         expect(MarkdownTokenizer.parse('[i]zxc[/i]')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '[i]zxc[/i]',
           type: 'inline',
           children: [{
-            content: '',
             type: 'em_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            content: '',
             type: 'em_close'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -178,23 +160,19 @@ describe('MarkdownTokenizer', () => {
 
       // it('*zxc*', () => {
       //   expect(MarkdownTokenizer.parse('*zxc*')).to.eql([{
-      //     content: '',
       //     type: 'paragraph_open'
       //   }, {
       //     content: '*zxc*',
       //     type: 'inline',
       //     children: [{
-      //       content: '',
       //       type: 'em_open'
       //     }, {
       //       content: 'zxc',
       //       type: 'text'
       //     }, {
-      //       content: '',
       //       type: 'em_close'
       //     }]
       //   }, {
-      //     content: '',
       //     type: 'paragraph_close'
       //   }]);
       // });
@@ -203,23 +181,19 @@ describe('MarkdownTokenizer', () => {
     describe('underline', () => {
       it('[u]zxc[/u]', () => {
         expect(MarkdownTokenizer.parse('[u]zxc[/u]')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '[u]zxc[/u]',
           type: 'inline',
           children: [{
-            content: '',
             type: 'underline_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            content: '',
             type: 'underline_close'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -234,23 +208,19 @@ describe('MarkdownTokenizer', () => {
     describe('deleted', () => {
       it('[s]zxc[/s]', () => {
         expect(MarkdownTokenizer.parse('[s]zxc[/s]')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '[s]zxc[/s]',
           type: 'inline',
           children: [{
-            content: '',
             type: 'deleted_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            content: '',
             type: 'deleted_close'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -265,7 +235,6 @@ describe('MarkdownTokenizer', () => {
     describe('inline_code', () => {
       it('`zxc`', () => {
         expect(MarkdownTokenizer.parse('`zxc`')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '`zxc`',
@@ -275,14 +244,12 @@ describe('MarkdownTokenizer', () => {
             type: 'code_inline'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
 
       it('``zxc```', () => {
         expect(MarkdownTokenizer.parse('``zxc```')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '``zxc```',
@@ -295,14 +262,12 @@ describe('MarkdownTokenizer', () => {
             type: 'text'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
 
       it('a`zxc`A', () => {
         expect(MarkdownTokenizer.parse('a`zxc`A')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: 'a`zxc`A',
@@ -318,7 +283,6 @@ describe('MarkdownTokenizer', () => {
             type: 'text'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -333,24 +297,20 @@ describe('MarkdownTokenizer', () => {
     describe('link', () => {
       it('[url=https://ya.ru]zxc[/url]', () => {
         expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '[url=https://ya.ru]zxc[/url]',
           type: 'inline',
           children: [{
-            content: '',
             type: 'link_open',
             attrs: [['href', 'https://ya.ru']]
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            content: '',
             type: 'link_close'
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -367,64 +327,52 @@ describe('MarkdownTokenizer', () => {
     describe('blockquote', () => {
       it('> a', () => {
         expect(MarkdownTokenizer.parse('> a')).to.eql([{
-          content: '',
           type: 'blockquote_open'
         },
         ...text('a'),
         {
-          content: '',
           type: 'blockquote_close'
         }]);
       });
 
       it('> a\\n> b\\n> c', () => {
         expect(MarkdownTokenizer.parse('> a\n> b\n> c')).to.eql([{
-          content: '',
           type: 'blockquote_open'
         },
         ...text('a'),
         ...text('b'),
         ...text('c'),
         {
-          content: '',
           type: 'blockquote_close'
         }]);
       });
 
       it('> > a', () => {
         expect(MarkdownTokenizer.parse('> > a')).to.eql([{
-          content: '',
           type: 'blockquote_open'
         }, {
-          content: '',
           type: 'blockquote_open'
         },
         ...text('a'),
         {
-          content: '',
           type: 'blockquote_close'
         }, {
-          content: '',
           type: 'blockquote_close'
         }]);
       });
 
       it('> > a\\n> b', () => {
         expect(MarkdownTokenizer.parse('> > a\n> b')).to.eql([{
-          content: '',
           type: 'blockquote_open'
         }, {
-          content: '',
           type: 'blockquote_open'
         },
         ...text('a'),
         {
-          content: '',
           type: 'blockquote_close'
         },
         ...text('b'),
         {
-          content: '',
           type: 'blockquote_close'
         }]);
       });
@@ -433,123 +381,95 @@ describe('MarkdownTokenizer', () => {
     describe('bullet_list', () => {
       it('- a', () => {
         expect(MarkdownTokenizer.parse('- a')).to.eql([{
-          content: '',
           type: 'bullet_list_open'
         }, {
-          content: '',
           type: 'list_item_open'
         },
         ...text('a'),
         {
-          content: '',
           type: 'list_item_close'
         }, {
-          content: '',
           type: 'bullet_list_close'
         }]);
       });
 
       it('- a\\n- b', () => {
         expect(MarkdownTokenizer.parse('- a\n- b')).to.eql([{
-          content: '',
           type: 'bullet_list_open'
         }, {
-          content: '',
           type: 'list_item_open'
         },
         ...text('a'),
         {
-          content: '',
           type: 'list_item_close'
         }, {
-          content: '',
           type: 'list_item_open'
         },
         ...text('b'),
         {
-          content: '',
           type: 'list_item_close'
         }, {
-          content: '',
           type: 'bullet_list_close'
         }]);
       });
 
       it('- test\\nn  zxc', () => {
         expect(MarkdownTokenizer.parse('- test\n  zxc')).to.eql([{
-          content: '',
           type: 'bullet_list_open'
         }, {
-          content: '',
           type: 'list_item_open'
         },
         ...text('test'),
         ...text('zxc'),
         {
-          content: '',
           type: 'list_item_close'
         }, {
-          content: '',
           type: 'bullet_list_close'
         }]);
       });
 
       it('- > test', () => {
         expect(MarkdownTokenizer.parse('- > test')).to.eql([{
-          content: '',
           type: 'bullet_list_open'
         }, {
-          content: '',
           type: 'list_item_open'
         }, {
-          content: '',
           type: 'blockquote_open'
         },
         ...text('test'),
         {
-          content: '',
           type: 'blockquote_close'
         }, {
-          content: '',
           type: 'list_item_close'
         }, {
-          content: '',
           type: 'bullet_list_close'
         }]);
       });
 
       it('[*] a', () => {
         expect(MarkdownTokenizer.parse('[*] a')).to.eql([{
-          content: '',
           type: 'bullet_list_open'
         }, {
-          content: '',
           type: 'list_item_open'
         },
         ...text('a'),
         {
-          content: '',
           type: 'list_item_close'
         }, {
-          content: '',
           type: 'bullet_list_close'
         }]);
       });
 
       it('[*]a', () => {
         expect(MarkdownTokenizer.parse('[*]a')).to.eql([{
-          content: '',
           type: 'bullet_list_open'
         }, {
-          content: '',
           type: 'list_item_open'
         },
         ...text('a'),
         {
-          content: '',
           type: 'list_item_close'
         }, {
-          content: '',
           type: 'bullet_list_close'
         }]);
       });
@@ -592,18 +512,15 @@ describe('MarkdownTokenizer', () => {
     describe('image', () => {
       it('[img]https://test.com[/img]', () => {
         expect(MarkdownTokenizer.parse('[img]https://test.com[/img]')).to.eql([{
-          content: '',
           type: 'paragraph_open'
         }, {
           content: '[img]https://test.com[/img]',
           type: 'inline',
           children: [{
-            content: undefined,
             type: 'image',
             attrs: [['src', 'https://test.com']]
           }]
         }, {
-          content: '',
           type: 'paragraph_close'
         }]);
       });
@@ -612,24 +529,20 @@ describe('MarkdownTokenizer', () => {
     describe('quote', () => {
       it('[quote]z[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([{
-          content: '',
           type: 'quote_open'
         },
         ...text('z'),
         {
-          content: '',
           type: 'quote_close'
         }]);
       });
 
       it('[quote]\\nz\\n[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote]\nz\n[/quote]')).to.eql([{
-          content: '',
           type: 'quote_open'
         },
         ...text('z'),
         {
-          content: '',
           type: 'quote_close'
         }]);
       });
@@ -638,12 +551,10 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('q[quote]z[/quote]')).to.eql([
           ...text('q'),
           {
-            content: '',
             type: 'quote_open'
           },
           ...text('z'),
           {
-            content: '',
             type: 'quote_close'
           }
         ]);
@@ -651,16 +562,25 @@ describe('MarkdownTokenizer', () => {
 
       it('[quote]z[/quote]q', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]q')).to.eql([{
-          content: '',
           type: 'quote_open'
         },
         ...text('z'),
         {
-          content: '',
           type: 'quote_close'
         },
         ...text('q')
         ]);
+      });
+
+      it('[quote=x]z[/quote]', () => {
+        expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([{
+          type: 'quote_open',
+          attrs: [['nickname', 'x']]
+        },
+        ...text('z'),
+        {
+          type: 'quote_close'
+        }]);
       });
     });
   });
