@@ -632,6 +632,57 @@ describe('MarkdownTokenizer', () => {
           type: 'quote_close'
         }]);
       });
+
+      it('q[quote]z[/quote]', () => {
+        expect(MarkdownTokenizer.parse('q[quote]z[/quote]')).to.eql([
+          ...text('q'),
+          {
+            content: '',
+            type: 'quote_open'
+          }, {
+            content: '',
+            type: 'paragraph_open'
+          }, {
+            content: 'z',
+            type: 'inline',
+            children: [{
+              content: 'z',
+              type: 'text'
+            }]
+          }, {
+            content: '',
+            type: 'paragraph_close'
+          }, {
+            content: '',
+            type: 'quote_close'
+          }
+        ]);
+      });
+
+      it('[quote]z[/quote]q', () => {
+        expect(MarkdownTokenizer.parse('[quote]z[/quote]q')).to.eql([{
+          content: '',
+          type: 'quote_open'
+        }, {
+          content: '',
+          type: 'paragraph_open'
+        }, {
+          content: 'z',
+          type: 'inline',
+          children: [{
+            content: 'z',
+            type: 'text'
+          }]
+        }, {
+          content: '',
+          type: 'paragraph_close'
+        }, {
+          content: '',
+          type: 'quote_close'
+        },
+        ...text('q')
+        ]);
+      });
     });
   });
 });
