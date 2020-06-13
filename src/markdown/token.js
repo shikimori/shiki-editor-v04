@@ -9,7 +9,9 @@ export default class Token {
     }
 
     if (attrs) {
-      this.attrs = attrs;
+      this.attrs = attrs.constructor === Object ?
+        Object.entries(attrs) :
+        attrs;
     }
 
     if (content) {
