@@ -614,20 +614,9 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([{
           content: '',
           type: 'quote_open'
-        }, {
-          content: '',
-          type: 'paragraph_open'
-        }, {
-          content: 'z',
-          type: 'inline',
-          children: [{
-            content: 'z',
-            type: 'text'
-          }]
-        }, {
-          content: '',
-          type: 'paragraph_close'
-        }, {
+        },
+        ...text('z'),
+        {
           content: '',
           type: 'quote_close'
         }]);
@@ -637,20 +626,9 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[quote]\nz\n[/quote]')).to.eql([{
           content: '',
           type: 'quote_open'
-        }, {
-          content: '',
-          type: 'paragraph_open'
-        }, {
-          content: 'z',
-          type: 'inline',
-          children: [{
-            content: 'z',
-            type: 'text'
-          }]
-        }, {
-          content: '',
-          type: 'paragraph_close'
-        }, {
+        },
+        ...text('z'),
+        {
           content: '',
           type: 'quote_close'
         }]);
@@ -662,20 +640,9 @@ describe('MarkdownTokenizer', () => {
           {
             content: '',
             type: 'quote_open'
-          }, {
-            content: '',
-            type: 'paragraph_open'
-          }, {
-            content: 'z',
-            type: 'inline',
-            children: [{
-              content: 'z',
-              type: 'text'
-            }]
-          }, {
-            content: '',
-            type: 'paragraph_close'
-          }, {
+          },
+          ...text('z'),
+          {
             content: '',
             type: 'quote_close'
           }
@@ -686,20 +653,9 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]q')).to.eql([{
           content: '',
           type: 'quote_open'
-        }, {
-          content: '',
-          type: 'paragraph_open'
-        }, {
-          content: 'z',
-          type: 'inline',
-          children: [{
-            content: 'z',
-            type: 'text'
-          }]
-        }, {
-          content: '',
-          type: 'paragraph_close'
-        }, {
+        },
+        ...text('z'),
+        {
           content: '',
           type: 'quote_close'
         },
