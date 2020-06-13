@@ -31,15 +31,10 @@ export default {
     Editor
   },
   data: () => ({
-    isColumn2: true,
-    text1: `q[quote]z[/quote]x
-
-q
-[quote]
-z
-[/quote]
-x
-`,
+    text1: `[quote]z[/quote]
+[quote=morr]z[/quote]
+[quote=c1;1;morr]z[/quote]`,
+    isColumn2: false,
     text2: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -63,7 +58,7 @@ css code block
 > > nope
 > yes
 
-before[quote]Old style quote support[/quote]after`
+[quote]Old style quote support[/quote]`
   }),
   mounted() {
     window.markdownTokenizer = markdownit('commonmark', { html: false });

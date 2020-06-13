@@ -6,6 +6,7 @@ import {
   extractUntil,
   hasInlineSequence
 } from './tokenizer_helpers';
+import { parseQuoteMeta } from './bbcode_helpers'
 
 export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
@@ -13,9 +14,10 @@ export default class MarkdownTokenizer {
     bullet_list: 'ul',
     list_item: 'li',
     underline: 'span'
-  }
-  MAX_BBCODE_SIZE = 10;
+  };
+  MAX_BBCODE_SIZE = 50; // [quote=...] can be so long
   MAX_URL_SIZE = 512;
+  QUOTE_REGEXP = /\[quote(?:=([^\]]+))?\]/;
 
   constructor(text, index, exitSequence) {
     this.text = text;
@@ -94,9 +96,10 @@ export default class MarkdownTokenizer {
 
   parseLine(nestedSequence) {
     const startIndex = this.index;
+    let match;
 
     outer: while (this.index <= this.text.length) { // eslint-disable-line no-restricted-syntax
-      const { char1, seq2, seq3, bbcode } = this;
+      const { char1, seq2, seq3, seq5, bbcode } = this;
       const isStart = startIndex === this.index;
       const isEnd = char1 === '\n' || char1 === undefined;
 
@@ -142,11 +145,18 @@ export default class MarkdownTokenizer {
         }
       }
 
-      if (bbcode === '[quote]') {
+      if (seq5 === '[quot' && (
+        match = bbcode.match(this.QUOTE_REGEXP)
+      )) {
         if (!isStart) {
           this.processParagraph(startIndex);
         }
-        this.processBlock('quote', bbcode, '[/quote]');
+        this.processBlock(
+          'quote',
+           bbcode,
+          '[/quote]',
+          parseQuoteMeta(match[1])
+        );
         if (this.char1 === '\n' || this.char1 === undefined) {
           this.next();
         }
@@ -236,11 +246,11 @@ export default class MarkdownTokenizer {
 
     const prevToken = inlineTokens[inlineTokens.length - 1];
     if (!prevToken || prevToken.type !== 'text') {
-      inlineTokens.push(new Token('text', ''));
+      inlineTokens.push(new Token('text'));
     }
     const token = inlineTokens[inlineTokens.length - 1];
 
-    token.content += this.char1;
+    token.content = token.content ? token.content + this.char1 : this.char1;
     this.next();
   }
 
@@ -291,7 +301,9 @@ export default class MarkdownTokenizer {
 
     const code = extractUntil(this.text, tag, startIndex);
     if (code) {
-      this.inlineTokens.push(new Token('code_inline', code));
+      this.inlineTokens.push(
+        new Token('code_inline', code)
+      );
       this.next(code.length + tag.length * 2);
       return true;
     }
@@ -302,10 +314,10 @@ export default class MarkdownTokenizer {
   processInlineLink(seq) {
     const url = extractUntil(this.text, ']', this.index + seq.length);
     if (url) {
-      const token = this.tagOpen('link');
-      token.attrSet('href', url);
       this.marksStack.push('[url]');
-      this.inlineTokens.push(token);
+      this.inlineTokens.push(
+        this.tagOpen('link', [['href', url]])
+      );
       this.next(seq.length + url.length + ']'.length);
       return true;
     }
@@ -320,9 +332,9 @@ export default class MarkdownTokenizer {
     const src = extractUntil(this.text, tagEnd, index, index + 255);
 
     if (src) {
-      const token = new Token('image');
-      token.attrSet('src', src);
-      this.inlineTokens.push(token);
+      this.inlineTokens.push(
+        new Token('image', null, null, [['src', src]])
+      );
       this.next(src.length + tagStart.length + tagEnd.length);
       return true;
     }
@@ -330,9 +342,9 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processBlock(type, startSequence, exitSequence) {
+  processBlock(type, startSequence, exitSequence, metaAttributes) {
     this.next(startSequence.length);
-    this.push(this.tagOpen(type));
+    this.push(this.tagOpen(type, metaAttributes));
 
     if (this.char1 === '\n') { this.next(); }
 
@@ -416,11 +428,10 @@ export default class MarkdownTokenizer {
 
     const token = new Token(
       'code_block',
-      this.text.slice(startIndex, isEnded ? this.index - 5 : this.index)
+      this.text.slice(startIndex, isEnded ? this.index - 5 : this.index),
+      null,
+      language ? [['language', language]] : null
     );
-    if (language) {
-      token.attrSet('language', language);
-    }
     this.push(token);
   }
 
@@ -439,12 +450,12 @@ export default class MarkdownTokenizer {
     return null;
   }
 
-  tagOpen(type) {
-    return new Token(`${type}_open`, '');
+  tagOpen(type, attributes = null) {
+    return new Token(`${type}_open`, null, null, attributes);
   }
 
   tagClose(type) {
-    return new Token(`${type}_close`, '');
+    return new Token(`${type}_close`);
   }
 
   push(token) {

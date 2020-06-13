@@ -573,7 +573,7 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[quote=x]z[/quote]', () => {
-        expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([{
+        expect(MarkdownTokenizer.parse('[quote=x]z[/quote]')).to.eql([{
           type: 'quote_open',
           attrs: [['nickname', 'x']]
         },
