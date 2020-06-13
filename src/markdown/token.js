@@ -1,14 +1,20 @@
 // based on https://github.com/markdown-it/markdown-it/blob/master/lib/token.js
 
 export default class Token {
-  constructor(type, content, children = null) {
+  constructor(type, content = null, children = null, attrs) {
     this.type = type;
 
     if (children) {
       this.children = children;
     }
 
-    this.content = content;
+    if (attrs) {
+      this.attrs = attrs;
+    }
+
+    if (content) {
+      this.content = content;
+    }
   }
 
   attrIndex(name) {
