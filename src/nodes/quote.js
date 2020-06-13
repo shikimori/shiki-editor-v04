@@ -15,4 +15,20 @@ export default class Quote extends Node {
       toDOM() { return ['div', { class: 'b-quote' }, 0]; }
     };
   }
+
+  get markdownSerializerToken() {
+    return {
+      open: '[quote]',
+      close: '[/quote]',
+      mixable: true,
+      expelEnclosingWhitespace: true
+    };
+  }
+  markdownSerialize(state, node) {
+    state.write('[quote]');
+    state.ensureNewLine();
+    state.renderContent(node);
+    state.write('[/quote]');
+    state.ensureNewLine();
+  }
 }
