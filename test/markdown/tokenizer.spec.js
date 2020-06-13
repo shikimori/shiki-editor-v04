@@ -582,6 +582,28 @@ describe('MarkdownTokenizer', () => {
           type: 'quote_close'
         }]);
       });
+
+      it('[quote=t1;2;x]z[/quote]', () => {
+        expect(MarkdownTokenizer.parse('[quote=t1;2;x]z[/quote]')).to.eql([{
+          type: 'quote_open',
+          attrs: [['topic_id', '1'], ['user_id', '2'], ['nickname', 'x']]
+        },
+        ...text('z'),
+        {
+          type: 'quote_close'
+        }]);
+      });
+
+      it('[quote=m1;2;x]z[/quote]', () => {
+        expect(MarkdownTokenizer.parse('[quote=m1;2;x]z[/quote]')).to.eql([{
+          type: 'quote_open',
+          attrs: [['message_id', '1'], ['user_id', '2'], ['nickname', 'x']]
+        },
+        ...text('z'),
+        {
+          type: 'quote_close'
+        }]);
+      });
     });
   });
 });
