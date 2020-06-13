@@ -11,6 +11,13 @@ export default class Quote extends Node {
       group: 'block',
       defining: true,
       draggable: false,
+      attrs: {
+        comment_id: { default: undefined },
+        message_id: { default: undefined },
+        topic_id: { default: undefined },
+        user_id: { default: undefined },      
+        user_nickname: { default: undefined },
+      },
       parseDOM: [{ tag: 'div.b-quote' }],
       toDOM() { return ['div', { class: 'b-quote' }, 0]; }
     };
