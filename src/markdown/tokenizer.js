@@ -20,7 +20,9 @@ export default class MarkdownTokenizer {
   constructor(text, index, endSequence) {
     this.text = text;
     this.index = index;
+
     this.endSequence = endSequence;
+    this.isEndSequence = false;
 
     this.tokens = [];
     this.inlineTokens = [];
@@ -45,6 +47,14 @@ export default class MarkdownTokenizer {
   next(steps = 1) {
     this.index += steps;
     this.char1 = this.text[this.index];
+
+    if (this.endSequence) {
+      this.isEndSequence = this.char1 === this.endSequence[0] && (
+        this.endSequence.length === 1 ||
+        this.text.slice(this.index, this.index + this.endSequence.length) ===
+          this.endSequence
+      );
+    }
   }
 
   get bbcode() {
@@ -311,7 +321,14 @@ export default class MarkdownTokenizer {
     this.next(startSequence.length);
     this.push(this.tagOpen(type));
 
-    // this.inlineTokens.push(token);
+    const tokenizer = new MarkdownTokenizer(this.text, this.index, endSequence);
+    const tokens = tokenizer.parse();
+
+    this.tokens = this.tokens.concat(tokens);
+    this.index = tokenizer.index;
+
+    this.next(endSequence.length);
+    this.push(this.tagClose(type));
   }
 
   processParagraph(startIndex) {
