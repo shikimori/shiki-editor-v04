@@ -31,7 +31,7 @@ export default {
     Editor
   },
   data: () => ({
-    isColumn2: false,
+    isColumn2: true,
     text1: `q[quote]z[/quote]x
 
 q
@@ -61,7 +61,9 @@ css code block
 
 > Quote
 > > nope
-> yes`
+> yes
+
+before[quote]Old style quote support[/quote]after`
   }),
   mounted() {
     window.markdownTokenizer = markdownit('commonmark', { html: false });
