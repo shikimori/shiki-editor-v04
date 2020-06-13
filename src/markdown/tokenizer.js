@@ -17,8 +17,10 @@ export default class MarkdownTokenizer {
   MAX_BBCODE_SIZE = 10;
   MAX_URL_SIZE = 512;
 
-  constructor(text) {
+  constructor(text, index, endSequence) {
     this.text = text;
+    this.index = index;
+    this.endSequence = endSequence;
 
     this.tokens = [];
     this.inlineTokens = [];
@@ -26,11 +28,11 @@ export default class MarkdownTokenizer {
   }
 
   static parse(text) {
-    return new MarkdownTokenizer(text).parse();
+    return new MarkdownTokenizer(text, 0, undefined).parse();
   }
 
   parse() {
-    this.index = -1;
+    this.index -= 1;
     this.next();
 
     while (this.index < this.text.length) {
@@ -79,12 +81,11 @@ export default class MarkdownTokenizer {
       this.text[this.index + 4];
   }
 
-
   parseLine(nestedSequence) {
     const startIndex = this.index;
 
     outer: while (this.index <= this.text.length) { // eslint-disable-line no-restricted-syntax
-      const { char1, seq2, seq3 } = this;
+      const { char1, seq2, seq3, bbcode } = this;
       const isStart = startIndex === this.index;
       const isEnd = char1 === '\n' || char1 === undefined;
 
@@ -113,19 +114,19 @@ export default class MarkdownTokenizer {
             break outer;
         }
 
-        switch (this.bbcode) {
+        switch (bbcode) {
           case '[*]':
             this.processBulletList(
               nestedSequence,
-              this.text[this.index + this.bbcode.length] === ' ' ?
-                this.bbcode + ' ' :
-                this.bbcode
+              this.text[this.index + bbcode.length] === ' ' ?
+                bbcode + ' ' :
+                bbcode
             );
             break outer;
         }
       }
 
-      this.processInline();
+      this.processInline(bbcode);
     }
   }
 
@@ -179,7 +180,7 @@ export default class MarkdownTokenizer {
         break;
 
       case '[quote]':
-        this.processQuote(bbcode);
+        this.processBlock('quote', bbcode, '[/quote]');
         return;
 
       default:
@@ -306,7 +307,10 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processQuote(bbcode) {
+  processBlock(type, startSequence, endSequence) {
+    this.next(startSequence.length);
+    this.push(this.tagOpen(type));
+
     // this.inlineTokens.push(token);
   }
 

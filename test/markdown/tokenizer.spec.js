@@ -627,7 +627,7 @@ describe('MarkdownTokenizer', () => {
         }, {
           content: '',
           type: 'paragraph_close'
-        } {
+        }, {
           content: '',
           type: 'quote_close'
         }]);

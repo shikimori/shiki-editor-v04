@@ -3,6 +3,7 @@
     <div class='fc-2'>
       <div class='f-column'>
         <Editor
+          ref='editor1'
           :content='text1'
           @update='(value) => text1 = value'
         />
@@ -10,6 +11,7 @@
       </div>
       <div v-if='isColumn2' class='f-column'>
         <Editor
+          ref='editor2'
           :content='text2'
           @update='(value) => text2 = value'
         />
@@ -21,9 +23,7 @@
 
 <script>
 import Editor from './components/editor';
-
 import markdownit from 'markdown-it';
-window.markdownTokenizer = markdownit('commonmark', { html: false });
 
 export default {
   name: 'App',
@@ -56,7 +56,11 @@ css code block
 > Quote
 > > nope
 > yes`
-  })
+  }),
+  mounted() {
+    window.markdownTokenizer = markdownit('commonmark', { html: false });
+    window.shikiTokenizer = this.$refs.editor1.editor.markdownParser.tokenizer;
+  }
 };
 </script>
 
