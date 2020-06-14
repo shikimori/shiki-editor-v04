@@ -30,6 +30,40 @@ export default class Quote extends Node {
       }],
       toDOM(node) {
         if (node.attrs.nickname) {
+          let innerQuoteable;
+
+          if (node.attrs.comment_id || node.attrs.message_id ||
+            node.attrs.topic_id
+          ) {
+            let href;
+
+            if (node.attrs.comment_id) {
+              href = `/comments/${node.attrs.comment_id}`;
+            } else if (node.attrs.message_id) {
+              href = `/messages/${node.attrs.message_id}`;
+            } else {
+              href = `/topics/${node.attrs.topic_id}`;
+            }
+
+            innerQuoteable = [
+              'a',
+              { class: 'b-link b-user16', href: href, target: '_blank' },
+              [
+                'img',
+                {
+                  src: `/system/users/x16/${node.attrs.user_id}.png`,
+                  srcset: `/system/users/x32/${node.attrs.user_id}.png 2x`
+                }
+              ],
+              [
+                'span',
+                node.attrs.nickname
+              ]
+            ];
+          } else {
+            innerQuoteable = node.attrs.nickname;
+          }
+
           return [
             'div',
             {
@@ -40,7 +74,7 @@ export default class Quote extends Node {
               'data-user_id': node.attrs.user_id,
               'data-nickname': node.attrs.nickname
             },
-            ['div', { class: 'quoteable' }, node.attrs.nickname],
+            ['div', { class: 'quoteable' }, innerQuoteable],
             ['div', 0]
           ];
         }
@@ -65,4 +99,8 @@ export default class Quote extends Node {
   }
 }
 
-// <div class="quoteable"><a class="b-link b-user16 bubbled-processed" href="/comments/5983625"><img src="https://desu.shikimori.one/system/users/x16/467283.png?1587042532" srcset="https://desu.shikimori.one/system/users/x32/467283.png?1587042532 2x" alt="Veniamin"><span>Veniamin</span></a></div>
+// <div class="quoteable">
+// <a class="b-link b-user16 bubbled-processed" href="/comments/5983625">
+// <img src="https://desu.shikimori.one/system/users/x16/467283.png?1587042532" srcset="https://desu.shikimori.one/system/users/x32/467283.png?1587042532 2x" alt="Veniamin">
+// <span>Veniamin</span></a>
+// </div>
