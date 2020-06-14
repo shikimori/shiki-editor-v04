@@ -19,13 +19,27 @@ export default class Quote extends Node {
         nickname: { default: undefined }
       },
       parseDOM: [{
-        tag: 'div.b-quote'
+        tag: 'div.b-quote',
+        getAttrs: node => ({
+          comment_id: node.getAttribute('data-comment_id'),
+          message_id: node.getAttribute('data-message_id'),
+          topic_id: node.getAttribute('data-topic_id'),
+          user_id: node.getAttribute('data-user_id'),
+          nickname: node.getAttribute('data-nickname')
+        })
       }],
       toDOM(node) {
         if (node.attrs.nickname) {
           return [
             'div',
-            { class: 'b-quote' },
+            {
+              class: 'b-quote',
+              'data-comment_id': node.attrs.comment_id,
+              'data-message_id': node.attrs.message_id,
+              'data-topic_id': node.attrs.topic_id,
+              'data-user_id': node.attrs.user_id,
+              'data-nickname': node.attrs.nickname
+            },
             ['div', { class: 'quoteable' }, node.attrs.nickname],
             ['div', 0]
           ];
