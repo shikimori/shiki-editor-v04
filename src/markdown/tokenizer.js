@@ -6,7 +6,7 @@ import {
   extractUntil,
   hasInlineSequence
 } from './tokenizer_helpers';
-import { parseQuoteMeta } from './bbcode_helpers'
+import { parseQuoteMeta } from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
@@ -153,7 +153,7 @@ export default class MarkdownTokenizer {
         }
         this.processBlock(
           'quote',
-           bbcode,
+          bbcode,
           '[/quote]',
           parseQuoteMeta(match[1])
         );

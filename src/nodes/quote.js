@@ -21,7 +21,15 @@ export default class Quote extends Node {
       parseDOM: [{
         tag: 'div.b-quote'
       }],
-      toDOM(_node) {
+      toDOM(node) {
+        if (node.attrs.nickname) {
+          return [
+            'div',
+            { class: 'b-quote' },
+            ['div', { class: 'quoteable' }, node.attrs.nickname],
+            ['div', 0]
+          ];
+        }
         return ['div', { class: 'b-quote' }, 0];
       }
     };
