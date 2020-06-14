@@ -14,13 +14,15 @@ export default {
     EditorContent
   },
   props: {
+    baseUrl: { type: String, required: true },
     content: { type: String, required: true }
   },
   data() {
     return {
       editor: new Editor({
         extensions: [],
-        content: this.content
+        content: this.content,
+        baseUrl: this.baseUrl
       }, Vue),
       editorContent: this.content
     };

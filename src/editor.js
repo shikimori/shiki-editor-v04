@@ -43,7 +43,8 @@ import {
 export default class ShikiEditor extends Emitter {
   options = {
     extensions: [],
-    content: ''
+    content: '',
+    baseUrl: ''
   }
 
   constructor(options, Vue) {
@@ -100,7 +101,7 @@ export default class ShikiEditor extends Emitter {
       new CodeBlock(),
       new Image(),
       new ListItem(),
-      new Quote()
+      new Quote({ baseUrl: this.options.baseUrl })
     ];
   }
 

@@ -5,6 +5,7 @@
         <Editor
           ref='editor1'
           :content='text1'
+          :base-url='baseUrl'
           @update='(value) => text1 = value'
         />
         <textarea v-model='text1' rows='10' />
@@ -13,6 +14,7 @@
         <Editor
           ref='editor2'
           :content='text2'
+          :base-url='baseUrl'
           @update='(value) => text2 = value'
         />
         <textarea v-model='text2' rows='10' />
@@ -31,6 +33,7 @@ export default {
     Editor
   },
   data: () => ({
+    baseUrl: 'https://shikimori.one',
     text1: `test
 `,
     isColumn2: true,
@@ -58,7 +61,8 @@ css code block
 > yes
 
 [quote]Old style quote support[/quote]
-[quote=c1246;1945;Silentium°]Old style quote with author support[/quote]`
+[quote=zxc]Old style quote with nickname[/quote]
+[quote=c1246;1945;Silentium°]Old style quote with user[/quote]`
   }),
   mounted() {
     window.markdownTokenizer = markdownit('commonmark', { html: false });

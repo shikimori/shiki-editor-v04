@@ -6,6 +6,8 @@ export default class Quote extends Node {
   }
 
   get schema() {
+    const prependBaseUrl = this.prependBaseUrl.bind(this);
+
     return {
       content: 'block*',
       group: 'block',
@@ -47,12 +49,20 @@ export default class Quote extends Node {
 
             innerQuoteable = [
               'a',
-              { class: 'b-link b-user16', href: href, target: '_blank' },
+              {
+                class: 'b-link b-user16',
+                href: prependBaseUrl(href),
+                target: '_blank'
+              },
               [
                 'img',
                 {
-                  src: `/system/users/x16/${node.attrs.user_id}.png`,
-                  srcset: `/system/users/x32/${node.attrs.user_id}.png 2x`
+                  src: prependBaseUrl(
+                    `/system/users/x16/${node.attrs.user_id}.png`
+                  ),
+                  srcset: prependBaseUrl(
+                    `/system/users/x32/${node.attrs.user_id}.png 2x`
+                  )
                 }
               ],
               [

@@ -70,7 +70,6 @@
     "webpack-merge": "^4.2.2"
   },
   "peerDependencies": {
-    "decko": "^1.2.0",
     "lodash": "^4.17.15",
     "prosemirror-inputrules": "^1.1.2",
     "prosemirror-keymap": "^1.1.4",
@@ -84,7 +83,6 @@
     "prosemirror-view": "^1.14.13"
   },
   "dependencies": {
-    "decko": "^1.2.0",
     "lodash": "^4.17.15",
     "prosemirror-inputrules": "^1.1.2",
     "prosemirror-keymap": "^1.1.4",

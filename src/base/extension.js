@@ -25,11 +25,17 @@ export default class Extension {
   }
 
   get defaultOptions() {
-    return {};
+    return {
+      baseUrl: ''
+    };
   }
 
   get plugins() {
     return [];
+  }
+
+  prependBaseUrl(url) {
+    return `${this.options.baseUrl}${url}`;
   }
 
   inputRules() {
