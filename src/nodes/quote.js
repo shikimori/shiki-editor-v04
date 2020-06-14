@@ -98,9 +98,3 @@ export default class Quote extends Node {
     state.ensureNewLine();
   }
 }
-
-// <div class="quoteable">
-// <a class="b-link b-user16 bubbled-processed" href="/comments/5983625">
-// <img src="https://desu.shikimori.one/system/users/x16/467283.png?1587042532" srcset="https://desu.shikimori.one/system/users/x32/467283.png?1587042532 2x" alt="Veniamin">
-// <span>Veniamin</span></a>
-// </div>
