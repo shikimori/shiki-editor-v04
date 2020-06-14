@@ -31,9 +31,11 @@ export default {
     Editor
   },
   data: () => ({
-    text1: `[quote]z[/quote]
-[quote=morr]z[/quote]
-[quote=c1;1;morr]z[/quote]`,
+//     text1: `[quote]z[/quote]
+// [quote=morr]z[/quote]
+// [quote=c1;1;morr]z[/quote]`,
+    text1: `[quote=morr]z[/quote]
+`,
     isColumn2: false,
     text2: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
