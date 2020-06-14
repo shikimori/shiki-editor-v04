@@ -28,7 +28,8 @@ export default class Quote extends Node {
           topic_id: node.getAttribute('data-topic_id'),
           user_id: node.getAttribute('data-user_id'),
           nickname: node.getAttribute('data-nickname')
-        })
+        }),
+        contentElement: 'div.quote-content'
       }],
       toDOM(node) {
         if (node.attrs.nickname) {
@@ -85,10 +86,14 @@ export default class Quote extends Node {
               'data-nickname': node.attrs.nickname
             },
             ['div', { class: 'quoteable' }, innerQuoteable],
-            ['div', 0]
+            ['div', { class: 'quote-content' }, 0]
           ];
         }
-        return ['div', { class: 'b-quote' }, 0];
+        return [
+          'div',
+          { class: 'b-quote' },
+          ['div', { class: 'quote-content' }, 0]
+        ];
       }
     };
   }

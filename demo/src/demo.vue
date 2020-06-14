@@ -35,6 +35,8 @@ export default {
   data: () => ({
     baseUrl: 'https://shikimori.one',
     text1: `test
+[quote=zxc]Old style quote with nickname[/quote]
+
 `,
     isColumn2: true,
     text2: `B[b]old tex[/b]t
