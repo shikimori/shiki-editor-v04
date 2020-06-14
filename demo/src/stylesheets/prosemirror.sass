@@ -158,11 +158,26 @@ li.ProseMirror-selectednode
   left: 0
   min-height: 1em !important
   overflow: visible
-  padding: 6px 0
   position: relative
+  display: flex
+  flex-wrap: wrap
   right: 0
   top: 0
   z-index: 10
+
+.ProseMirror-menuitem
+  margin: 6px 0
+
+  +gte_laptop
+    &:hover
+      color: $link-hover
+
+  &:active
+    color: #ff0202
+
+.ProseMirror-menuseparator
+  margin-top: 6px
+  margin-bottom: 6px
 
 .ProseMirror-icon
   display: inline-block
