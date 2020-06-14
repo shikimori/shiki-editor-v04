@@ -18,8 +18,19 @@ export default class Quote extends Node {
         user_id: { default: undefined },
         nickname: { default: undefined }
       },
-      parseDOM: [{ tag: 'div.b-quote' }],
-      toDOM(node) { return ['div', { class: 'b-quote' }, 0]; }
+      parseDOM: [{
+        tag: 'div.b-quote'
+      }],
+      toDOM(_node) {
+        return ['div', { class: 'b-quote' }, 0];
+      }
+    };
+  }
+
+  get markdownParserToken() {
+    return {
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
     };
   }
 

@@ -34,10 +34,8 @@ export default class Image extends Node {
 
   get markdownParserToken() {
     return {
-      node: 'image',
-      getAttrs: token => ({
-        src: token.attrGet('src')
-      })
+      node: this.name,
+      getAttrs: token => token.serializeAttributes()
     };
   }
 

@@ -51,10 +51,11 @@ export default class Token {
   }
 
   attrGet(name) {
-    const idx = this.attrIndex(name); let
-      value = null;
+    const idx = this.attrIndex(name);
+    let value = null;
+
     if (idx >= 0) {
-      value = this.attrs[idx][1]; // eslint-disable-line
+      value = this.attrs[idx][1];
     }
     return value;
   }
@@ -67,5 +68,9 @@ export default class Token {
     } else {
       this.attrs[idx][1] = this.attrs[idx][1] + ' ' + value;
     }
+  }
+
+  serializeAttributes() {
+    return this.attrs ? Object.fromEntries(this.attrs) : null;
   }
 }

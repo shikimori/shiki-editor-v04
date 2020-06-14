@@ -55,10 +55,8 @@ export default class CodeBlock extends Node {
 
   get markdownParserToken() {
     return {
-      block: 'code_block',
-      getAttrs: token => ({
-        language: token.attrGet('language')
-      })
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
     };
   }
 
