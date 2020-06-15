@@ -117,8 +117,7 @@ export default {
   z-index: 10
 
 .menu-group
-  display: flex
-  flex-wrap: wrap
+  display: inline
 
   & + .menu-group:before
     border-right: 1px solid #ddd
