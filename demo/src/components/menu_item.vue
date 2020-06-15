@@ -38,11 +38,14 @@ export default {
   font-size: 14px
 
   &:not(.is-disabled)
-    +link-color(#123)
+    +link-color(#456)
     cursor: pointer
 
   &.is-disabled
     color: rgba(#123, 0.3)
+
+  &.is-active
+    background: rgba(#acb1b4, 0.25)
 
   &:before
     +shikimori
