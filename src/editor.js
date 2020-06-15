@@ -280,6 +280,18 @@ export default class ShikiEditor extends Emitter {
     };
   }
 
+  get isActive() {
+    return Object
+      .entries({
+        ...this.activeMarks,
+        ...this.activeNodes
+      })
+      .reduce((types, [name, value]) => ({
+        ...types,
+        [name]: (attrs = {}) => value(attrs)
+      }), {});
+  }
+
   setParentComponent(component = null) {
     if (!component) {
       return;
