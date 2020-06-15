@@ -33,6 +33,7 @@ import {
 } from './utils';
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
+import trackFocus from './plugins/track_focus';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -162,7 +163,8 @@ export default class ShikiEditor extends Emitter {
       }),
       keymap(baseKeymap),
       dropCursor(this.options.dropCursor),
-      gapCursor()
+      gapCursor(),
+      trackFocus(this)
     ];
   }
 
