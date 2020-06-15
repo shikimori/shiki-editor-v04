@@ -2,10 +2,13 @@
   <button
     class='menu-item'
     :title='title'
-    :class='{ "is-active": isActive }'
-    @click='itemCommand'
+    :class='{
+      "is-active": isActive,
+      "is-disabled": !isEnabled
+    }'
+    @click='command'
   >
-    {{ type }} {{ isActive }}
+    {{ title }} {{ isActive }}
   </button>
 </template>
 
@@ -13,20 +16,11 @@
 export default {
   name: 'MenuItem',
   props: {
-    type: { type: String, required: true },
+    title: { type: String, required: true },
+    command: { type: Function, required: true },
     isActive: { type: Boolean, required: true },
-    command: { type: Function, required: true }
+    isEnabled: { type: Boolean, required: false, default: true }
   },
-  computed: {
-    title() {
-      return I18n.t(`frontend.shiki_editor.${this.type}`);
-    }
-  },
-  methods: {
-    itemCommand() {
-      this.command();
-    }
-  }
 };
 </script>
 

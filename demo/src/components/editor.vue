@@ -1,7 +1,7 @@
 <template>
   <div>
     <EditorMenuBar
-      v-slot='{ commands, activeChecks }'
+      v-slot='{ activeChecks, commands }'
       :editor="editor"
     >
       <div class='menubar'>
@@ -11,11 +11,9 @@
           class='menu-group'
         >
           <MenuItem
-            v-for='menuItem in menuGroup'
-            :key='menuItem'
-            :type='menuItem'
-            :is-active='activeChecks[menuItem]()'
-            :command='commands[menuItem]'
+            v-for='item in menuGroup'
+            :key='item.constructor === Object ? item.type : item'
+            v-bind='item.constructor === Object ? item : buildMenuItem(item, activeChecks, commands)'
           />
         </div>
       </div>
@@ -29,6 +27,7 @@
 import Vue from 'vue';
 import { Editor, EditorContent, EditorMenuBar } from '../../../src';
 import MenuItem from './menu_item';
+import { undo, redo } from "prosemirror-history";
 
 export default {
   name: 'Editor',
@@ -55,7 +54,19 @@ export default {
     menuGroups() {
       return [
         ['strong', 'em', 'underline', 'deleted', 'link', 'code_inline'],
-        ['undo', 'redo'],
+        [{
+          type: 'undo',
+          title: I18n.t('frontend.shiki_editor.undo'),
+          command: undo,
+          isActive: false,
+          isEnabled: undo(this.editor.state),
+        }, {
+          type: 'redo',
+          title: I18n.t('frontend.shiki_editor.redo'),
+          command: redo,
+          isActive: false,
+          isEnabled: redo(this.editor.state),
+        }],
         ['image'],
         ['bullet_list', 'blockquote', 'code_block']
       ];
@@ -76,6 +87,17 @@ export default {
   },
   beforeDestroy() {
     this.editor.destroy();
+  },
+  methods: {
+    buildMenuItem(type, activeChecks, commands) {
+      return {
+        type: type,
+        title: I18n.t(`frontend.shiki_editor.${type}`),
+        command: commands[type],
+        isActive: activeChecks[type](),
+        isEnabled: true
+      };
+    }
   }
 };
 </script>
