@@ -11,18 +11,6 @@ import { dropCursor } from 'prosemirror-dropcursor';
 import { gapCursor } from 'prosemirror-gapcursor';
 
 import {
-  Doc,
-  Text,
-  Paragraph,
-  Blockquote,
-  BulltList,
-  CodeBlock,
-  Image,
-  ListItem,
-  Quote
-} from './nodes';
-import { Strong, Em, Underline, Deleted, CodeInline, Link } from './marks';
-import {
   ExtensionManager,
   Emitter,
   ComponentView,
@@ -33,7 +21,7 @@ import {
 } from './utils';
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
-import { trackFocus } from './plugins';
+import { trackFocus, nodesAndMarks } from './plugins';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -92,29 +80,9 @@ export default class ShikiEditor extends Emitter {
     return this.view ? this.view.state : undefined;
   }
 
-  get builtInExtensions() {
-    return [
-      new Doc(),
-      new Text(),
-      new Paragraph(),
-      new Strong(),
-      new Em(),
-      new Link(),
-      new Underline(),
-      new Deleted(),
-      new CodeInline(),
-      new Blockquote(),
-      new BulltList(),
-      new CodeBlock(),
-      new Image(),
-      new ListItem(),
-      new Quote({ baseUrl: this.options.baseUrl })
-    ];
-  }
-
   createExtensions() {
     return new ExtensionManager([
-      ...this.builtInExtensions,
+      ...nodesAndMarks(this),
       ...this.options.extensions
     ], this);
   }
@@ -300,7 +268,7 @@ export default class ShikiEditor extends Emitter {
       nodeViews: this.initNodeViews({
         parent: component,
         extensions: [
-          ...this.builtInExtensions,
+          ...nodesAndMarks(this),
           ...this.options.extensions
         ],
         editable: this.options.editable
