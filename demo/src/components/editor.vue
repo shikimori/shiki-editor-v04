@@ -6,10 +6,10 @@
     >
       <button
         class='icon'
-        :class='{ "is-active": isActive.bold() }'
-        @click='commands.bold'
+        :class='{ "is-active": isActive.strong() }'
+        @click='commands.strong'
       >
-        BOLD ICON
+        BOLD ICON {{ isActive.strong() ? 'acitve' : 'not(active)' }}
       </button>
     </EditorMenuBar>
 

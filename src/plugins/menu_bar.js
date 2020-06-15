@@ -8,7 +8,8 @@ class Menu {
 
     // the mousedown event is fired before blur so we can prevent it
     this.mousedownHandler = this.handleClick.bind(this);
-    this.options.element.addEventListener('mousedown', this.mousedownHandler, { capture: true });
+    this.options.element
+      .addEventListener('mousedown', this.mousedownHandler, { capture: true });
 
     this.blurHandler = () => {
       if (this.preventHide) {
@@ -29,7 +30,6 @@ class Menu {
     this.options.element.removeEventListener('mousedown', this.mousedownHandler);
     this.options.editor.off('blur', this.blurHandler);
   }
-
 }
 
 export default function(options) {

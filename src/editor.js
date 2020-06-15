@@ -265,21 +265,21 @@ export default class ShikiEditor extends Emitter {
       .entries(this.schema.marks)
       .reduce((marks, [name, mark]) => ({
         ...marks,
-        [name]: (attrs = {}) => markIsActive(this.state, mark, attrs)
+        [name]: (attrs = {}) => markIsActive(mark, this.state, attrs)
       }), {});
 
     this.activeMarkAttrs = Object
       .entries(this.schema.marks)
       .reduce((marks, [name, mark]) => ({
         ...marks,
-        [name]: getMarkAttrs(this.state, mark)
+        [name]: getMarkAttrs(mark, this.state)
       }), {});
 
     this.activeNodes = Object
       .entries(this.schema.nodes)
       .reduce((nodes, [name, node]) => ({
         ...nodes,
-        [name]: (attrs = {}) => nodeIsActive(this.state, node, attrs)
+        [name]: (attrs = {}) => nodeIsActive(node, this.state, attrs)
       }), {});
   }
 

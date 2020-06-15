@@ -1,5 +1,5 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-utils/src/utils/getNodeAttrs.js
-export default function getNodeAttrs(state, type) {
+export default function getNodeAttrs(type, state) {
   const { from, to } = state.selection;
   let nodes = [];
 
