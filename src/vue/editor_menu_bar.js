@@ -1,5 +1,5 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Components/EditorMenuBar.js
-import MenuBar from '../plugins/menu_bar';
+import { menuBar } from '../plugins';
 
 export default {
   props: {
@@ -21,7 +21,7 @@ export default {
       handler(editor) {
         if (editor) {
           this.$nextTick(() => {
-            editor.registerPlugin(MenuBar({
+            editor.registerPlugin(menuBar({
               editor,
               element: this.$el
             }));

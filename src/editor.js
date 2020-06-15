@@ -33,7 +33,7 @@ import {
 } from './utils';
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
-import trackFocus from './plugins/track_focus';
+import { trackFocus } from './plugins';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -48,6 +48,8 @@ export default class ShikiEditor extends Emitter {
 
   constructor(options, Vue) {
     super(options);
+
+    // setInterval(() => console.log(this.focused), 250)
 
     this.options = {
       ...this.options,
