@@ -19,26 +19,18 @@ import {
   ListItem,
   Quote
 } from './nodes';
-import {
-  Strong,
-  Em,
-  Underline,
-  Deleted,
-  CodeInline,
-  Link
-} from './marks';
+import { Strong, Em, Underline, Deleted, CodeInline, Link } from './marks';
 import {
   ExtensionManager,
   Emitter,
   ComponentView,
-  buildMenu
+  buildMenu,
+  getMarkAttrs,
+  getNodeAttrs
 } from './utils';
-
-import {
-  MarkdownParser,
-  MarkdownSerializer,
-  MarkdownTokenizer
-} from './markdown';
+import { markIsActive, nodeIsActive } from './checks';
+import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
+  from './markdown';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -76,6 +68,8 @@ export default class ShikiEditor extends Emitter {
 
     this.plugins = this.createPlugins();
     this.attachPlugins();
+
+    this.setActiveNodesAndMarks();
 
     // give extension manager access to our view
     this.extensions.view = this.view;
@@ -253,6 +247,39 @@ export default class ShikiEditor extends Emitter {
     this.view.dispatch(transaction);
   }
 
+  setActiveNodesAndMarks() {
+    this.activeMarks = Object
+      .entries(this.schema.marks)
+      .reduce((marks, [name, mark]) => ({
+        ...marks,
+        [name]: (attrs = {}) => markIsActive(this.state, mark, attrs)
+      }), {});
+
+    this.activeMarkAttrs = Object
+      .entries(this.schema.marks)
+      .reduce((marks, [name, mark]) => ({
+        ...marks,
+        [name]: getMarkAttrs(this.state, mark)
+      }), {});
+
+    this.activeNodes = Object
+      .entries(this.schema.nodes)
+      .reduce((nodes, [name, node]) => ({
+        ...nodes,
+        [name]: (attrs = {}) => nodeIsActive(this.state, node, attrs)
+      }), {});
+  }
+
+  getMarkAttrs(type = null) {
+    return this.activeMarkAttrs[type];
+  }
+
+  getNodeAttrs(type = null) {
+    return {
+      ...getNodeAttrs(this.state, this.schema.nodes[type])
+    };
+  }
+
   setParentComponent(component = null) {
     if (!component) {
       return;
@@ -277,6 +304,8 @@ export default class ShikiEditor extends Emitter {
     if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
       return;
     }
+
+    this.setActiveNodesAndMarks();
 
     this.emit('update', { transaction });
   }
