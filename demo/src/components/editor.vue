@@ -119,4 +119,11 @@ export default {
 .menu-group
   display: flex
   flex-wrap: wrap
+
+  & + .menu-group:before
+    border-right: 1px solid #ddd
+    content: ''
+    margin: 0 5px 0 3px
+    margin-top: 6px
+    margin-bottom: 6px
 </style>
