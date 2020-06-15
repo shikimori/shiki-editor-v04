@@ -1,21 +1,9 @@
-import Doc from './doc';
-import Text from './text';
-import Paragraph from './paragraph';
-import Blockquote from './blockquote';
-import BulltList from './bullet_list';
-import CodeBlock from './code_block';
-import Image from './image';
-import ListItem from './list_item';
-import Quote from './quote';
-
-export {
-  Doc,
-  Text,
-  Paragraph,
-  Blockquote,
-  BulltList,
-  CodeBlock,
-  Image,
-  ListItem,
-  Quote
-};
+export { default as Doc } from './doc';
+export { default as Text } from './text';
+export { default as Paragraph } from './paragraph';
+export { default as Blockquote } from './blockquote';
+export { default as BulltList } from './bullet_list';
+export { default as CodeBlock } from './code_block';
+export { default as Image } from './image';
+export { default as ListItem } from './list_item';
+export { default as Quote } from './quote';

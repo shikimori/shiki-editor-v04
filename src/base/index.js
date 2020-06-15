@@ -1,9 +1,3 @@
-import Extension from './extension';
-import Mark from './mark';
-import Node from './node';
-
-export {
-  Extension,
-  Mark,
-  Node
-};
+export { default as Extension } from './extension';
+export { default as Mark } from './mark';
+export { default as Node } from './node';
