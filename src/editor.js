@@ -7,6 +7,8 @@ import { Schema } from 'prosemirror-model';
 import { keymap } from 'prosemirror-keymap';
 import { baseKeymap, joinBackward } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
+import { dropCursor } from 'prosemirror-dropcursor';
+import { gapCursor } from 'prosemirror-gapcursor';
 
 import {
   Doc,
@@ -26,7 +28,8 @@ import {
   ComponentView,
   buildMenu,
   getMarkAttrs,
-  getNodeAttrs
+  getNodeAttrs,
+  minMax
 } from './utils';
 import { markIsActive, nodeIsActive } from './checks';
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
@@ -34,10 +37,14 @@ import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
 
 export default class ShikiEditor extends Emitter {
   options = {
-    extensions: [],
+    autofocus: null,
+    baseUrl: '',
     content: '',
-    baseUrl: ''
+    dropCursor: {},
+    extensions: []
   }
+  focused = false
+  selection = { from: 0, to: 0 }
 
   constructor(options, Vue) {
     super(options);
@@ -70,6 +77,10 @@ export default class ShikiEditor extends Emitter {
     this.attachPlugins();
 
     this.setActiveNodesAndMarks();
+
+    if (this.options.autoFocus !== null) {
+      this.focus(this.options.autoFocus);
+    }
 
     // give extension manager access to our view
     this.extensions.view = this.view;
@@ -150,7 +161,9 @@ export default class ShikiEditor extends Emitter {
         'Shift-Mod-z': redo,
         Backspace: joinBackward
       }),
-      keymap(baseKeymap)
+      keymap(baseKeymap),
+      dropCursor(this.options.dropCursor),
+      gapCursor()
     ];
   }
 
@@ -313,6 +326,11 @@ export default class ShikiEditor extends Emitter {
     const { state } = this.state.applyTransaction(transaction);
     this.view.updateState(state);
 
+    this.selection = {
+      from: this.state.selection.from,
+      to: this.state.selection.to
+    };
+
     if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
       return;
     }
@@ -320,6 +338,57 @@ export default class ShikiEditor extends Emitter {
     this.setActiveNodesAndMarks();
 
     this.emit('update', { transaction });
+  }
+
+  resolveSelection(position = null) {
+    if (this.selection && position === null) {
+      return this.selection;
+    }
+
+    if (position === 'start' || position === true) {
+      return {
+        from: 0,
+        to: 0
+      };
+    }
+
+    if (position === 'end') {
+      const { doc } = this.state;
+      return {
+        from: doc.content.size,
+        to: doc.content.size
+      };
+    }
+
+    return {
+      from: position,
+      to: position
+    };
+  }
+
+  focus(position = null) {
+    if ((this.view.focused && position === null) || position === false) {
+      return;
+    }
+
+    const { from, to } = this.resolveSelection(position);
+
+    this.setSelection(from, to);
+    setTimeout(() => this.view.focus(), 10);
+  }
+
+  setSelection(from = 0, to = 0) {
+    const { doc, tr } = this.state;
+    const resolvedFrom = minMax(from, 0, doc.content.size);
+    const resolvedEnd = minMax(to, 0, doc.content.size);
+    const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
+    const transaction = tr.setSelection(selection);
+
+    this.view.dispatch(transaction);
+  }
+
+  blur() {
+    this.view.dom.blur();
   }
 
   exportMarkdown() {
