@@ -100,3 +100,9 @@ textarea
   margin-top: 30px
   width: 100%
 </style>
+
+<style lang='sass'>
+@import 'node_modules/reset-css/sass/reset'
+@import @/stylesheets/application
+@import @/stylesheets/prosemirror
+</style>
