@@ -1,17 +1,31 @@
 <template>
   <div>
+    <EditorMenuBar
+      v-slot='{ commands, isActive }'
+      :editor="editor"
+    >
+      <button
+        class='icon'
+        :class='{ "is-active": isActive.bold() }'
+        @click='commands.bold'
+      >
+        BOLD ICON
+      </button>
+    </EditorMenuBar>
+
     <EditorContent :editor='editor' />
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
-import { Editor, EditorContent } from '../../../src';
+import { Editor, EditorContent, EditorMenuBar } from '../../../src';
 
 export default {
   name: 'Editor',
   components: {
-    EditorContent
+    EditorContent,
+    EditorMenuBar
   },
   props: {
     baseUrl: { type: String, required: true },

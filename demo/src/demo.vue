@@ -34,11 +34,10 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    text1: `test
-[quote=zxc]Old style quote with nickname[/quote]
+    text1: `t[b]es[/b]t
 
 `,
-    isColumn2: true,
+    isColumn2: false,
     text2: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
