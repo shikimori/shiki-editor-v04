@@ -31,7 +31,6 @@ import {
   getNodeAttrs,
   minMax
 } from './utils';
-import { markIsActive, nodeIsActive } from './checks';
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
 
@@ -263,23 +262,23 @@ export default class ShikiEditor extends Emitter {
   setActiveNodesAndMarks() {
     this.activeMarks = Object
       .entries(this.schema.marks)
-      .reduce((marks, [name, mark]) => ({
-        ...marks,
-        [name]: (attrs = {}) => markIsActive(mark, this.state, attrs)
+      .reduce((memo, [name, mark]) => ({
+        ...memo,
+        [name]: (attrs = {}) => this.activeChecks[mark.name](this.state, attrs)
       }), {});
 
     this.activeMarkAttrs = Object
       .entries(this.schema.marks)
-      .reduce((marks, [name, mark]) => ({
-        ...marks,
+      .reduce((memo, [name, mark]) => ({
+        ...memo,
         [name]: getMarkAttrs(mark, this.state)
       }), {});
 
     this.activeNodes = Object
       .entries(this.schema.nodes)
-      .reduce((nodes, [name, node]) => ({
-        ...nodes,
-        [name]: (attrs = {}) => nodeIsActive(node, this.state, attrs)
+      .reduce((memo, [name, node]) => ({
+        ...memo,
+        [name]: (attrs = {}) => this.activeChecks[node.name](this.state, attrs)
       }), {});
   }
 
@@ -299,8 +298,8 @@ export default class ShikiEditor extends Emitter {
         ...this.activeMarks,
         ...this.activeNodes
       })
-      .reduce((types, [name, value]) => ({
-        ...types,
+      .reduce((memo, [name, value]) => ({
+        ...memo,
         [name]: (attrs = {}) => value(attrs)
       }), {});
   }
