@@ -260,13 +260,6 @@ export default class ShikiEditor extends Emitter {
   }
 
   setActiveNodesAndMarks() {
-    this.activeMarks = Object
-      .entries(this.schema.marks)
-      .reduce((memo, [name, mark]) => ({
-        ...memo,
-        [name]: (attrs = {}) => this.activeChecks[mark.name](this.state, attrs)
-      }), {});
-
     this.activeMarkAttrs = Object
       .entries(this.schema.marks)
       .reduce((memo, [name, mark]) => ({
@@ -274,11 +267,13 @@ export default class ShikiEditor extends Emitter {
         [name]: getMarkAttrs(mark, this.state)
       }), {});
 
-    this.activeNodes = Object
-      .entries(this.schema.nodes)
-      .reduce((memo, [name, node]) => ({
+    this.isActive = [
+      ...Object.entries(this.schema.marks),
+      ...Object.entries(this.schema.nodes)
+    ]
+      .reduce((memo, [name, type]) => ({
         ...memo,
-        [name]: (attrs = {}) => this.activeChecks[node.name](this.state, attrs)
+        [name]: (attrs = {}) => this.activeChecks[type.name](this.state, attrs)
       }), {});
   }
 
@@ -290,18 +285,6 @@ export default class ShikiEditor extends Emitter {
     return {
       ...getNodeAttrs(this.state, this.schema.nodes[type])
     };
-  }
-
-  get isActive() {
-    return Object
-      .entries({
-        ...this.activeMarks,
-        ...this.activeNodes
-      })
-      .reduce((memo, [name, value]) => ({
-        ...memo,
-        [name]: (attrs = {}) => value(attrs)
-      }), {});
   }
 
   setParentComponent(component = null) {
