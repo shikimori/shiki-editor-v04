@@ -99,6 +99,9 @@ css code block
 textarea
   margin-top: 30px
   width: 100%
+
+.f-column:first-child:last-child
+  width: 100%
 </style>
 
 <style lang='sass'>
