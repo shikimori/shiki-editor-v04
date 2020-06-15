@@ -285,6 +285,27 @@ export default class ShikiEditor extends Emitter {
     return this.markdownSerializer.serialize(this.state.doc);
   }
 
+  registerPlugin(plugin = null, handlePlugins) {
+    const plugins = typeof handlePlugins === 'function' ?
+      handlePlugins(plugin, this.state.plugins) :
+      [plugin, ...this.state.plugins];
+    const newState = this.state.reconfigure({ plugins });
+    this.view.updateState(newState);
+  }
+
+  unregisterPlugin(name = null) {
+    if (!name || !this.view.docView) {
+      return;
+    }
+
+    const newState = this.state.reconfigure({
+      plugins: this.state.plugins.filter(plugin => (
+        !plugin.key.startsWith(`${name}$`)
+      ))
+    });
+    this.view.updateState(newState);
+  }
+
   destroy() {
     if (!this.view) { return; }
     this.view.destroy();
