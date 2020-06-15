@@ -238,15 +238,6 @@ export default class ShikiEditor extends Emitter {
         ...memo,
         [name]: getMarkAttrs(mark, this.state)
       }), {});
-
-    this.isActive = [
-      ...Object.entries(this.schema.marks),
-      ...Object.entries(this.schema.nodes)
-    ]
-      .reduce((memo, [name, type]) => ({
-        ...memo,
-        [name]: (attrs = {}) => this.activeChecks[type.name](this.state, attrs)
-      }), {});
   }
 
   getMarkAttrs(type = null) {

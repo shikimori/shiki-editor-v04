@@ -1,18 +1,23 @@
 <template>
   <div>
     <EditorMenuBar
-      v-slot='{ commands, isActive }'
+      v-slot='{ commands, activeChecks }'
       :editor="editor"
     >
-      <div>
-        <MenuItem type='strong' />
-        <button
-          class='icon'
-          :class='{ "is-active": isActive.strong() }'
-          @click='commands.strong'
+      <div class='menubar'>
+        <div
+          v-for='(menuGroup, index) in menuGroups'
+          :key='index'
+          class='menu-group'
         >
-          BOLD ICON {{ isActive.strong() ? 'acitve' : 'not(active)' }}
-        </button>
+          <MenuItem
+            v-for='menuItem in menuGroup'
+            :key='menuItem'
+            :type='menuItem'
+            :is-active='activeChecks[menuItem]()'
+            :command='commands[menuItem]'
+          />
+        </div>
       </div>
     </EditorMenuBar>
 
@@ -46,6 +51,16 @@ export default {
       editorContent: this.content
     };
   },
+  computed: {
+    menuGroups() {
+      return [
+        ['strong', 'em', 'underline', 'deleted', 'link', 'code_inline'],
+        ['undo', 'redo'],
+        ['image'],
+        ['bullet_list', 'blockquote', 'code_block']
+      ];
+    }
+  },
   watch: {
     content() {
       if (this.content !== this.editorContent) {
@@ -66,4 +81,20 @@ export default {
 </script>
 
 <style scoped lang='sass'>
+.menu-bar
+  color: #456
+  display: flex
+  flex-wrap: wrap
+  font-size: 14px
+  left: 0
+  min-height: 1em
+  overflow: visible
+  position: relative
+  right: 0
+  top: 0
+  z-index: 10
+
+.menu-group
+  display: flex
+  flex-wrap: wrap
 </style>

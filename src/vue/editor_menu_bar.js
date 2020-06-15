@@ -50,7 +50,7 @@ export default {
       focused: this.focused,
       focus: this.editor.focus,
       commands: this.editor.commands,
-      isActive: this.editor.isActive,
+      activeChecks: this.editor.activeChecks,
       getMarkAttrs: this.editor.getMarkAttrs.bind(this.editor),
       getNodeAttrs: this.editor.getNodeAttrs.bind(this.editor)
     });
