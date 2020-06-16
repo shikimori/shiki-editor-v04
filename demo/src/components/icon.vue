@@ -62,7 +62,7 @@ export default {
   &:before
     +shikimori
 
-  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "🔗", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac")
+  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "\1f517", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph
