@@ -20,7 +20,7 @@ export default {
     command: { type: Function, required: true },
     isActive: { type: Boolean, required: true },
     isEnabled: { type: Boolean, required: false, default: true }
-  },
+  }
 };
 </script>
 
@@ -50,7 +50,7 @@ export default {
   &:before
     +shikimori
 
-  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "blockquote": "\e80b")
+  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "\e829", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph
