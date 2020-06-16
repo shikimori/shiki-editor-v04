@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import Demo from './demo.vue';
+
 import 'reset-css/reset.css';
+import '@/stylesheets/application.sass';
+import '@/stylesheets/prosemirror.sass';
+
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;

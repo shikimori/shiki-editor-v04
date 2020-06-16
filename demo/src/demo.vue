@@ -74,8 +74,3 @@ css code block
 .f-column:first-child:last-child
   width: 100%
 </style>
-
-<style lang='sass'>
-@import ./stylesheets/application
-@import ./stylesheets/prosemirror
-</style>
