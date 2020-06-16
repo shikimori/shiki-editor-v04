@@ -22,6 +22,9 @@ extends:
 plugins:
   - vue
 
+globals:
+  I18n: true
+
 rules:
   quotes:
     - error

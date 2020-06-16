@@ -34,11 +34,33 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    text1: `test
-[quote=zxc]Old style quote with nickname[/quote]
+    text1: `B[b]old tex[/b]t
+I[i]talic tex[/i]t
+U[u]nderlined tex[/u]t
+S[s]triked tex[/s]t
+C\`ode tex\`t
+L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
+Image
+[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
+\`\`\`
+code block
+\`\`\`
+\`\`\`css
+css code block
+\`\`\`
+- Bulet List
+- def
+> - quoted list
+- > list quoted
 
-`,
-    isColumn2: true,
+> Quote
+> > nope
+> yes
+
+[quote]Old style quote support[/quote]
+[quote=zxc]Old style quote with nickname[/quote]
+[quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
+    isColumn2: false,
     text2: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -77,4 +99,13 @@ css code block
 textarea
   margin-top: 30px
   width: 100%
+
+.f-column:first-child:last-child
+  width: 100%
+</style>
+
+<style lang='sass'>
+@import 'node_modules/reset-css/sass/reset'
+@import @/stylesheets/application
+@import @/stylesheets/prosemirror
 </style>

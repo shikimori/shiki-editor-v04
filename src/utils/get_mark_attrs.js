@@ -1,5 +1,7 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-utils/src/utils/getMarkAttrs.js
-export default function getMarkAttrs(state, type) {
+export default function getMarkAttrs(type, state) {
+  if (!state.selection) debugger;
+
   const { from, to } = state.selection;
   let marks = [];
 

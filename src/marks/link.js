@@ -80,7 +80,7 @@ export default class Link extends Mark {
         props: {
           handleClick: (view, pos, event) => {
             const { schema } = view.state;
-            const attrs = getMarkAttrs(view.state, schema.marks.link);
+            const attrs = getMarkAttrs(schema.marks.link, view.state);
 
             if (attrs.href && event.target instanceof HTMLAnchorElement) {
               event.stopPropagation();

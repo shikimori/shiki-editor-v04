@@ -7,48 +7,37 @@ import { Schema } from 'prosemirror-model';
 import { keymap } from 'prosemirror-keymap';
 import { baseKeymap, joinBackward } from 'prosemirror-commands';
 import { inputRules } from 'prosemirror-inputrules';
+import { dropCursor } from 'prosemirror-dropcursor';
+import { gapCursor } from 'prosemirror-gapcursor';
 
-import {
-  Doc,
-  Text,
-  Paragraph,
-  Blockquote,
-  BulltList,
-  CodeBlock,
-  Image,
-  ListItem,
-  Quote
-} from './nodes';
-import {
-  Strong,
-  Em,
-  Underline,
-  Deleted,
-  CodeInline,
-  Link
-} from './marks';
 import {
   ExtensionManager,
   Emitter,
   ComponentView,
-  buildMenu
+  buildMenu,
+  getMarkAttrs,
+  getNodeAttrs,
+  minMax
 } from './utils';
-
-import {
-  MarkdownParser,
-  MarkdownSerializer,
-  MarkdownTokenizer
-} from './markdown';
+import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
+  from './markdown';
+import { trackFocus, nodesAndMarks } from './plugins';
 
 export default class ShikiEditor extends Emitter {
   options = {
-    extensions: [],
+    autofocus: null,
+    baseUrl: '',
     content: '',
-    baseUrl: ''
+    dropCursor: {},
+    extensions: []
   }
+  focused = false
+  selection = { from: 0, to: 0 }
 
   constructor(options, Vue) {
     super(options);
+
+    // setInterval(() => console.log(this.focused), 250)
 
     this.options = {
       ...this.options,
@@ -77,6 +66,12 @@ export default class ShikiEditor extends Emitter {
     this.plugins = this.createPlugins();
     this.attachPlugins();
 
+    this.setActiveNodesAndMarks();
+
+    if (this.options.autoFocus !== null) {
+      this.focus(this.options.autoFocus);
+    }
+
     // give extension manager access to our view
     this.extensions.view = this.view;
   }
@@ -85,29 +80,9 @@ export default class ShikiEditor extends Emitter {
     return this.view ? this.view.state : undefined;
   }
 
-  get builtInExtensions() {
-    return [
-      new Doc(),
-      new Text(),
-      new Paragraph(),
-      new Strong(),
-      new Em(),
-      new Link(),
-      new Underline(),
-      new Deleted(),
-      new CodeInline(),
-      new Blockquote(),
-      new BulltList(),
-      new CodeBlock(),
-      new Image(),
-      new ListItem(),
-      new Quote({ baseUrl: this.options.baseUrl })
-    ];
-  }
-
   createExtensions() {
     return new ExtensionManager([
-      ...this.builtInExtensions,
+      ...nodesAndMarks(this),
       ...this.options.extensions
     ], this);
   }
@@ -156,7 +131,10 @@ export default class ShikiEditor extends Emitter {
         'Shift-Mod-z': redo,
         Backspace: joinBackward
       }),
-      keymap(baseKeymap)
+      keymap(baseKeymap),
+      dropCursor(this.options.dropCursor),
+      gapCursor(),
+      trackFocus(this)
     ];
   }
 
@@ -253,6 +231,25 @@ export default class ShikiEditor extends Emitter {
     this.view.dispatch(transaction);
   }
 
+  setActiveNodesAndMarks() {
+    this.activeMarkAttrs = Object
+      .entries(this.schema.marks)
+      .reduce((memo, [name, mark]) => ({
+        ...memo,
+        [name]: getMarkAttrs(mark, this.state)
+      }), {});
+  }
+
+  getMarkAttrs(type = null) {
+    return this.activeMarkAttrs[type];
+  }
+
+  getNodeAttrs(type = null) {
+    return {
+      ...getNodeAttrs(this.state, this.schema.nodes[type])
+    };
+  }
+
   setParentComponent(component = null) {
     if (!component) {
       return;
@@ -262,7 +259,7 @@ export default class ShikiEditor extends Emitter {
       nodeViews: this.initNodeViews({
         parent: component,
         extensions: [
-          ...this.builtInExtensions,
+          ...nodesAndMarks(this),
           ...this.options.extensions
         ],
         editable: this.options.editable
@@ -274,15 +271,94 @@ export default class ShikiEditor extends Emitter {
     const { state } = this.state.applyTransaction(transaction);
     this.view.updateState(state);
 
+    this.selection = {
+      from: this.state.selection.from,
+      to: this.state.selection.to
+    };
+
     if (!transaction.docChanged || transaction.getMeta('preventUpdate')) {
       return;
     }
 
+    this.setActiveNodesAndMarks();
+
     this.emit('update', { transaction });
+  }
+
+  resolveSelection(position = null) {
+    if (this.selection && position === null) {
+      return this.selection;
+    }
+
+    if (position === 'start' || position === true) {
+      return {
+        from: 0,
+        to: 0
+      };
+    }
+
+    if (position === 'end') {
+      const { doc } = this.state;
+      return {
+        from: doc.content.size,
+        to: doc.content.size
+      };
+    }
+
+    return {
+      from: position,
+      to: position
+    };
+  }
+
+  focus(position = null) {
+    if ((this.view.focused && position === null) || position === false) {
+      return;
+    }
+
+    const { from, to } = this.resolveSelection(position);
+
+    this.setSelection(from, to);
+    setTimeout(() => this.view.focus(), 10);
+  }
+
+  setSelection(from = 0, to = 0) {
+    const { doc, tr } = this.state;
+    const resolvedFrom = minMax(from, 0, doc.content.size);
+    const resolvedEnd = minMax(to, 0, doc.content.size);
+    const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
+    const transaction = tr.setSelection(selection);
+
+    this.view.dispatch(transaction);
+  }
+
+  blur() {
+    this.view.dom.blur();
   }
 
   exportMarkdown() {
     return this.markdownSerializer.serialize(this.state.doc);
+  }
+
+  registerPlugin(plugin = null, handlePlugins) {
+    const plugins = typeof handlePlugins === 'function' ?
+      handlePlugins(plugin, this.state.plugins) :
+      [plugin, ...this.state.plugins];
+    const newState = this.state.reconfigure({ plugins });
+    this.view.updateState(newState);
+  }
+
+  unregisterPlugin(name = null) {
+    if (!name || !this.view.docView) {
+      return;
+    }
+
+    const newState = this.state.reconfigure({
+      plugins: this.state.plugins.filter(plugin => (
+        !plugin.key.startsWith(`${name}$`)
+      ))
+    });
+    this.view.updateState(newState);
   }
 
   destroy() {
