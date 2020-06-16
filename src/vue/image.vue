@@ -52,8 +52,22 @@ export default {
       );
     },
     expand() {
+      this.view.dispatch(
+        this.view.state.tr.setNodeMarkup(
+          this.getPos(),
+          null,
+          { ...this.node.attrs, isPoster: true }
+        )
+      );
     },
     collapse() {
+      this.view.dispatch(
+        this.view.state.tr.setNodeMarkup(
+          this.getPos(),
+          null,
+          { ...this.node.attrs, isPoster: false }
+        )
+      );
     }
   }
 };
@@ -83,12 +97,10 @@ export default {
 
     img
       opacity: 1
+      transition: max-width .25s
 
     .controls
-      display: block
+      display: flex
       top: 1px
       right: 1px
-
-      & > div
-        margin-left: 1px !important
 </style>
