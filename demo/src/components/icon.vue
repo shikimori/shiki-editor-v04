@@ -1,5 +1,6 @@
 <template>
   <button
+    ref='icon'
     class='icon'
     :tabindex='isEnabled ? undefined : -1'
     :title='title'
@@ -25,6 +26,7 @@ export default {
   methods: {
     execute() {
       if (!this.isEnabled) { return; }
+      this.$refs.icon.blur();
       this.command();
     }
   }
