@@ -96,7 +96,7 @@ export default {
       border: 1px solid rgba(#fff, 0.5)
 
     img
-      transition: max-width .25s
+      opacity: 1
 
     .controls
       display: flex
