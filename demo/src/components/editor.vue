@@ -108,15 +108,16 @@ export default {
 
 <style scoped lang='sass'>
 .menu-bar
+  background: #fff
   color: #456
   display: flex
   flex-wrap: wrap
   font-size: 16px
   left: 0
   min-height: 1em
-  padding: 3px 0
   overflow: visible
-  position: relative
+  padding: 3px 0
+  position: sticky
   right: 0
   top: 0
   z-index: 10
