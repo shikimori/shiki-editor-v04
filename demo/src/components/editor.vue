@@ -61,13 +61,13 @@ export default {
         [{
           type: 'undo',
           title: I18n.t('frontend.shiki_editor.undo'),
-          command: undo,
+          command: () => undo(this.editor.state, this.editor.view.dispatch),
           isActive: false,
           isEnabled: undo(this.editor.state)
         }, {
           type: 'redo',
           title: I18n.t('frontend.shiki_editor.redo'),
-          command: redo,
+          command: () => redo(this.editor.state, this.editor.view.dispatch),
           isActive: false,
           isEnabled: redo(this.editor.state)
         }],
