@@ -27,7 +27,7 @@
 import Vue from 'vue';
 import { Editor, EditorContent, EditorMenuBar } from '../../../src';
 import MenuItem from './menu_item';
-import { undo, redo } from "prosemirror-history";
+import { undo, redo } from 'prosemirror-history';
 
 export default {
   name: 'Editor',
@@ -59,13 +59,13 @@ export default {
           title: I18n.t('frontend.shiki_editor.undo'),
           command: undo,
           isActive: false,
-          isEnabled: undo(this.editor.state),
+          isEnabled: undo(this.editor.state)
         }, {
           type: 'redo',
           title: I18n.t('frontend.shiki_editor.redo'),
           command: redo,
           isActive: false,
-          isEnabled: redo(this.editor.state),
+          isEnabled: redo(this.editor.state)
         }],
         ['image'],
         ['bullet_list', 'blockquote', 'code_block']
