@@ -14,7 +14,6 @@ import {
   ExtensionManager,
   Emitter,
   ComponentView,
-  buildMenu,
   getMarkAttrs,
   getNodeAttrs,
   minMax
@@ -120,7 +119,6 @@ export default class ShikiEditor extends Emitter {
     return [
       ...this.extensions.plugins,
       history(),
-      buildMenu(this),
       inputRules({
         rules: this.inputRules
       }),
