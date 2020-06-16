@@ -8,7 +8,6 @@
           :base-url='baseUrl'
           @update='(value) => text1 = value'
         />
-        <textarea v-model='text1' rows='10' />
       </div>
       <div v-if='isColumn2' class='f-column'>
         <Editor
@@ -17,7 +16,6 @@
           :base-url='baseUrl'
           @update='(value) => text2 = value'
         />
-        <textarea v-model='text2' rows='10' />
       </div>
     </div>
   </div>
@@ -96,10 +94,6 @@ css code block
 </script>
 
 <style scoped lang='sass'>
-textarea
-  margin-top: 30px
-  width: 100%
-
 .f-column:first-child:last-child
   width: 100%
 </style>

@@ -103,13 +103,13 @@ export default {
       };
     }
   },
-  watch: {
-    content() {
-      if (this.content !== this.editorContent) {
-        this.editor.setContent(this.content);
-      }
-    }
-  },
+  // watch: {
+  //   content() {
+  //     if (this.content !== this.editorContent) {
+  //       this.editor.setContent(this.content);
+  //     }
+  //   }
+  // },
   created() {
     this.editor.on('update', () => {
       this.editorContent = this.editor.exportMarkdown();
@@ -185,4 +185,5 @@ export default {
 
 textarea.source-editor
   width: 100%
+  outline: none
 </style>
