@@ -63,7 +63,8 @@ export default {
         baseUrl: this.baseUrl
       }, Vue),
       editorContent: this.content,
-      isSource: false
+      isSource: false,
+      editorPosition: null
     };
   },
   computed: {
@@ -137,6 +138,7 @@ export default {
         this.editor.setContent(this.editorContent);
       } else {
         this.editorContent = this.editor.exportMarkdown();
+        this.editorPosition = this.editor.selection.from;
       }
 
       this.isSource = this.isEnabled;
@@ -146,7 +148,7 @@ export default {
           autosize(this.$refs.textarea);
           this.$refs.textarea.focus();
         } else {
-          this.editor.focus();
+          this.editor.focus(this.editorPosition);
         }
       });
     }
