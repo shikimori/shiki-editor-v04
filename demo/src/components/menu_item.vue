@@ -50,7 +50,7 @@ export default {
   &:before
     +shikimori
 
-  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805")
+  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "blockquote": "\e80b")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph
