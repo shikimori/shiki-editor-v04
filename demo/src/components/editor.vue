@@ -114,10 +114,10 @@ export default {
   //   }
   // },
   created() {
-    this.editor.on('update', () => {
-      this.editorContent = this.editor.exportMarkdown();
-      this.$emit('update', this.editorContent);
-    });
+    // this.editor.on('update', () => {
+    //   this.editorContent = this.editor.exportMarkdown();
+    //   this.$emit('update', this.editorContent);
+    // });
   },
   beforeDestroy() {
     this.editor.destroy();
