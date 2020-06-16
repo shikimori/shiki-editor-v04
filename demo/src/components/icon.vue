@@ -1,6 +1,7 @@
 <template>
   <button
-    class='menu-item'
+    class='icon'
+    :tabindex='isEnabled ? undefined : -1'
     :title='title'
     :class='{
       [type]: true,
@@ -27,7 +28,7 @@ export default {
 <style scoped lang='sass'>
 @import @/stylesheets/core
 
-.menu-item
+.icon
   -webkit-appearance: none
   background: transparent
   border-radius: 4px
@@ -47,6 +48,7 @@ export default {
 
   &.is-disabled
     color: rgba(#123, 0.3)
+    outline: none
 
   &.is-active
     background: rgba(#acb1b4, 0.25)

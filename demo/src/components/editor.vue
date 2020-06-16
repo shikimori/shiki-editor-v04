@@ -10,7 +10,7 @@
           :key='index'
           class='menu-group'
         >
-          <MenuItem
+          <Icon
             v-for='item in menuGroup'
             :key='item.constructor === Object ? item.type : item'
             v-bind='
@@ -30,7 +30,7 @@
 <script>
 import Vue from 'vue';
 import { Editor, EditorContent, EditorMenuBar } from '../../../src';
-import MenuItem from './menu_item';
+import Icon from './icon';
 import { undo, redo } from 'prosemirror-history';
 
 export default {
@@ -38,7 +38,7 @@ export default {
   components: {
     EditorContent,
     EditorMenuBar,
-    MenuItem
+    Icon
   },
   props: {
     baseUrl: { type: String, required: true },
