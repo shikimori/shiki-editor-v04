@@ -1,13 +1,14 @@
 <template>
   <button
-    class='menu-item'
+    class='icon'
+    :tabindex='isEnabled ? undefined : -1'
     :title='title'
     :class='{
       [type]: true,
-      "is-active": isActive,
+      "is-active": isEnabled && isActive,
       "is-disabled": !isEnabled
     }'
-    @click='command'
+    @click='execute'
   />
 </template>
 
@@ -21,21 +22,31 @@ export default {
     isActive: { type: Boolean, required: true },
     isEnabled: { type: Boolean, required: false, default: true }
   },
+  methods: {
+    execute() {
+      if (!this.isEnabled) { return; }
+      this.command();
+    }
+  }
 };
 </script>
 
 <style scoped lang='sass'>
 @import @/stylesheets/core
 
-.menu-item
+.icon
   -webkit-appearance: none
-  border: none
   background: transparent
-  margin: 0 4px
-  padding: 0
-  width: 19px
-  height: 19px
+  border-radius: 4px
+  border: none
   font-size: 14px
+  height: 19px
+  margin: 0 1px
+  padding: 0 4px
+  width: 27px
+
+  &:active
+    outline: none
 
   &:not(.is-disabled)
     +link-color(#456)
@@ -43,6 +54,7 @@ export default {
 
   &.is-disabled
     color: rgba(#123, 0.3)
+    outline: none
 
   &.is-active
     background: rgba(#acb1b4, 0.25)
@@ -50,8 +62,16 @@ export default {
   &:before
     +shikimori
 
-  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805")
+  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "🔗", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph
+
+  &.source
+    width: auto
+
+    &:before
+      content: '<source>'
+      font-family: Courier New
+      font-weight: bold
 </style>
