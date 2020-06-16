@@ -96,11 +96,13 @@ export default {
       border: 1px solid rgba(#fff, 0.5)
 
     img
-      opacity: 1
       transition: max-width .25s
 
     .controls
       display: flex
       top: 1px
       right: 1px
+
+  img
+    transition: max-width .25s
 </style>
