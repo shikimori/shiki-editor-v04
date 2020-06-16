@@ -13,7 +13,11 @@
           <MenuItem
             v-for='item in menuGroup'
             :key='item.constructor === Object ? item.type : item'
-            v-bind='item.constructor === Object ? item : buildMenuItem(item, activeChecks, commands)'
+            v-bind='
+              item.constructor === Object ?
+                item :
+                buildMenuItem(item, activeChecks, commands)
+            '
           />
         </div>
       </div>
