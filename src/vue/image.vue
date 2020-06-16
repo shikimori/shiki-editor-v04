@@ -53,25 +53,23 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang='sass'>
 .b-image:hover,
-.b-image.is-prosemirror-selected {
-  outline: 2px solid #8cf;
-  z-index: 9;
-}
+.b-image.is-prosemirror-selected
+  outline: 2px solid #8cf
+  z-index: 9
+
 .b-image:hover:before,
-.b-image.is-prosemirror-selected:before {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  bottom: 0;
-  content: "";
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
+.b-image.is-prosemirror-selected:before
+  border: 1px solid rgba(255, 255, 255, 0.5)
+  bottom: 0
+  content: ''
+  left: 0
+  position: absolute
+  right: 0
+  top: 0
 
 .b-image:hover .controls,
-.b-image.is-prosemirror-selected .controls {
-  display: block;
-}
+.b-image.is-prosemirror-selected .controls
+  display: block
 </style>
