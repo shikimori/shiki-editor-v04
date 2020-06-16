@@ -5,10 +5,10 @@
     :title='title'
     :class='{
       [type]: true,
-      "is-active": isActive,
+      "is-active": isEnabled && isActive,
       "is-disabled": !isEnabled
     }'
-    @click='command'
+    @click='execute'
   />
 </template>
 
@@ -21,6 +21,12 @@ export default {
     command: { type: Function, required: true },
     isActive: { type: Boolean, required: true },
     isEnabled: { type: Boolean, required: false, default: true }
+  },
+  methods: {
+    execute() {
+      if (!this.isEnabled) { return; }
+      this.command();
+    }
   }
 };
 </script>

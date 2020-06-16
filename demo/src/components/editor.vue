@@ -67,6 +67,9 @@ export default {
     };
   },
   computed: {
+    isEnabled() {
+      return !this.isSource;
+    },
     menuGroups() {
       return [
         ['strong', 'em', 'underline', 'deleted', 'link', 'code_inline'],
@@ -78,7 +81,7 @@ export default {
             this.editor.focus();
           },
           isActive: false,
-          isEnabled: !this.isSource && undo(this.editor.state)
+          isEnabled: this.isEnabled && undo(this.editor.state)
         }, {
           type: 'redo',
           title: I18n.t('frontend.shiki_editor.redo'),
@@ -87,7 +90,7 @@ export default {
             this.editor.focus();
           },
           isActive: false,
-          isEnabled: !this.isSource && redo(this.editor.state)
+          isEnabled: this.isEnabled && redo(this.editor.state)
         }],
         ['image'],
         ['bullet_list', 'blockquote', 'code_block']
@@ -126,7 +129,7 @@ export default {
         title: I18n.t(`frontend.shiki_editor.${type}`),
         command: commands[type],
         isActive: activeChecks[type](),
-        isEnabled: !this.isSource
+        isEnabled: this.isEnabled
       };
     },
     toggleSource() {
@@ -136,7 +139,7 @@ export default {
         this.editorContent = this.editor.exportMarkdown();
       }
 
-      this.isSource = !this.isSource;
+      this.isSource = this.isEnabled;
 
       this.$nextTick().then(() => {
         if (this.isSource) {
@@ -184,6 +187,7 @@ export default {
       display: none
 
 textarea.source-editor
-  width: 100%
+  min-height: 89px
   outline: none
+  width: 100%
 </style>
