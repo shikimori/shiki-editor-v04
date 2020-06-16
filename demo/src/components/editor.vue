@@ -30,7 +30,7 @@
       v-if='isSource'
       ref='textarea'
       v-model='editorContent'
-      class='source-editor'
+      class='ProseMirror'
     />
     <EditorContent v-else :editor='editor' />
   </div>
@@ -186,7 +186,7 @@ export default {
     &:before
       display: none
 
-textarea.source-editor
+textarea.ProseMirror
   min-height: 89px
   outline: none
   width: 100%
