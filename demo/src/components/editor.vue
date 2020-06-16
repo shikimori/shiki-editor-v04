@@ -20,18 +20,29 @@
             '
           />
         </div>
+        <div class='menu-group source'>
+          <Icon v-bind='menuSourceItem' />
+        </div>
       </div>
     </EditorMenuBar>
 
-    <EditorContent :editor='editor' />
+    <textarea
+      v-if='isSource'
+      ref='textarea'
+      v-model='editorContent'
+      class='source-editor'
+    />
+    <EditorContent v-else :editor='editor' />
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
+import { undo, redo } from 'prosemirror-history';
+import autosize from 'autosize';
+
 import { Editor, EditorContent, EditorMenuBar } from '../../../src';
 import Icon from './icon';
-import { undo, redo } from 'prosemirror-history';
 
 export default {
   name: 'Editor',
@@ -51,7 +62,8 @@ export default {
         content: this.content,
         baseUrl: this.baseUrl
       }, Vue),
-      editorContent: this.content
+      editorContent: this.content,
+      isSource: false
     };
   },
   computed: {
@@ -61,19 +73,34 @@ export default {
         [{
           type: 'undo',
           title: I18n.t('frontend.shiki_editor.undo'),
-          command: () => undo(this.editor.state, this.editor.view.dispatch),
+          command: () => {
+            undo(this.editor.state, this.editor.view.dispatch);
+            this.editor.focus();
+          },
           isActive: false,
-          isEnabled: undo(this.editor.state)
+          isEnabled: !this.isSource && undo(this.editor.state)
         }, {
           type: 'redo',
           title: I18n.t('frontend.shiki_editor.redo'),
-          command: () => redo(this.editor.state, this.editor.view.dispatch),
+          command: () => {
+            redo(this.editor.state, this.editor.view.dispatch);
+            this.editor.focus();
+          },
           isActive: false,
-          isEnabled: redo(this.editor.state)
+          isEnabled: !this.isSource && redo(this.editor.state)
         }],
         ['image'],
         ['bullet_list', 'blockquote', 'code_block']
       ];
+    },
+    menuSourceItem() {
+      return {
+        type: 'source',
+        title: I18n.t('frontend.shiki_editor.undo'),
+        command: this.toggleSource,
+        isActive: this.isSource,
+        isEnabled: true
+      };
     }
   },
   watch: {
@@ -99,8 +126,26 @@ export default {
         title: I18n.t(`frontend.shiki_editor.${type}`),
         command: commands[type],
         isActive: activeChecks[type](),
-        isEnabled: true
+        isEnabled: !this.isSource
       };
+    },
+    toggleSource() {
+      if (this.isSource) {
+        this.editor.setContent(this.editorContent);
+      } else {
+        this.editorContent = this.editor.exportMarkdown();
+      }
+
+      this.isSource = !this.isSource;
+
+      this.$nextTick().then(() => {
+        if (this.isSource) {
+          autosize(this.$refs.textarea);
+          this.$refs.textarea.focus();
+        } else {
+          this.editor.focus();
+        }
+      });
     }
   }
 };
@@ -131,4 +176,13 @@ export default {
     border-right: 1px solid #ddd
     content: ''
     margin: 0 5px 0 3px
+
+  &.source
+    margin-left: auto
+
+    &:before
+      display: none
+
+textarea.source-editor
+  width: 100%
 </style>

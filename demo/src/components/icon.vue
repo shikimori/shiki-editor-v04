@@ -36,7 +36,7 @@ export default {
   font-size: 14px
   height: 19px
   margin: 0 1px
-  padding: 0
+  padding: 0 4px
   width: 27px
 
   &:active
@@ -60,4 +60,12 @@ export default {
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph
+
+  &.source
+    width: auto
+
+    &:before
+      content: '<source>'
+      font-family: Courier New
+      font-weight: bold
 </style>
