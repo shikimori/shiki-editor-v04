@@ -10,6 +10,8 @@
     @click='select'
   >
     <div class='controls'>
+      <div v-if='isPoster' class='collapse' @click='collapse' />
+      <div v-else class='expand' @click='expand' />
       <div class='delete' @click='remove' />
     </div>
     <img :src='node.attrs.src'>
@@ -48,28 +50,45 @@ export default {
           new NodeSelection(this.view.state.tr.doc.resolve(this.getPos()))
         )
       );
+    },
+    expand() {
+    },
+    collapse() {
     }
   }
 };
 </script>
 
 <style scoped lang='sass'>
-.b-image:hover,
-.b-image.is-prosemirror-selected
-  outline: 2px solid #8cf
-  z-index: 9
+.b-image
+  &:hover,
+  &.is-prosemirror-selected
+    outline: 2px solid #8cf
+    z-index: 9
 
-.b-image:hover:before,
-.b-image.is-prosemirror-selected:before
-  border: 1px solid rgba(255, 255, 255, 0.5)
-  bottom: 0
-  content: ''
-  left: 0
-  position: absolute
-  right: 0
-  top: 0
+    &:after,
+    &:before
+      bottom: 0
+      content: ''
+      left: 0
+      position: absolute
+      right: 0
+      top: 0
 
-.b-image:hover .controls,
-.b-image.is-prosemirror-selected .controls
-  display: block
+    &:before
+      border: 1px solid rgba(#000, 0.5)
+
+    &:after
+      border: 1px solid rgba(#fff, 0.5)
+
+    img
+      opacity: 1
+
+    .controls
+      display: block
+      top: 1px
+      right: 1px
+
+      & > div
+        margin-left: 1px !important
 </style>

@@ -1,8 +1,8 @@
 =image_editable
   .controls
     position: absolute
-    right: 0px
-    top: 0px
+    right: 0
+    top: 0
     z-index: 1
 
   .controls,
@@ -55,6 +55,8 @@
     display: none !important
 
   .edit,
+  .expand,
+  .collapse,
   .delete,
   .drag-handle,
   .confirm,
@@ -82,6 +84,12 @@
 
   .delete
     +icon('\2715', 12px)
+
+  .expand
+    +icon('\e83d', 12px)
+
+  .collapse
+    +icon('\e834', 12px)
 
   .drag-handle
     +icon('m', 11px)
