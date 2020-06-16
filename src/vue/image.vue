@@ -57,7 +57,7 @@ export default {
 .b-image:hover,
 .b-image.is-prosemirror-selected {
   outline: 2px solid #8cf;
-  z-index: 10;
+  z-index: 9;
 }
 .b-image:hover:before,
 .b-image.is-prosemirror-selected:before {
