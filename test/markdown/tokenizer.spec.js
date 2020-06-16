@@ -518,7 +518,22 @@ describe('MarkdownTokenizer', () => {
           type: 'inline',
           children: [{
             type: 'image',
-            attrs: [['src', 'https://test.com']]
+            attrs: [['src', 'https://test.com'], ['isPoster', false]]
+          }]
+        }, {
+          type: 'paragraph_close'
+        }]);
+      });
+
+      it('[poster]https://test.com[/poster]', () => {
+        expect(MarkdownTokenizer.parse('[poster]https://test.com[/poster]')).to.eql([{
+          type: 'paragraph_open'
+        }, {
+          content: '[poster]https://test.com[/poster]',
+          type: 'inline',
+          children: [{
+            type: 'image',
+            attrs: [['src', 'https://test.com'], ['isPoster', true]]
           }]
         }, {
           type: 'paragraph_close'

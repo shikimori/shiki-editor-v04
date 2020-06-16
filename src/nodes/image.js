@@ -14,21 +14,27 @@ export default class Image extends Node {
     return {
       inline: true,
       attrs: {
-        src: {}
+        src: {},
+        isPoster: { default: false }
       },
       group: 'inline',
       draggable: true,
       parseDOM: [{
         tag: 'span.b-image',
-        getAttrs: node => ({
-          src: node.children[0].src
-        })
+        getAttrs: node => ({ src: node.children[0].src })
+      }, {
+        tag: 'img.b-poster',
+        getAttrs: node => ({ src: node.src })
       }],
-      toDOM: node => [
-        'span',
-        { class: 'b-image unprocessed no-zoom' },
-        ['img', node.attrs]
-      ]
+      toDOM: node => (
+        node.attrs.isPoster ?
+          ['img', { class: 'b-poster', src: node.attrs.src }] :
+          [
+            'span',
+            { class: 'b-image unprocessed no-zoom' },
+            ['img', { src: node.attrs.src }]
+          ]
+      )
     };
   }
 
@@ -67,6 +73,7 @@ export default class Image extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.write(`[img]${state.esc(node.attrs.src)}[/img]`);
+    const tag = node.attrs.isPoster ? 'poster' : 'img';
+    state.write(`[${tag}]${state.esc(node.attrs.src)}[/${tag}]`);
   }
 }

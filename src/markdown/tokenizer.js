@@ -213,7 +213,11 @@ export default class MarkdownTokenizer {
         break;
 
       case '[img]':
-        if (this.processInlineImage(bbcode)) { return; }
+        if (this.processInlineImage(bbcode, '[/img]', false)) { return; }
+        break;
+
+      case '[poster]':
+        if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
         break;
 
       default:
@@ -325,15 +329,14 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineImage(tagStart) {
+  processInlineImage(tagStart, tagEnd, isPoster) {
     let index = this.index + tagStart.length;
-    const tagEnd = '[/img]';
 
     const src = extractUntil(this.text, tagEnd, index, index + 255);
 
     if (src) {
       this.inlineTokens.push(
-        new Token('image', null, null, [['src', src]])
+        new Token('image', null, null, [['src', src], ['isPoster', isPoster]])
       );
       this.next(src.length + tagStart.length + tagEnd.length);
       return true;

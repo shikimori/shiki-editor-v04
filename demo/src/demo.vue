@@ -46,6 +46,7 @@ code block
 \`\`\`css
 css code block
 \`\`\`
+[poster]https://www.ljmu.ac.uk/~/media/ljmu/news/starsedit.jpg[/poster]
 - Bulet List
 - def
 > - quoted list
