@@ -3,6 +3,7 @@ export { default as Text } from './text';
 export { default as Paragraph } from './paragraph';
 export { default as Blockquote } from './blockquote';
 export { default as BulltList } from './bullet_list';
+export { default as SpoilerBlock } from './spoiler_block';
 export { default as CodeBlock } from './code_block';
 export { default as Image } from './image';
 export { default as ListItem } from './list_item';

@@ -94,7 +94,7 @@ export default {
           isEnabled: this.isEnabled && redo(this.editor.state)
         }],
         ['image'],
-        ['bullet_list', 'blockquote', 'code_block']
+        ['bullet_list', 'blockquote', 'spoiler_block', 'code_block']
       ];
     },
     menuSourceItem() {
