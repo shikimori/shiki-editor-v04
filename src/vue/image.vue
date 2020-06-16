@@ -1,7 +1,11 @@
 <template>
   <span
-    class='b-image unprocessed no-zoom'
-    :class='{ "is-prosemirror-selected": selected }'
+    class='b-image no-zoom'
+    :class='{
+      "is-prosemirror-selected": selected,
+      "b-poster": isPoster,
+      "check-width": !isPoster
+    }'
     :data-src='node.attrs.src'
     @click='select'
   >
@@ -21,6 +25,11 @@ export default {
     getPos: { type: Function, required: true },
     view: { type: Object, required: true },
     selected: { type: Boolean, required: true }
+  },
+  computed: {
+    isPoster() {
+      return this.node.attrs.isPoster;
+    }
   },
   methods: {
     remove(e) {
