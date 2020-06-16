@@ -37,7 +37,7 @@ export default {
   height: 19px
   margin: 0 1px
   padding: 0
-  width: 25px
+  width: 27px
 
   &:active
     outline: none

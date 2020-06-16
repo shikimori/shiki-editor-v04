@@ -6,12 +6,12 @@
     >
       <div class='menu-bar'>
         <div
-          v-for='(menuGroup, index) in menuGroups'
+          v-for='(menuItems, index) in menuGroups'
           :key='index'
           class='menu-group'
         >
           <Icon
-            v-for='item in menuGroup'
+            v-for='item in menuItems'
             :key='item.constructor === Object ? item.type : item'
             v-bind='
               item.constructor === Object ?
@@ -114,7 +114,7 @@ export default {
   font-size: 16px
   left: 0
   min-height: 1em
-  padding: 6px 0
+  padding: 3px 0
   overflow: visible
   position: relative
   right: 0
@@ -122,7 +122,9 @@ export default {
   z-index: 10
 
 .menu-group
-  display: inline
+  display: flex
+  flex-wrap: wrap
+  padding: 5px 0
 
   & + .menu-group:before
     border-right: 1px solid #ddd
