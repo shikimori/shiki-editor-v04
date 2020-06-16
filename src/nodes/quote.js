@@ -106,7 +106,26 @@ export default class Quote extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.write('[quote]');
+    if (node.attrs.nickname) {
+      const attributes = [];
+
+      if (node.attrs.comment_id) {
+        attributes.push(`c${node.attrs.comment_id}`);
+      } else if (node.attrs.message_id) {
+        attributes.push(`m${node.attrs.message_id}`);
+      } else if (node.attrs.topic_id) {
+        attributes.push(`t${node.attrs.topic_id}`);
+      }
+
+      if (node.attrs.user_id) {
+        attributes.push(node.attrs.user_id);
+      }
+      attributes.push(node.attrs.nickname);
+
+      state.write(`[quote=${attributes.join(';')}]`);
+    } else {
+      state.write('[quote]');
+    }
     state.ensureNewLine();
     state.renderContent(node);
     state.write('[/quote]');
