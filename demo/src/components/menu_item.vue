@@ -29,13 +29,14 @@ export default {
 
 .menu-item
   -webkit-appearance: none
-  border: none
   background: transparent
-  margin: 0 4px
-  padding: 0
-  width: 19px
-  height: 19px
+  border-radius: 4px
+  border: none
   font-size: 14px
+  height: 19px
+  margin: 0 1px
+  padding: 0
+  width: 25px
 
   &:not(.is-disabled)
     +link-color(#456)
@@ -50,7 +51,7 @@ export default {
   &:before
     +shikimori
 
-  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "\e829", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac")
+  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "🔗", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph
