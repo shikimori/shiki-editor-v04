@@ -21,10 +21,13 @@ export default class Image extends Node {
       draggable: true,
       parseDOM: [{
         tag: 'span.b-image',
-        getAttrs: node => ({ src: node.children[0].src })
+        getAttrs: node => ({
+          src: node.children[0].src,
+          isPoster: node.classList.contains('b-poster')
+        })
       }, {
         tag: 'img.b-poster',
-        getAttrs: node => ({ src: node.src })
+        getAttrs: node => ({ src: node.src, isPoster: true })
       }],
       toDOM: node => (
         node.attrs.isPoster ?
