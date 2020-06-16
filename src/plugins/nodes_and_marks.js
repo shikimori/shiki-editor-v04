@@ -16,6 +16,7 @@ import {
   Underline,
   Deleted,
   CodeInline,
+  SpoilerInline,
   Link
 } from '../marks';
 
@@ -30,6 +31,7 @@ export default function(editor) {
     new Underline(),
     new Deleted(),
     new CodeInline(),
+    new SpoilerInline(),
     new Blockquote(),
     new BulltList(),
     new CodeBlock(),
