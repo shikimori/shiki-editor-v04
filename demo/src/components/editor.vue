@@ -4,7 +4,7 @@
       v-slot='{ activeChecks, commands }'
       :editor="editor"
     >
-      <div class='menubar'>
+      <div class='menu-bar'>
         <div
           v-for='(menuGroup, index) in menuGroups'
           :key='index'
@@ -110,6 +110,7 @@ export default {
   font-size: 16px
   left: 0
   min-height: 1em
+  padding: 6px 0
   overflow: visible
   position: relative
   right: 0

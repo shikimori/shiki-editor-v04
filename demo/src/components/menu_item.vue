@@ -38,6 +38,9 @@ export default {
   padding: 0
   width: 25px
 
+  &:active
+    outline: none
+
   &:not(.is-disabled)
     +link-color(#456)
     cursor: pointer
