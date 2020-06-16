@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Demo from './demo.vue';
-
-import 'node_modules/reset-css/sass/reset';
+import 'reset-css/reset.css';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;

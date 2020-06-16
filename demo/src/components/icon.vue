@@ -32,7 +32,7 @@ export default {
 </script>
 
 <style scoped lang='sass'>
-@import @/stylesheets/core
+@import ../stylesheets/core
 
 .icon
   -webkit-appearance: none

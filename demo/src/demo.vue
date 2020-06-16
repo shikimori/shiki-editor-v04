@@ -76,6 +76,6 @@ css code block
 </style>
 
 <style lang='sass'>
-@import @/stylesheets/application
-@import @/stylesheets/prosemirror
+@import ./stylesheets/application
+@import ./stylesheets/prosemirror
 </style>
