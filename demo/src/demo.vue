@@ -38,15 +38,12 @@ U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t
 C\`ode tex\`t
 L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
-Image
-[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
 \`\`\`
 code block
 \`\`\`
 \`\`\`css
 css code block
 \`\`\`
-[poster]https://www.ljmu.ac.uk/~/media/ljmu/news/starsedit.jpg[/poster]
 - Bulet List
 - def
 > - quoted list
@@ -55,6 +52,11 @@ css code block
 > Quote
 > > nope
 > yes
+
+Image
+[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
+Poster
+[poster]https://www.ljmu.ac.uk/~/media/ljmu/news/starsedit.jpg[/poster]
 
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
@@ -66,8 +68,6 @@ U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t
 C\`ode tex\`t
 L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
-Image
-[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
 \`\`\`
 code block
 \`\`\`
@@ -82,6 +82,11 @@ css code block
 > Quote
 > > nope
 > yes
+
+Image
+[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
+Poster
+[poster]https://www.ljmu.ac.uk/~/media/ljmu/news/starsedit.jpg[/poster]
 
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
