@@ -9,7 +9,7 @@ export default class SpoilerInline extends Mark {
   get schema() {
     return {
       parseDOM: [{ tag: 'span.b-spoiler_inline' }],
-      toDOM: () => ['span', { class: 'b-spoiler_inline' }]
+      toDOM: () => ['span', { class: 'b-spoiler_inline is-opened' }]
     };
   }
 

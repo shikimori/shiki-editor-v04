@@ -30,7 +30,7 @@ export default class CodeBlock extends Node {
       toDOM(node) {
         return [
           'pre',
-          { class: 'b-code-v2', 'data-language': node.attrs.language || '' },
+          { class: 'b-code_block', 'data-language': node.attrs.language || '' },
           ['code', 0]
         ];
       }
