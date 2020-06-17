@@ -73,7 +73,7 @@ export default {
     },
     menuGroups() {
       return [
-        ['strong', 'em', 'underline', 'deleted', 'link', 'code_inline', 'spoiler_inline'],
+        ['strong', 'em', 'underline', 'deleted', 'spoiler_inline', 'code_inline', 'link'],
         [{
           type: 'undo',
           title: I18n.t('frontend.shiki_editor.undo'),
@@ -94,7 +94,7 @@ export default {
           isEnabled: this.isEnabled && redo(this.editor.state)
         }],
         ['image'],
-        ['bullet_list', 'blockquote', 'spoiler_block', 'code_block']
+        ['blockquote', 'spoiler_block', 'code_block', 'bullet_list']
       ];
     },
     menuSourceItem() {
