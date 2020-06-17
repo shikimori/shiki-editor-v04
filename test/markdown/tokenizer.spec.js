@@ -294,6 +294,40 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
+
+    describe('spoiler_inline', () => {
+      it('||zxc||', () => {
+        expect(MarkdownTokenizer.parse('||zxc||')).to.eql([{
+          type: 'paragraph_open'
+        }, {
+          content: '||zxc||',
+          type: 'inline',
+          children: [{
+            type: 'spoiler_inline_open'
+          }, {
+            content: 'zxc',
+            type: 'text'
+          }, {
+            type: 'spoiler_inline_close'
+          }]
+        }, {
+          type: 'paragraph_close'
+        }]);
+      });
+
+      it('||z', () => {
+        expect(MarkdownTokenizer.parse('||z')).to.eql([
+          ...text('||z')
+        ]);
+      });
+
+      it('z||', () => {
+        expect(MarkdownTokenizer.parse('z||')).to.eql([
+          ...text('z||')
+        ]);
+      });
+    });
+
     describe('link', () => {
       it('[url=https://ya.ru]zxc[/url]', () => {
         expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([{

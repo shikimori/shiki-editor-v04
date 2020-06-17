@@ -32,7 +32,7 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    text1: `B[b]old tex[/b]t
+    text1: `||B[b]old tex[/b]t||
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t

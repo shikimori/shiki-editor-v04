@@ -172,6 +172,8 @@ export default class MarkdownTokenizer {
       inlineTokens,
       bbcode,
       char1,
+      seq2,
+      seq3,
       seq5
     } = this;
 
@@ -222,6 +224,14 @@ export default class MarkdownTokenizer {
 
       default:
         break;
+    }
+
+    if (seq2 === '||' && seq3 !== '|||') {
+      if (this.lastMark !== seq2) {
+        if (this.processMarkOpen('spoiler_inline', '||', '||')) { return; }
+      } else {
+        if (this.processMarkClose('spoiler_inline', '||', '||')) { return; }
+      }
     }
 
     // if (seq2 === '**' && seq3 !== '***') {
