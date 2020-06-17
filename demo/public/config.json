@@ -852,8 +852,8 @@
     },
     {
       "uid": "f42c0631502d9e69791c455ebbcbe1d5",
-      "css": "spoiler_block-1",
-      "code": 62238,
+      "css": "spoiler_block",
+      "code": 62235,
       "src": "custom_icons",
       "selected": true,
       "svg": {
