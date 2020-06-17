@@ -12,13 +12,13 @@ import {
 } from '../nodes';
 
 import {
+  SpoilerInline,
+  Link,
   Strong,
   Em,
   Underline,
   Deleted,
-  CodeInline,
-  SpoilerInline,
-  Link
+  CodeInline
 } from '../marks';
 
 export default function(editor) {
@@ -26,12 +26,12 @@ export default function(editor) {
     new Doc(),
     new Text(),
     new Paragraph(),
+    new SpoilerInline(), // must be above other marks in order to obtain greater priorirty
+    new Link(),
     new Strong(),
     new Em(),
-    new Link(),
     new Underline(),
     new Deleted(),
-    new SpoilerInline(),
     new CodeInline(),
     new Blockquote(),
     new BulltList(),
