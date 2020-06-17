@@ -197,6 +197,9 @@ export default class ShikiEditor extends Emitter {
       .filter(extension => extension.view)
       .reduce((nodeViews, extension) => {
         const nodeView = (node, view, getPos, decorations) => {
+          if (extension.view.constructor === Function) {
+            return extension.view(node, view, getPos, decorations);
+          }
           const component = extension.view;
 
           return new ComponentView(component, {

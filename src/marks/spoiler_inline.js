@@ -13,6 +13,17 @@ export default class SpoilerInline extends Mark {
     };
   }
 
+  get view() {
+    return (_node, _view, _getPos, _decorations) => {
+      const dom = document.createElement('span');
+      dom.classList.add('b-spoiler_inline');
+      dom.classList.add('is-opened');
+      dom.addEventListener('click', () => dom.classList.toggle('is-opened'));
+
+      return { dom, contentDOM: dom };
+    }
+  }
+
   inputRules({ type }) {
     return [
       markInputRule(/(?:\|\|)([^|]+)(?:\|\|)$/, type)

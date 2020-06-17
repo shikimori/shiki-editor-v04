@@ -41,13 +41,6 @@ export default class Image extends Node {
     };
   }
 
-  get markdownParserToken() {
-    return {
-      node: this.name,
-      getAttrs: token => token.serializeAttributes()
-    };
-  }
-
   get view() {
     return ImageApp;
   }
@@ -72,6 +65,13 @@ export default class Image extends Node {
         const transaction = state.tr.insert(position, node);
         dispatch(transaction);
       }
+    };
+  }
+
+  get markdownParserToken() {
+    return {
+      node: this.name,
+      getAttrs: token => token.serializeAttributes()
     };
   }
 
