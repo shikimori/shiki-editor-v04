@@ -8,48 +8,29 @@ export default class SpoilerInline extends Mark {
 
   get schema() {
     return {
-      parseDOM: [{ tag: 'code' }],
-      toDOM() { return ['code', { class: 'b-code-v2-inline' }]; }
+      parseDOM: [{ tag: 'span.b-spoiler_inline' }],
+      toDOM: () => ['span', { class: 'b-spoiler_inline' }]
     };
   }
 
   inputRules({ type }) {
     return [
-      markInputRule(/(?:`)([^`]+)(?:`)$/, type)
+      markInputRule(/(?:\|\|)([^|]+)(?:\|\|)$/, type)
     ];
   }
 
   pasteRules({ type }) {
     return [
-      markPasteRule(/(?:`)([^`]+)(?:`)/g, type)
+      markPasteRule(/(?:\|\|)([^|]+)(?:\|\|)/g, type)
     ];
   }
 
   get markdownSerializerToken() {
     return {
-      open(_state, _mark, parent, index) {
-        return backticksFor(parent.child(index), -1);
-      },
-      close(_state, _mark, parent, index) {
-        return backticksFor(parent.child(index - 1), 1);
-      },
-      escape: false
+      open: '||',
+      close: '||',
+      mixable: true,
+      expelEnclosingWhitespace: true
     };
   }
-}
-
-function backticksFor(node, side) {
-  const ticks = /`+/g;
-  let m;
-  let len = 0;
-
-  if (node.isText) {
-    while (m = ticks.exec(node.text)) { // eslint-disable-line
-      len = Math.max(len, m[0].length);
-    }
-  }
-  let result = len > 0 && side > 0 ? ' `' : '`';
-  for (let i = 0; i < len; i++) result += '`';
-  if (len > 0 && side < 0) result += ' ';
-  return result;
 }

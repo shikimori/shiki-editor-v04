@@ -9,7 +9,7 @@ export default class CodeInline extends Mark {
   get schema() {
     return {
       parseDOM: [{ tag: 'code' }],
-      toDOM() { return ['code', { class: 'b-code-v2-inline' }]; }
+      toDOM: () => ['code', { class: 'b-code-v2-inline' }]
     };
   }
 
