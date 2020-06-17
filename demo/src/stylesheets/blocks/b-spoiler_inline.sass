@@ -1,8 +1,11 @@
 .b-spoiler_inline
   border-radius: 3px
-  transition: all .1s ease
-  background-color: #202225
-  cursor: pointer
+  transition: color .25s ease, background-color .25s ease
+
+  &:not(.is-opened)
+    color: #456
+    background-color: #456
+    cursor: pointer
 
   &.is-opened
-    background-color: rgba(#202225, 0.2)
+    background-color: rgba(#456, 0.2)
