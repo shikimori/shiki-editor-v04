@@ -45,7 +45,8 @@ spoiler content
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t
-C\`ode tex\`t
+Inline c\`ode tex\`t
+Inline s||poiler tex||t
 L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
 [spoiler=spoiler block with label]
 spoiler content
