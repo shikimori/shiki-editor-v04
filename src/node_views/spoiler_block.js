@@ -27,15 +27,17 @@ export default class SpoilerBlockView {
   }
 
   toggle() {
-    this.view.dispatch(
-      this.view.state.tr.setNodeMarkup(
-        this.getPos(),
-        null,
-        {
-          ...this.node.attrs,
-          isOpened: !this.node.attrs.isOpened
-        }
-      )
+    const { getPos, node } = this;
+    const { dispatch } = this.view;
+    const { tr } = this.view.state;
+
+    const attrs = {
+      ...node.attrs,
+      isOpened: !node.attrs.isOpened
+    };
+
+    dispatch(
+      tr.setNodeMarkup(getPos(), null, attrs)
     );
   }
 }
