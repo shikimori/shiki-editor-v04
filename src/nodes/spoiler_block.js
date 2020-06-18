@@ -26,7 +26,8 @@ export default class SpoilerBlock extends Node {
             label: node.children[0].innerText || '',
             isOpened: node.classList.contains('is-opened')
           }
-        )
+        ),
+        contentElement: node => node.children[1]
       }],
       toDOM(node) {
         return [
