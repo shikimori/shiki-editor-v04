@@ -18,6 +18,7 @@ export default class MarkdownTokenizer {
   MAX_BBCODE_SIZE = 50; // [quote=...] can be so long
   MAX_URL_SIZE = 512;
   QUOTE_REGEXP = /\[quote(?:=([^\]]+))?\]/;
+  SPOILER_REGEXP = /\[spoiler(?:=([^\]]+))?\]/;
 
   constructor(text, index, exitSequence) {
     this.text = text;
@@ -143,11 +144,20 @@ export default class MarkdownTokenizer {
             );
             break outer;
         }
+
+        if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
+          this.processBlock(
+            'spoiler',
+            bbcode,
+            '[/spoiler]',
+            match[1]
+          );
+          if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
+          return;
+        }
       }
 
-      if (seq5 === '[quot' && (
-        match = bbcode.match(this.QUOTE_REGEXP)
-      )) {
+      if (seq5 === '[quot' && ( match = bbcode.match(this.QUOTE_REGEXP))) {
         if (!isStart) {
           this.processParagraph(startIndex);
         }
@@ -157,9 +167,7 @@ export default class MarkdownTokenizer {
           '[/quote]',
           parseQuoteMeta(match[1])
         );
-        if (this.char1 === '\n' || this.char1 === undefined) {
-          this.next();
-        }
+        if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
         return;
       }
 

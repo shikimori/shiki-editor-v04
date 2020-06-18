@@ -575,6 +575,50 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
+    describe('spoiler', () => {
+      it('[spoiler]z[/spoiler]', () => {
+        expect(MarkdownTokenizer.parse('[spoiler]z[/spoiler]')).to.eql([{
+          type: 'spoiler_open'
+        },
+        ...text('z'),
+        {
+          type: 'spoiler_close'
+        }]);
+      });
+
+      it('[spoiler]\\nz\\n[/spoiler]', () => {
+        expect(MarkdownTokenizer.parse('[spoiler]\nz\n[/spoiler]')).to.eql([{
+          type: 'spoiler_open'
+        },
+        ...text('z'),
+        {
+          type: 'spoiler_close'
+        }]);
+      });
+
+      it('[spoiler]\\nz[/spoiler]', () => {
+        expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]')).to.eql([{
+          type: 'spoiler_open'
+        },
+        ...text('z'),
+        {
+          type: 'spoiler_close'
+        }]);
+      });
+
+      it('[spoiler]\\nz[/spoiler]qwe', () => {
+        expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]qwe')).to.eql([{
+          type: 'spoiler_open'
+        },
+        ...text('z'),
+        {
+          type: 'spoiler_close'
+        },
+        ...text('qwe')
+        ]);
+      });
+    });
+
     describe('quote', () => {
       it('[quote]z[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([{
