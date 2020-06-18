@@ -1,5 +1,6 @@
 import { Mark } from '../base';
 import { markInputRule, markPasteRule } from '../commands';
+import { SpoilerInlineView } from '../node_views';
 
 export default class SpoilerInline extends Mark {
   get name() {
@@ -27,20 +28,8 @@ export default class SpoilerInline extends Mark {
     };
   }
 
-  get view() {
-    return (node, _view, _getPos, _decorations) => {
-      const dom = document.createElement('span');
-      const contentDOM = document.createElement('span');
-
-      dom.classList.add('b-spoiler_inline');
-      if (node.attrs.isOpened) {
-        dom.classList.add('is-opened');
-      }
-      dom.addEventListener('click', () => dom.classList.toggle('is-opened'));
-      dom.appendChild(contentDOM);
-
-      return { dom, contentDOM };
-    };
+  view(node, view, getPos, decorations) {
+    return new SpoilerInlineView(node, view, getPos, decorations);
   }
 
   inputRules({ type }) {

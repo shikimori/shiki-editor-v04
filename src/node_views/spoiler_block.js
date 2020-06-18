@@ -27,7 +27,6 @@ export default class SpoilerBlockView {
   }
 
   toggle() {
-
     this.view.dispatch(
       this.view.state.tr.setNodeMarkup(
         this.getPos(),
