@@ -3,13 +3,13 @@
   padding: 2px 3px 1px
   transition: background-color .25s ease
 
-  span.inner
-    transition: opacity .25s ease
+  &.is-opened
+    background-color: rgba(#456, 0.2)
 
   &:not(.is-opened)
     background-color: #456
 
-    span.inner
+    & > span
       opacity: 0
 
       span,
@@ -19,5 +19,5 @@
         color: inherit
         background-color: inherit
 
-  &.is-opened
-    background-color: rgba(#456, 0.2)
+  & > span
+    transition: opacity .25s ease

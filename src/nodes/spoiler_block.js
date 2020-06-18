@@ -33,8 +33,8 @@ export default class SpoilerBlock extends Node {
         return [
           'div',
           { class: 'b-spoiler_block' },
-          ['div', { class: 'label' }, label],
-          ['div', { class: 'inner' }, 0]
+          ['button', label],
+          ['div', 0]
         ];
       }
     };
