@@ -129,6 +129,6 @@ export default class Quote extends Node {
     state.ensureNewLine();
     state.renderContent(node);
     state.write('[/quote]');
-    state.ensureNewLine();
+    state.closeBlock(node);
   }
 }

@@ -41,7 +41,7 @@ Inline c\`ode tex\`t
 Inline s||poiler tex||t
 L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
 [spoiler=spoiler block with label]
-spoiler content
+spoiler \`content\`
 [/spoiler]
 [spoiler]
 spoiler content
@@ -54,8 +54,8 @@ css code block
 \`\`\`
 - Bulet List
 - def
-> - quoted list
-- > list quoted
+> - \`quoted\` list
+- > list \`quoted\`
 
 > Quote
 > > nope
