@@ -32,16 +32,7 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    text1: `zxc
-[spoiler=spoiler block with label]
-spoiler content
-[/spoiler]
-[spoiler]
-spoiler content
-[/spoiler]
-`,
-    isColumn2: true,
-    text2: `B[b]old tex[/b]t
+    text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t
@@ -76,7 +67,16 @@ Poster
 
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
-[quote=c1246;1945;Silentium°]Old style quote with user[/quote]`
+[quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
+    isColumn2: true,
+    text2: `zxc
+[spoiler=spoiler block with label]
+spoiler content
+[/spoiler]
+[spoiler]
+spoiler content
+[/spoiler]
+`
   }),
   mounted() {
     window.markdownTokenizer = markdownit('commonmark', { html: false });

@@ -42,7 +42,7 @@ export default class SpoilerBlock extends Node {
   }
 
   get view() {
-    return (node, _view, _getPos, _decorations) => {
+    return (node, view, getPos) => {
       const dom = document.createElement('div');
       const button = document.createElement('button');
       const contentDOM = document.createElement('div');
@@ -51,7 +51,15 @@ export default class SpoilerBlock extends Node {
       if (node.attrs.isOpened) {
         dom.classList.add('is-opened');
       }
-      button.addEventListener('click', () => dom.classList.toggle('is-opened'));
+      button.addEventListener('click', () =>
+        view.dispatch(
+          view.state.tr.setNodeMarkup(
+            getPos(),
+            null,
+            { ...node.attrs, isOpened: !node.attrs.isOpened }
+          )
+        )
+      );
       button.innerText = node.attrs.label;
 
       dom.appendChild(button);
