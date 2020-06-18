@@ -2,6 +2,7 @@
   <div>
     <EditorMenuBar
       v-slot='{ activeChecks, commands }'
+      ref='menubar'
       :editor="editor"
     >
       <div class='menu-bar'>
@@ -40,8 +41,10 @@
 import Vue from 'vue';
 import { undo, redo } from 'prosemirror-history';
 import autosize from 'autosize';
+import withinviewport from 'withinviewport';
 
 import { Editor, EditorContent, EditorMenuBar } from '../../../src';
+import { scrollTop } from '../../../src/utils';
 import Icon from './icon';
 
 export default {
@@ -134,6 +137,8 @@ export default {
       };
     },
     toggleSource() {
+      const scrollY = scrollTop();
+
       if (this.isSource) {
         this.editor.setContent(this.editorContent);
       } else {
@@ -147,8 +152,14 @@ export default {
         if (this.isSource) {
           autosize(this.$refs.textarea);
           this.$refs.textarea.focus();
+          window.scrollTo(0, scrollY);
+          if (!withinviewport(this.$refs.menubar.$el, 'top')) {
+            this.$refs.textarea.blur();
+            this.$refs.textarea.focus();
+          }
         } else {
           this.editor.focus(this.editorPosition);
+          window.scrollTo(0, scrollY);
         }
       });
     }
