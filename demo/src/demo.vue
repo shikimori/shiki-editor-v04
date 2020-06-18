@@ -32,6 +32,7 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
+    isColumn2: false,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -68,7 +69,6 @@ Poster
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    isColumn2: true,
     text2: `zxc
 [spoiler=spoiler block with label]
 spoiler content
