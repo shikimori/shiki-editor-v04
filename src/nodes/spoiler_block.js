@@ -16,45 +16,66 @@ export default class SpoilerBlock extends Node {
       defining: true,
       draggable: false,
       attrs: {
-        label: { default: '' }
+        label: { default: I18n.t('frontend.shiki_editor.spoiler') },
+        isOpened: { default: true }
       },
       parseDOM: [{
-        tag: 'div.b-spoiler_block'
-        // preserveWhitespace: 'full',
-        // getAttrs: node => (
-        //   { language: node.getAttribute('data-langauge') || '' }
-        // )
+        tag: 'div.b-spoiler_block',
+        getAttrs: node => (
+          {
+            label: node.children[0].innerText || '',
+            isOpened: node.classList.contains('is-opened')
+          }
+        )
       }],
       toDOM(node) {
-        const label = node.attrs.label ?
-          node.attrs.label :
-          I18n.t('frontend.shiki_editor.spoiler');
-
         return [
           'div',
-          { class: 'b-spoiler_block is-opened' },
-          ['button', label],
+          {
+            class: `b-spoiler_block${node.attrs.isOpened ? ' is-opened' : ''}`
+          },
+          ['button', node.attrs.label],
           ['div', 0]
         ];
       }
     };
   }
 
-  commands({ schema, type }) {
-    return () => toggleBlockType(type, schema.nodes.paragraph, {});
+  get view() {
+    return (node, _view, _getPos, _decorations) => {
+      const dom = document.createElement('div');
+      const button = document.createElement('button');
+      const contentDOM = document.createElement('div');
+
+      dom.classList.add('b-spoiler_block');
+      if (node.attrs.isOpened) {
+        dom.classList.add('is-opened');
+      }
+      button.addEventListener('click', () => dom.classList.toggle('is-opened'));
+      button.innerText = node.attrs.label;
+
+      dom.appendChild(button);
+      dom.appendChild(contentDOM);
+
+      return { dom, contentDOM };
+    };
   }
+
+  // commands({ schema, type }) {
+  //   return () => toggleBlockType(type, schema.nodes.paragraph, {});
+  // }
 
   activeCheck(type, state) {
     return nodeIsActive(type, state);
   }
 
-  inputRules({ type }) {
-    return [
-      textblockTypeInputRule(/^```\w* $/, type, match => ({
-        language: match[0].match(/`+(\w*)/)[1] || ''
-      }))
-    ];
-  }
+  // inputRules({ type }) {
+  //   return [
+  //     textblockTypeInputRule(/^```\w* $/, type, match => ({
+  //       language: match[0].match(/`+(\w*)/)[1] || ''
+  //     }))
+  //   ];
+  // }
 
   get markdownParserToken() {
     return {

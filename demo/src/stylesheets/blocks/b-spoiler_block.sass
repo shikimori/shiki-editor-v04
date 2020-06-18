@@ -1,9 +1,13 @@
 .b-spoiler_block
+  transition: margin .25s
+
   &:not(.is-opened)
     & > div
       display: none
 
   &.is-opened
+    margin-bottom: 2px
+
     & > button
       &:after
         transform: rotate(180deg)

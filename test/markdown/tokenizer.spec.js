@@ -596,6 +596,16 @@ describe('MarkdownTokenizer', () => {
           type: 'spoiler_block_close'
         }]);
       });
+      it('[spoiler=qw er]z[/spoiler]', () => {
+        expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([{
+          type: 'spoiler_block_open',
+          attrs: [['label', 'qw er']]
+        },
+        ...text('z'),
+        {
+          type: 'spoiler_block_close'
+        }]);
+      });
 
       it('[spoiler]\\nz\\n[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]\nz\n[/spoiler]')).to.eql([{

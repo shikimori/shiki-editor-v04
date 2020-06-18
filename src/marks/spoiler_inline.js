@@ -8,22 +8,37 @@ export default class SpoilerInline extends Mark {
 
   get schema() {
     return {
-      parseDOM: [{ tag: 'span.b-spoiler_inline' }],
-      toDOM: () => [
+      attrs: {
+        isOpened: { default: true }
+      },
+      parseDOM: [{
+        tag: 'span.b-spoiler_inline',
+        getAttrs: node => (
+          {
+            label: node.children[0].innerText || '',
+            isOpened: node.classList.contains('is-opened')
+          }
+        )
+      }],
+      toDOM: (node) => [
         'span',
-        { class: 'b-spoiler_inline is-opened' },
+        {
+          class: `b-spoiler_inline${node.attrs.isOpened ? ' is-opened' : ''}`
+        },
         ['span', 0]
       ]
     };
   }
 
   get view() {
-    return (_node, _view, _getPos, _decorations) => {
+    return (node, _view, _getPos, _decorations) => {
       const dom = document.createElement('span');
       const contentDOM = document.createElement('span');
 
       dom.classList.add('b-spoiler_inline');
-      dom.classList.add('is-opened');
+      if (node.attrs.isOpened) {
+        dom.classList.add('is-opened');
+      }
       dom.addEventListener('click', () => dom.classList.toggle('is-opened'));
       dom.appendChild(contentDOM);
 
