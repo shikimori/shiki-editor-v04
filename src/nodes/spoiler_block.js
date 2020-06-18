@@ -32,7 +32,7 @@ export default class SpoilerBlock extends Node {
 
         return [
           'div',
-          { class: 'b-spoiler_block' },
+          { class: 'b-spoiler_block is-opened' },
           ['button', label],
           ['div', 0]
         ];

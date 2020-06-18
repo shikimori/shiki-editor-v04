@@ -32,9 +32,11 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    text1: `[spoiler]
+    text1: `qwe
+[spoiler]
 spoiler content
 [/spoiler]
+zxc
 `,
     isColumn2: false,
     text2: `B[b]old tex[/b]t
