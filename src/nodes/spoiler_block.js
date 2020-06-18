@@ -3,6 +3,7 @@ import { textblockTypeInputRule } from 'prosemirror-inputrules';
 import { Node } from '../base';
 import { nodeIsActive } from '../checks';
 import { toggleWrap } from '../commands';
+import { SpoilerBlockView } from '../node_views';
 
 export default class SpoilerBlock extends Node {
   get name() {
@@ -40,38 +41,8 @@ export default class SpoilerBlock extends Node {
     };
   }
 
-  get view() {
-    return (node, view, getPos) => {
-      const dom = document.createElement('div');
-      const button = document.createElement('button');
-      const contentDOM = document.createElement('div');
-
-      dom.classList.add('b-spoiler_block');
-      if (node.attrs.isOpened) {
-        dom.classList.add('is-opened');
-      }
-      button.addEventListener('click', () =>
-        view.dispatch(
-          view.state.tr.setNodeMarkup(
-            getPos(),
-            null,
-            { ...node.attrs, isOpened: !node.attrs.isOpened }
-          )
-        )
-      );
-      button.innerText = node.attrs.label;
-
-      dom.appendChild(button);
-      dom.appendChild(contentDOM);
-
-      return {
-        dom,
-        contentDOM,
-        // for some reason this fixes headline editing of closed spoiler
-        // https://prosemirror.net/docs/ref/#view.NodeView.update
-        update(_node, _decorations) { return false; }
-      };
-    };
+  view(node, view, getPos, decorations) {
+    return new SpoilerBlockView(node, view, getPos, decorations);
   }
 
   commands({ schema, type }) {
@@ -82,13 +53,6 @@ export default class SpoilerBlock extends Node {
     return nodeIsActive(type, state);
   }
 
-  // inputRules({ type }) {
-  //   return [
-  //     textblockTypeInputRule(/^```\w* $/, type, match => ({
-  //       language: match[0].match(/`+(\w*)/)[1] || ''
-  //     }))
-  //   ];
-  // }
 
   get markdownParserToken() {
     return {

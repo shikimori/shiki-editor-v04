@@ -22,6 +22,7 @@
 import { NodeSelection } from 'prosemirror-state';
 
 export default {
+  name: 'ImageView',
   props: {
     node: { type: Object, required: true },
     getPos: { type: Function, required: true },
