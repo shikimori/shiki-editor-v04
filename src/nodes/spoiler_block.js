@@ -2,7 +2,7 @@ import { textblockTypeInputRule } from 'prosemirror-inputrules';
 
 import { Node } from '../base';
 import { nodeIsActive } from '../checks';
-import { toggleBlockType } from '../commands';
+import { toggleWrap } from '../commands';
 
 export default class SpoilerBlock extends Node {
   get name() {
@@ -75,7 +75,7 @@ export default class SpoilerBlock extends Node {
   }
 
   commands({ schema, type }) {
-    return () => toggleBlockType(type, schema.nodes.paragraph, {});
+    return () => toggleWrap(type, schema.nodes.paragraph);
   }
 
   activeCheck(type, state) {
