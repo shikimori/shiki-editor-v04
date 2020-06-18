@@ -15,8 +15,8 @@ export default class CodeBlock extends Node {
       group: 'block',
       code: true,
       defining: true,
-      marks: '',
       draggable: false,
+      marks: '',
       attrs: {
         language: { default: '' }
       },

@@ -29,7 +29,7 @@ export default class SpoilerInline extends Mark {
 
       dom.appendChild(contentDOM);
 
-      return { dom, contentDOM: contentDOM };
+      return { dom, contentDOM };
     };
   }
 
