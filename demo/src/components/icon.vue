@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style scoped lang='sass'>
-@import ../stylesheets/core
+@import ../stylesheets/mixins/responsive
 
 .icon
   -webkit-appearance: none
@@ -51,8 +51,15 @@ export default {
     outline: none
 
   &:not(.is-disabled)
-    +link-color(#456)
+    color: #456
     cursor: pointer
+
+    +gte_laptop
+      &:hover
+        color: var(--link-hover-color, #dd5202)
+
+    &:active
+      color: var(--link-active-color, #ff0202)
 
   &.is-disabled
     color: rgba(#123, 0.3)
@@ -62,7 +69,13 @@ export default {
     background: rgba(#acb1b4, 0.25)
 
   &:before
-    +shikimori
+    // it is a copy of shikimori font mixin
+    font-family: shikimori
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    font-feature-settings: 'liga'
+    text-transform: none
+    letter-spacing: normal
 
   $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "\1f517", "spoiler_inline": "\f31a", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac", "spoiler_block": "\f31b")
   @each $name, $glyph in $icons
