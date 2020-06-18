@@ -13,12 +13,9 @@ export default class SpoilerInline extends Mark {
       },
       parseDOM: [{
         tag: 'span.b-spoiler_inline',
-        getAttrs: node => (
-          {
-            label: node.children[0].innerText || '',
-            isOpened: node.classList.contains('is-opened')
-          }
-        )
+        getAttrs: node => ({
+          isOpened: node.classList.contains('is-opened')
+        })
       }],
       toDOM: (node) => [
         'span',
