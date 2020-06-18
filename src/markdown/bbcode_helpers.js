@@ -27,3 +27,11 @@ export function parseQuoteMeta(meta) {
 
   return attributes;
 }
+
+export function parseSpoilerMeta(meta) {
+  if (!meta) { return null; }
+
+  return {
+    label: meta
+  };
+}

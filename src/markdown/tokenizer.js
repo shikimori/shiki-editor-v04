@@ -6,7 +6,7 @@ import {
   extractUntil,
   hasInlineSequence
 } from './tokenizer_helpers';
-import { parseQuoteMeta } from './bbcode_helpers';
+import { parseQuoteMeta, parseSpoilerMeta } from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
@@ -150,7 +150,7 @@ export default class MarkdownTokenizer {
             'spoiler',
             bbcode,
             '[/spoiler]',
-            match[1]
+            parseSpoilerMeta(match[1])
           );
           if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
           return;
