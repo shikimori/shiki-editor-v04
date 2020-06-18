@@ -9,7 +9,11 @@ export default class SpoilerInline extends Mark {
   get schema() {
     return {
       parseDOM: [{ tag: 'span.b-spoiler_inline' }],
-      toDOM: () => ['span', { class: 'b-spoiler_inline is-opened' }]
+      toDOM: () => [
+        'span',
+        { class: 'b-spoiler_inline is-opened' },
+        ['span', { class: 'inner' }, 0]
+      ]
     };
   }
 
@@ -20,8 +24,13 @@ export default class SpoilerInline extends Mark {
       dom.classList.add('is-opened');
       dom.addEventListener('click', () => dom.classList.toggle('is-opened'));
 
-      return { dom, contentDOM: dom };
-    }
+      const contentDOM = document.createElement('span');
+      contentDOM.classList.add('inner');
+
+      dom.appendChild(contentDOM);
+
+      return { dom, contentDOM: contentDOM };
+    };
   }
 
   inputRules({ type }) {
