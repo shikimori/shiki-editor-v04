@@ -295,7 +295,7 @@ describe('MarkdownTokenizer', () => {
     });
 
 
-    describe('spoiler_block_inline', () => {
+    describe('spoiler_inline', () => {
       it('||zxc||', () => {
         expect(MarkdownTokenizer.parse('||zxc||')).to.eql([{
           type: 'paragraph_open'
@@ -303,12 +303,12 @@ describe('MarkdownTokenizer', () => {
           content: '||zxc||',
           type: 'inline',
           children: [{
-            type: 'spoiler_block_inline_open'
+            type: 'spoiler_inline_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'spoiler_block_inline_close'
+            type: 'spoiler_inline_close'
           }]
         }, {
           type: 'paragraph_close'
