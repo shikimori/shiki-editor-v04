@@ -11,7 +11,7 @@ export default class SpoilerBlock extends Node {
 
   get schema() {
     return {
-      content: 'block*',
+      content: 'block+',
       group: 'block',
       defining: true,
       draggable: false,
@@ -64,13 +64,19 @@ export default class SpoilerBlock extends Node {
       dom.appendChild(button);
       dom.appendChild(contentDOM);
 
-      return { dom, contentDOM };
+      return {
+        dom,
+        contentDOM,
+        // for some reason this fixes headline editing of closed spoiler
+        // https://prosemirror.net/docs/ref/#view.NodeView.update
+        update(_node, _decorations) { return false; }
+      };
     };
   }
 
-  // commands({ schema, type }) {
-  //   return () => toggleBlockType(type, schema.nodes.paragraph, {});
-  // }
+  commands({ schema, type }) {
+    return () => toggleBlockType(type, schema.nodes.paragraph, {});
+  }
 
   activeCheck(type, state) {
     return nodeIsActive(type, state);
