@@ -26,7 +26,8 @@ export default {
     node: { type: Object, required: true },
     getPos: { type: Function, required: true },
     view: { type: Object, required: true },
-    selected: { type: Boolean, required: true }
+    selected: { type: Boolean, required: true },
+    updateAttrs: { type: Function, required: true }
   },
   computed: {
     isPoster() {
@@ -52,22 +53,19 @@ export default {
       );
     },
     expand() {
-      this.view.dispatch(
-        this.view.state.tr.setNodeMarkup(
-          this.getPos(),
-          null,
-          { ...this.node.attrs, isPoster: true }
-        )
-      );
+      this.updateAttrs({ ...this.node.attrs, isPoster: true });
+
+      // NOTE: example with transaction
+      // this.view.dispatch(
+      //   this.view.state.tr.setNodeMarkup(
+      //     this.getPos(),
+      //     null,
+      //     { ...this.node.attrs, isPoster: true }
+      //   )
+      // );
     },
     collapse() {
-      this.view.dispatch(
-        this.view.state.tr.setNodeMarkup(
-          this.getPos(),
-          null,
-          { ...this.node.attrs, isPoster: false }
-        )
-      );
+      this.updateAttrs({ ...this.node.attrs, isPoster: false });
     }
   }
 };
