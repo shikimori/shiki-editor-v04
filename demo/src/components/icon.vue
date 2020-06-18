@@ -73,7 +73,12 @@ export default {
     width: auto
 
     &:before
-      content: '<source>'
       font-family: Courier New
       font-weight: bold
+
+      body[data-locale=ru]
+        content: '<код>'
+
+      body[data-locale=en]
+        content: '<source>'
 </style>

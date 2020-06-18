@@ -11,7 +11,7 @@ export default class SpoilerBlock extends Node {
 
   get schema() {
     return {
-      content: 'text*',
+      content: 'block*',
       group: 'block',
       defining: true,
       draggable: false,
@@ -26,9 +26,14 @@ export default class SpoilerBlock extends Node {
         // )
       }],
       toDOM(node) {
+        const label = node.attrs.label ?
+          node.attrs.label :
+          I18n.t('frontend.shiki_editor.spoiler');
+
         return [
           'div',
           { class: 'b-spoiler_block' },
+          ['div', { class: 'label' }, label],
           ['div', { class: 'inner' }, 0]
         ];
       }
@@ -63,7 +68,7 @@ export default class SpoilerBlock extends Node {
     state.write(`[spoiler${label ? '=' + label : ''}]\n`);
     state.text(node.textContent, false);
     state.ensureNewLine();
-    state.write('```');
+    state.write('[/spoiler]');
     state.closeBlock(node);
   }
 }
