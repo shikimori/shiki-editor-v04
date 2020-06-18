@@ -295,7 +295,7 @@ describe('MarkdownTokenizer', () => {
     });
 
 
-    describe('spoiler_inline', () => {
+    describe('spoiler_block_inline', () => {
       it('||zxc||', () => {
         expect(MarkdownTokenizer.parse('||zxc||')).to.eql([{
           type: 'paragraph_open'
@@ -303,12 +303,12 @@ describe('MarkdownTokenizer', () => {
           content: '||zxc||',
           type: 'inline',
           children: [{
-            type: 'spoiler_inline_open'
+            type: 'spoiler_block_inline_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'spoiler_inline_close'
+            type: 'spoiler_block_inline_close'
           }]
         }, {
           type: 'paragraph_close'
@@ -578,52 +578,52 @@ describe('MarkdownTokenizer', () => {
     describe('spoiler', () => {
       it('[spoiler]z[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]z[/spoiler]')).to.eql([{
-          type: 'spoiler_open'
+          type: 'spoiler_block_open'
         },
         ...text('z'),
         {
-          type: 'spoiler_close'
+          type: 'spoiler_block_close'
         }]);
       });
 
       it('[spoiler=qw er]z[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([{
-          type: 'spoiler_open',
+          type: 'spoiler_block_open',
           attrs: [['label', 'qw er']]
         },
         ...text('z'),
         {
-          type: 'spoiler_close'
+          type: 'spoiler_block_close'
         }]);
       });
 
       it('[spoiler]\\nz\\n[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]\nz\n[/spoiler]')).to.eql([{
-          type: 'spoiler_open'
+          type: 'spoiler_block_open'
         },
         ...text('z'),
         {
-          type: 'spoiler_close'
+          type: 'spoiler_block_close'
         }]);
       });
 
       it('[spoiler]\\nz[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]')).to.eql([{
-          type: 'spoiler_open'
+          type: 'spoiler_block_open'
         },
         ...text('z'),
         {
-          type: 'spoiler_close'
+          type: 'spoiler_block_close'
         }]);
       });
 
       it('[spoiler]\\nz[/spoiler]qwe', () => {
         expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]qwe')).to.eql([{
-          type: 'spoiler_open'
+          type: 'spoiler_block_open'
         },
         ...text('z'),
         {
-          type: 'spoiler_close'
+          type: 'spoiler_block_close'
         },
         ...text('qwe')
         ]);

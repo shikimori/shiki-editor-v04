@@ -32,36 +32,10 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    text1: `B[b]old tex[/b]t
-I[i]talic tex[/i]t
-U[u]nderlined tex[/u]t
-S[s]triked tex[/s]t
-Inline c\`ode tex\`t
-Inline s||poiler tex||t
-L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
-\`\`\`
-code block
-\`\`\`
-\`\`\`css
-css code block
-\`\`\`
-- Bulet List
-- def
-> - quoted list
-- > list quoted
-
-> Quote
-> > nope
-> yes
-
-Image
-[img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
-Poster
-[poster]https://www.ljmu.ac.uk/~/media/ljmu/news/starsedit.jpg[/poster]
-
-[quote]Old style quote support[/quote]
-[quote=zxc]Old style quote with nickname[/quote]
-[quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
+    text1: `[spoiler]
+spoiler content
+[/spoiler]
+`,
     isColumn2: false,
     text2: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
@@ -69,6 +43,12 @@ U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t
 C\`ode tex\`t
 L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
+[spoiler=spoiler block with label]
+spoiler content
+[/spoiler]
+[spoiler]
+spoiler content
+[/spoiler]
 \`\`\`
 code block
 \`\`\`

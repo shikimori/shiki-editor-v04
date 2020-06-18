@@ -147,7 +147,7 @@ export default class MarkdownTokenizer {
 
         if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
           this.processBlock(
-            'spoiler',
+            'spoiler_block',
             bbcode,
             '[/spoiler]',
             parseSpoilerMeta(match[1])

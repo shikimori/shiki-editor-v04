@@ -13,25 +13,23 @@ export default class SpoilerBlock extends Node {
     return {
       content: 'text*',
       group: 'block',
-      code: true,
       defining: true,
-      marks: '',
       draggable: false,
       attrs: {
-        language: { default: '' }
+        label: { default: '' }
       },
       parseDOM: [{
-        tag: 'pre',
-        preserveWhitespace: 'full',
-        getAttrs: node => (
-          { language: node.getAttribute('data-langauge') || '' }
-        )
+        tag: 'div.b-spoiler_block'
+        // preserveWhitespace: 'full',
+        // getAttrs: node => (
+        //   { language: node.getAttribute('data-langauge') || '' }
+        // )
       }],
       toDOM(node) {
         return [
-          'pre',
-          { class: 'b-code_block', 'data-language': node.attrs.language || '' },
-          ['code', 0]
+          'div',
+          { class: 'b-spoiler_block' },
+          ['div', { class: 'inner' }, 0]
         ];
       }
     };
@@ -61,7 +59,8 @@ export default class SpoilerBlock extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.write('```' + (node.attrs.language || '') + '\n');
+    const label = node.attrs.label;
+    state.write(`[spoiler${label ? '=' + label : ''}]\n`);
     state.text(node.textContent, false);
     state.ensureNewLine();
     state.write('```');
