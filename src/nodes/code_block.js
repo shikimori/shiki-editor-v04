@@ -23,9 +23,9 @@ export default class CodeBlock extends Node {
       parseDOM: [{
         tag: 'pre',
         preserveWhitespace: 'full',
-        getAttrs: node => (
-          { language: node.getAttribute('data-langauge') || '' }
-        )
+        getAttrs: node => ({
+          language: node.getAttribute('data-language') || ''
+        })
       }],
       toDOM(node) {
         return [
