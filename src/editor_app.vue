@@ -205,4 +205,30 @@ textarea.ProseMirror
   min-height: 89px
   outline: none
   width: 100%
+
+/deep/ div[data-div]:hover
+  position: relative
+  outline: 2px solid #8cf
+
+  &:before,
+  &:after
+    position: absolute
+    color: #2b8acc
+    cursor: pointer
+    display: inline
+    font-weight: normal
+    font-size: 10px
+    letter-spacing: 0.8px
+    background: #fff
+    z-index: 999
+
+  &:before
+    content: "START " attr(data-div)
+    left: 0
+    top: 0
+
+  &:after
+    content: "END " attr(data-div)
+    right: 0
+    bottom: 0
 </style>

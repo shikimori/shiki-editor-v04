@@ -26,11 +26,22 @@ export default class Div extends Node {
       }],
       toDOM: (node) => {
         const attributes = {};
+
         if (node.attrs.class) {
           attributes.class = node.attrs.class;
         }
         node.attrs.data.forEach(data => attributes[data] = '');
-        return ['div', { 'data-div': '', ...attributes }, 0];
+
+        return [
+          'div',
+          {
+            'data-div': (
+              `[div${serializeClassAttr(node)}${serializeDataAttr(node)}]`
+            ),
+             ...attributes
+          },
+          0
+        ];
       }
     };
   }
@@ -43,14 +54,18 @@ export default class Div extends Node {
   }
 
   markdownSerialize(state, node) {
-    const { attrs } = node;
-    const class_markdown = attrs.class ? `=${attrs.class}`: '';
-    const data_markdown = attrs.data.length ? ` ${attrs.data.join(' ')}` : '';
-
-    state.write(`[div${class_markdown}${data_markdown}]`);
+    state.write(`[div${serializeClassAttr(node)}${serializeDataAttr(node)}]`);
     state.ensureNewLine();
     state.renderContent(node);
     state.write('[/div]');
     state.closeBlock(node);
   }
+}
+
+function serializeClassAttr(node) {
+  return node.attrs.class ? `=${node.attrs.class}`: '';
+}
+
+function serializeDataAttr(node) {
+  return node.attrs.data.length ? ` ${node.attrs.data.join(' ')}` : '';
 }
