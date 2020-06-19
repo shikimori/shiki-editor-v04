@@ -13,28 +13,38 @@ export default class Div extends Node {
       draggable: false,
       attrs: {
         class: { default: null },
-        data: { default: [] }
+        data: { default: null }
       },
       parseDOM: [{
         tag: 'div[data-div]'
       }],
-      toDOM: () => ['div', { 'data-div': true }, 0]
+      toDOM: (node) => {
+        const attributes = {};
+        if (node.attrs.class) {
+          attributes.class = node.attrs.class;
+        }
+        if (node.attrs.data) {
+          node.attrs.data.forEach(data => attributes[data] = '');
+        }
+        return ['div', { 'data-div': '', ...attributes }, 0];
+      }
     };
   }
 
-  // commands({ type }) {
-  //   return () => setBlockType(type);
-  // }
-  //
-  // markdownSerialize(state, node) {
-  //   if (node.content.content.length) {
-  //     state.renderInline(node);
-  //     state.closeBlock(node);
-  //   } else {
-  //     if (!state.atBlank) {
-  //       state.closeBlock(node);
-  //     }
-  //     state.write('\n');
-  //   }
-  // }
+  get markdownParserToken() {
+    return {
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
+    };
+  }
+
+  markdownSerialize(state, node) {
+    const { attrs } = node;
+    const class_markdown = attrs.class ? `=${attrs.class}`: '';
+    const data_markdown = attrs.data ? ` ${attrs.data.join(' ')}` : '';
+
+    state.write(`[div${class_markdown}${data_markdown}]`);
+    state.renderContent(node);
+    state.write('[/div]');
+  }
 }
