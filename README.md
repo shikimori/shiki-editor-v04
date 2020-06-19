@@ -4,8 +4,6 @@
 
 `shiki-editor` inner architecture is also highly inspired by [tiptap](https://github.com/scrumpy/tiptap) source code. Many parts of the code are taken from there.
 
-Feel free to create pull requesrts. Any contributions are welcomed.
-
 
 ## Installation & Run
 
@@ -17,3 +15,7 @@ yarn start
 ```
 
 Open http://localhost:8088/ in browser.
+
+
+## Contribution
+Feel free to create pull requests. Any contributions are welcomed.
