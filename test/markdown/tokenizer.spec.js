@@ -719,5 +719,17 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
     });
+
+    describe('div', () => {
+      it('[div]z[/div]', () => {
+        expect(MarkdownTokenizer.parse('[div]z[/div]')).to.eql([{
+          type: 'div_open'
+        },
+        ...text('z'),
+        {
+          type: 'div_close'
+        }]);
+      });
+    });
   });
 });

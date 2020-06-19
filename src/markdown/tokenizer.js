@@ -17,8 +17,10 @@ export default class MarkdownTokenizer {
   };
   MAX_BBCODE_SIZE = 50; // [quote=...] can be so long
   MAX_URL_SIZE = 512;
+
   QUOTE_REGEXP = /\[quote(?:=([^\]]+))?\]/;
   SPOILER_REGEXP = /\[spoiler(?:=([^\]]+))?\]/;
+  DIV_REGEXP = /\[div(?:=([^\]]+))?\]/;
 
   constructor(text, index, exitSequence) {
     this.text = text;
@@ -100,7 +102,7 @@ export default class MarkdownTokenizer {
     let match;
 
     outer: while (this.index <= this.text.length) { // eslint-disable-line no-restricted-syntax
-      const { char1, seq2, seq3, seq5, bbcode } = this;
+      const { char1, seq2, seq3, seq4, seq5, bbcode } = this;
       const isStart = startIndex === this.index;
       const isEnd = char1 === '\n' || char1 === undefined;
 
@@ -143,6 +145,15 @@ export default class MarkdownTokenizer {
                 bbcode
             );
             break outer;
+        }
+
+        if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
+          this.processBlock(
+            'div',
+            bbcode,
+            '[/div]',
+            match[1]// parseSpoilerMeta(match[1])
+          );
         }
 
         if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
