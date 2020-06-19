@@ -4,6 +4,11 @@
 
 `shiki-editor` inner architecture is also highly inspired by [tiptap](https://github.com/scrumpy/tiptap) source code. Many parts of the code are taken from there.
 
+## Requirements
+OSX, Linux or Windows
+
+NodeJS, Yarn
+
 
 ## Installation & Run
 
