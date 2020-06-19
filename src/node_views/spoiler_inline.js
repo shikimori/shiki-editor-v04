@@ -1,4 +1,3 @@
-import { updateMark } from '../commands';
 import { getMarkRange } from '../utils';
 
 export default class SpoilerInlineView {
