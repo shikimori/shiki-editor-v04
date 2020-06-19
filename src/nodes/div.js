@@ -12,7 +12,8 @@ export default class Div extends Node {
       group: 'block',
       draggable: false,
       attrs: {
-        class: {}
+        class: { default: null },
+        data: { default: [] }
       },
       parseDOM: [{
         tag: 'div[data-div]'

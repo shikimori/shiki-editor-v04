@@ -39,7 +39,25 @@ export function parseSpoilerMeta(meta) {
 export function parseDivMeta(meta) {
   if (!meta) { return null; }
 
-  return {
-    class: meta
-  };
+  const attributes = {};
+
+  const classes = [];
+  const data = [];
+
+  meta.split(' ').forEach(value => {
+    if (value.length > 5 && value.startsWith("data-")) {
+      data.push(value);
+    } else {
+      classes.push(value);
+    }
+  });
+
+  if (classes.length) {
+    attributes.class = classes.join(' ');
+  }
+  if (data.length) {
+    attributes.data = data;
+  }
+
+  return attributes;
 }

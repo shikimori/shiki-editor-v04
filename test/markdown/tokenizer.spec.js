@@ -731,10 +731,21 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
-      it('[div=a b]z[/div]', () => {
-        expect(MarkdownTokenizer.parse('[div=a b]z[/div]')).to.eql([{
+      it('[div data-test data-fofo]z[/div]', () => {
+        expect(MarkdownTokenizer.parse('[div data-test data-fofo]z[/div]')).to.eql([{
           type: 'div_open',
-          attrs: [['class', 'a b']]
+          attrs: [['data', ['data-test', 'data-fofo']]]
+        },
+        ...text('z'),
+        {
+          type: 'div_close'
+        }]);
+      });
+
+      it('[div=aaa bb-cd_e data-test data-fofo]z[/div]', () => {
+        expect(MarkdownTokenizer.parse('[div=aaa bb-cd_e data-test data-fofo]z[/div]')).to.eql([{
+          type: 'div_open',
+          attrs: [['class', 'aaa bb-cd_e'], ['data', ['data-test', 'data-fofo']]]
         },
         ...text('z'),
         {

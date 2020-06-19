@@ -24,7 +24,7 @@ export default class MarkdownTokenizer {
 
   QUOTE_REGEXP = /\[quote(?:=([^\]]+))?\]/;
   SPOILER_REGEXP = /\[spoiler(?:=([^\]]+))?\]/;
-  DIV_REGEXP = /\[div(?:=([^\]]+))?\]/;
+  DIV_REGEXP = /\[div(?:(?:=| )([^\]]+))?\]/;
 
   constructor(text, index, exitSequence) {
     this.text = text;
