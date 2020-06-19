@@ -151,6 +151,16 @@ export default class MarkdownTokenizer {
             break outer;
         }
 
+        if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
+          this.processBlock(
+            'div',
+            bbcode,
+            '[/div]',
+            parseDivMeta(match[1])
+          );
+          return;
+        }
+
         if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
           this.processBlock(
             'spoiler_block',
@@ -163,14 +173,6 @@ export default class MarkdownTokenizer {
         }
       }
 
-      if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
-        this.processBlock(
-          'div',
-          bbcode,
-          '[/div]',
-          parseDivMeta(match[1])
-        );
-      }
 
       if (seq5 === '[quot' && ( match = bbcode.match(this.QUOTE_REGEXP))) {
         if (!isStart) {

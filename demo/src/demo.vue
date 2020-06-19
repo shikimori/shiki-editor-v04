@@ -1,7 +1,7 @@
 <template>
   <div class='container'>
     <div class='fc-2'>
-      <div class='f-column'>
+      <div v-if='isColumn1' class='f-column'>
         <Editor
           ref='editor1'
           :content='text1'
@@ -32,6 +32,7 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
+    isColumn1: false,
     isColumn2: true,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
@@ -69,13 +70,14 @@ Poster
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `zxc
-[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark data-test]Вкратце о CSS[/div][/url]
+    text2: `z[div]x[/div]c
 `
+  // [url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark data-test]Вкратце о CSS[/div][/url]
   }),
   mounted() {
     window.markdownTokenizer = markdownit('commonmark', { html: false });
-    window.shikiTokenizer = this.$refs.editor1.editor.markdownParser.tokenizer;
+    window.shikiTokenizer = (this.$refs.editor1 || this.$refs.editor2)
+      .editor.markdownParser.tokenizer;
   }
 };
 </script>

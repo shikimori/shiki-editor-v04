@@ -48,7 +48,7 @@ export default class Div extends Node {
     const data_markdown = attrs.data ? ` ${attrs.data.join(' ')}` : '';
 
     state.write(`[div${class_markdown}${data_markdown}]`);
-    state.renderContent(node);
+    state.renderInline(node);
     state.write('[/div]');
   }
 }
