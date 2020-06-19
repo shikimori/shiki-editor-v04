@@ -27,8 +27,8 @@ export default class SpoilerBlockView {
   }
 
   toggle() {
-    const { getPos, node } = this;
-    const { dispatch } = this.view;
+    const { getPos, node, view } = this;
+    const { dispatch } = view;
     const { tr } = this.view.state;
 
     const attrs = {
@@ -39,5 +39,6 @@ export default class SpoilerBlockView {
     dispatch(
       tr.setNodeMarkup(getPos(), null, attrs)
     );
+    view.focus();
   }
 }

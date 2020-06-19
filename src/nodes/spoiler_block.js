@@ -1,5 +1,3 @@
-import { textblockTypeInputRule } from 'prosemirror-inputrules';
-
 import { Node } from '../base';
 import { nodeIsActive } from '../checks';
 import { toggleWrap } from '../commands';
