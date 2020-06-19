@@ -33,6 +33,10 @@
   @media screen and (max-width: 767px) and (orientation: landscape)
     @content
 
+=iphone-landscape
+  @media screen and (min-width: 481px) and (max-width: 767px), screen and (max-width: $iphone_max) and (orientation: landscape)
+    @content
+
 =ipad
   @media screen and (min-width: 568px) and (max-width: 1023px) and (orientation: landscape)
     @content
