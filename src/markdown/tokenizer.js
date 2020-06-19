@@ -162,7 +162,7 @@ export default class MarkdownTokenizer {
           if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
           return;
         }
-
+//////////////////TODO: CLEANUP ALL BBCODES FROM META CONTENT. META REGEXP SHOULD ALLOW INCLUDE BBCODES
         if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
           this.processBlock(
             'spoiler_block',
