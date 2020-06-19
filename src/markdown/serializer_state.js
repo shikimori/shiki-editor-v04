@@ -114,8 +114,8 @@ export default class MarkdownSerializerState {
   // :: (Node)
   // Render the contents of `parent` as inline content.
   renderInline(parent) {
-    const active = []; let
-      trailing = '';
+    const active = [];
+    let trailing = '';
     const progress = (node, _, index) => {
       let marks = node ? node.marks : [];
 
@@ -149,8 +149,8 @@ export default class MarkdownSerializerState {
         }
       }
 
-      const inner = marks.length && marks[marks.length - 1]; const
-        noEsc = inner && this.marks[inner.type.name].escape === false;
+      const inner = marks.length && marks[marks.length - 1];
+      const noEsc = inner && this.marks[inner.type.name].escape === false;
       const len = marks.length - (noEsc ? 1 : 0);
 
       // Try to reorder 'mixable' marks, such as em and strong, which
