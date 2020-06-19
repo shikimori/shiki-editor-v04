@@ -13,19 +13,23 @@ export default class Div extends Node {
       draggable: false,
       attrs: {
         class: { default: null },
-        data: { default: null }
+        data: { default: [] }
       },
       parseDOM: [{
-        tag: 'div[data-div]'
+        tag: 'div[data-div]',
+        getAttrs: node => ({
+          class: node.getAttribute('class'),
+          data: node
+            .getAttributeNames()
+            .filter(name => name != 'data-div' && name.startsWith('data-'))
+        })
       }],
       toDOM: (node) => {
         const attributes = {};
         if (node.attrs.class) {
           attributes.class = node.attrs.class;
         }
-        if (node.attrs.data) {
-          node.attrs.data.forEach(data => attributes[data] = '');
-        }
+        node.attrs.data.forEach(data => attributes[data] = '');
         return ['div', { 'data-div': '', ...attributes }, 0];
       }
     };
