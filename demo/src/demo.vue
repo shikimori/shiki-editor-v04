@@ -67,10 +67,16 @@ Image
 Poster
 [poster]https://www.ljmu.ac.uk/~/media/ljmu/news/starsedit.jpg[/poster]
 
+[div=b-link_button]
+\`[div=b-link_button]...[/div]\`
+[/div]
+
+div [div=b-link_button]inside[/div] paragraph
+
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `z[div]x[/div]c
+    text2: `[url=kinopoisk.ru]Кинопоиск[/url]
 `
   // [url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark data-test]Вкратце о CSS[/div][/url]
   }),

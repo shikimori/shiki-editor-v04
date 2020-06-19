@@ -2,7 +2,7 @@
 import { Plugin } from 'prosemirror-state';
 import { Mark } from '../base';
 import { updateMark, removeMark, pasteRule } from '../commands';
-import { getMarkAttrs } from '../utils';
+import { getMarkAttrs, fixUrl } from '../utils';
 
 export default class Link extends Mark {
   get name() {
@@ -30,7 +30,7 @@ export default class Link extends Mark {
         }
       ],
       toDOM: node => ['a', {
-        ...node.attrs,
+        href: fixUrl(node.attrs.href),
         class: 'b-link',
         rel: 'noopener noreferrer nofollow',
         target: '_blank'

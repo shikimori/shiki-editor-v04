@@ -349,6 +349,26 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
+      it('[url=ya.ru]zxc[/url]', () => {
+        expect(MarkdownTokenizer.parse('[url=ya.ru]zxc[/url]')).to.eql([{
+          type: 'paragraph_open'
+        }, {
+          content: '[url=ya.ru]zxc[/url]',
+          type: 'inline',
+          children: [{
+            type: 'link_open',
+            attrs: [['href', '//ya.ru']]
+          }, {
+            content: 'zxc',
+            type: 'text'
+          }, {
+            type: 'link_close'
+          }]
+        }, {
+          type: 'paragraph_close'
+        }]);
+      });
+
       it('z[/url]', () => {
         expect(MarkdownTokenizer.parse('z[/url]')).to.eql([
           ...text('z[/url]')

@@ -1,6 +1,7 @@
 import Token from './token';
 import flatten from 'lodash/flatten';
 
+import { fixUrl } from '../utils';
 import {
   extractBbCode,
   extractUntil,
@@ -356,7 +357,7 @@ export default class MarkdownTokenizer {
     if (url) {
       this.marksStack.push('[url]');
       this.inlineTokens.push(
-        this.tagOpen('link', [['href', url]])
+        this.tagOpen('link', [['href', fixUrl(url)]])
       );
       this.next(seq.length + url.length + ']'.length);
       return true;
