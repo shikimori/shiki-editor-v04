@@ -4,21 +4,22 @@ import {
   Paragraph,
   Blockquote,
   BulltList,
-  SpoilerBlock,
   CodeBlock,
+  Div,
   Image,
   ListItem,
-  Quote
+  Quote,
+  SpoilerBlock
 } from '../nodes';
 
 import {
-  SpoilerInline,
-  Link,
-  Strong,
-  Em,
-  Underline,
+  CodeInline,
   Deleted,
-  CodeInline
+  Em,
+  Link,
+  SpoilerInline,
+  Strong,
+  Underline
 } from '../marks';
 
 export default function(editor) {
@@ -35,10 +36,11 @@ export default function(editor) {
     new CodeInline(),
     new Blockquote(),
     new BulltList(),
-    new SpoilerBlock(),
     new CodeBlock(),
+    new Div(),
     new Image(),
     new ListItem(),
-    new Quote({ baseUrl: editor.options.baseUrl })
+    new Quote({ baseUrl: editor.options.baseUrl }),
+    new SpoilerBlock()
   ];
 }
