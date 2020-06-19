@@ -32,7 +32,7 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn2: false,
+    isColumn2: true,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -70,12 +70,7 @@ Poster
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
     text2: `zxc
-[spoiler=spoiler block with label]
-spoiler content
-[/spoiler]
-[spoiler]
-spoiler content
-[/spoiler]
+[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark]Вкратце о CSS[/div][/url]
 `
   }),
   mounted() {

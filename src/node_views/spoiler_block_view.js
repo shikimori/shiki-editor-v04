@@ -13,10 +13,15 @@ export default class SpoilerBlockView {
     }
 
     const button = document.createElement('button');
-    button.addEventListener('click', this.toggle.bind(this));
     button.innerText = node.attrs.label;
+    button.addEventListener('click', this.toggle.bind(this));
+
+    const edit = document.createElement('span');
+    edit.classList.add('edit');
+    edit.addEventListener('click', this.changeLabel.bind(this));
 
     this.dom.appendChild(button);
+    this.dom.appendChild(edit);
     this.dom.appendChild(this.contentDOM);
   }
 
@@ -35,6 +40,26 @@ export default class SpoilerBlockView {
       ...node.attrs,
       isOpened: !node.attrs.isOpened
     };
+
+    dispatch(
+      tr.setNodeMarkup(getPos(), null, attrs)
+    );
+    view.focus();
+  }
+
+  changeLabel() {
+    const label = prompt(
+      I18n.t('frontend.shiki_editor.prompt.spoiler_label'),
+      this.node.attrs.label
+    );
+    if (!label) { return; }
+
+    const { getPos, node, view } = this;
+    const { dispatch } = view;
+    const { tr } = this.view.state;
+
+
+    const attrs = { ...node.attrs, label };
 
     dispatch(
       tr.setNodeMarkup(getPos(), null, attrs)

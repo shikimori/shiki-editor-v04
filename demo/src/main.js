@@ -16,8 +16,9 @@ const TRANSLATIONS = {
   'frontend.shiki_editor.deleted': ' Зачёркнутый',
   'frontend.shiki_editor.undo': ' Отменить последнее изменение',
   'frontend.shiki_editor.redo': ' Повторить последнее изменение',
-  'frontend.shiki_editor.prompt.image_url': ' Укажи URL картинки',
-  'frontend.shiki_editor.prompt.link_url': ' Укажи URL ссылки',
+  'frontend.shiki_editor.prompt.image_url': ' URL картинки',
+  'frontend.shiki_editor.prompt.link_url': ' URL ссылки',
+  'frontend.shiki_editor.prompt.spoiler_label': 'Заголовок спойлера',
   'frontend.shiki_editor.spoiler': 'Спойлер'
 };
 

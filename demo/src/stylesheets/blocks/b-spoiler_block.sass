@@ -12,12 +12,25 @@
         transform: rotate(180deg)
         margin-top: 0px
 
+    & > span.edit
+      +link_color(#456)
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      cursor: pointer
+      width: 23px
+      height: 23px
+      margin-left: 6px
+
+      &:before
+        +shikimori('\e842')
+
   & > button
     +shiki_button
     padding-right: 28px
 
     &:after
-      +shikimori('\E847')
+      +shikimori('\e847')
       font-size: 17px
       margin: 1px 0 0 8px
       position: absolute
