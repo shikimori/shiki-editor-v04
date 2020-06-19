@@ -210,8 +210,7 @@ textarea.ProseMirror
   position: relative
   outline: 2px solid #8cf
 
-  &:before,
-  &:after
+  &:before
     position: absolute
     color: #2b8acc
     cursor: pointer
@@ -221,14 +220,7 @@ textarea.ProseMirror
     letter-spacing: 0.8px
     background: #fff
     z-index: 999
-
-  &:before
-    content: "START " attr(data-div)
+    content: attr(data-div)
     left: 0
     top: 0
-
-  &:after
-    content: "END " attr(data-div)
-    right: 0
-    bottom: 0
 </style>

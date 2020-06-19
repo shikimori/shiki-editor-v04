@@ -32,8 +32,8 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn1: false,
-    isColumn2: true,
+    isColumn1: true,
+    isColumn2: false,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
