@@ -45,10 +45,12 @@ export default class Div extends Node {
   markdownSerialize(state, node) {
     const { attrs } = node;
     const class_markdown = attrs.class ? `=${attrs.class}`: '';
-    const data_markdown = attrs.data ? ` ${attrs.data.join(' ')}` : '';
+    const data_markdown = attrs.data.length ? ` ${attrs.data.join(' ')}` : '';
 
     state.write(`[div${class_markdown}${data_markdown}]`);
-    state.renderInline(node);
+    state.ensureNewLine();
+    state.renderContent(node);
     state.write('[/div]');
+    state.closeBlock(node);
   }
 }

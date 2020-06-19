@@ -158,6 +158,7 @@ export default class MarkdownTokenizer {
             '[/div]',
             parseDivMeta(match[1])
           );
+          if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
           return;
         }
 
