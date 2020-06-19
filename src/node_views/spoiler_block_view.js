@@ -33,11 +33,7 @@ export default class SpoilerBlockView extends DOMView {
 
   toggle() {
     const { getPos, node, view, dispatch, tr } = this;
-
-    const attrs = {
-      ...node.attrs,
-      isOpened: !node.attrs.isOpened
-    };
+    const attrs = this.mergeAttrs({ isOpened: !node.attrs.isOpened });
 
     dispatch(
       tr.setNodeMarkup(getPos(), null, attrs)
