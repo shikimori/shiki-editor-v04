@@ -1,6 +1,6 @@
-import getMarkRange from './get_mark_range';
+import { getMarkRange } from '../utils';
 
-export default class ComponentView {
+export default class VueView {
   constructor(component, {
     editor,
     extension,

@@ -14,7 +14,7 @@
       <div v-else class='expand' @click='expand' />
       <div class='delete' @click='remove' />
     </div>
-    <img :src='node.attrs.src'>
+    <img ref='image' :src='node.attrs.src'>
   </span>
 </template>
 

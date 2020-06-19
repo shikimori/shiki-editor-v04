@@ -1,3 +1,4 @@
+// based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Components/EditorContent.js
 export default {
   props: {
     editor: { type: Object, required: true }

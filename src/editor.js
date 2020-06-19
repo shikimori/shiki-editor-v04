@@ -13,13 +13,13 @@ import { gapCursor } from 'prosemirror-gapcursor';
 import {
   ExtensionManager,
   Emitter,
-  ComponentView,
   getMarkAttrs,
   getNodeAttrs,
   minMax
 } from './utils';
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
+import { VueView } from './node_views';
 import { trackFocus, nodesAndMarks } from './plugins';
 
 export default class ShikiEditor extends Emitter {
@@ -202,7 +202,7 @@ export default class ShikiEditor extends Emitter {
           }
           const component = extension.view;
 
-          return new ComponentView(component, {
+          return new VueView(component, {
             editor: this,
             extension,
             parent,
