@@ -43,12 +43,14 @@ import { undo, redo } from 'prosemirror-history';
 import autosize from 'autosize';
 import withinviewport from 'withinviewport';
 
-import { Editor, EditorContent, EditorMenuBar } from '../../../src';
-import { scrollTop } from '../../../src/utils';
-import Icon from './icon';
+import Editor from './editor';
+import EditorContent from './components/editor_content';
+import EditorMenuBar from './components/editor_menu_bar';
+import Icon from './components/icon';
+import { scrollTop } from './utils';
 
 export default {
-  name: 'Editor',
+  name: 'EditorApp',
   components: {
     EditorContent,
     EditorMenuBar,

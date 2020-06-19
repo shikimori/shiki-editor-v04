@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Editor from './components/editor';
+import Editor from '../../src/editor_app';
 import markdownit from 'markdown-it';
 
 export default {

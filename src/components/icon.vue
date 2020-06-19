@@ -34,8 +34,6 @@ export default {
 </script>
 
 <style scoped lang='sass'>
-@import ../stylesheets/mixins/responsive
-
 .icon
   -webkit-appearance: none
   background: transparent
@@ -54,7 +52,7 @@ export default {
     color: #456
     cursor: pointer
 
-    +gte_laptop
+    @media screen and (min-width: 1024px)
       &:hover
         color: var(--link-hover-color, #dd5202)
 
