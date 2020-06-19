@@ -35,3 +35,11 @@ export function parseSpoilerMeta(meta) {
     label: meta
   };
 }
+
+export function parseDivMeta(meta) {
+  if (!meta) { return null; }
+
+  return {
+    class: meta
+  };
+}

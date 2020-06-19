@@ -6,7 +6,11 @@ import {
   extractUntil,
   hasInlineSequence
 } from './tokenizer_helpers';
-import { parseQuoteMeta, parseSpoilerMeta } from './bbcode_helpers';
+import {
+  parseQuoteMeta,
+  parseSpoilerMeta,
+  parseDivMeta
+} from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
   SPECIAL_TAGS = {
@@ -147,15 +151,6 @@ export default class MarkdownTokenizer {
             break outer;
         }
 
-        if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
-          this.processBlock(
-            'div',
-            bbcode,
-            '[/div]',
-            match[1]// parseSpoilerMeta(match[1])
-          );
-        }
-
         if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
           this.processBlock(
             'spoiler_block',
@@ -166,6 +161,15 @@ export default class MarkdownTokenizer {
           if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
           return;
         }
+      }
+
+      if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
+        this.processBlock(
+          'div',
+          bbcode,
+          '[/div]',
+          parseDivMeta(match[1])
+        );
       }
 
       if (seq5 === '[quot' && ( match = bbcode.match(this.QUOTE_REGEXP))) {

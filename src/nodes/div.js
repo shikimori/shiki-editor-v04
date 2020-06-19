@@ -11,6 +11,9 @@ export default class Div extends Node {
       content: 'block*',
       group: 'block',
       draggable: false,
+      attrs: {
+        class: {}
+      },
       parseDOM: [{
         tag: 'div[data-div]'
       }],
@@ -21,7 +24,7 @@ export default class Div extends Node {
   // commands({ type }) {
   //   return () => setBlockType(type);
   // }
-  // 
+  //
   // markdownSerialize(state, node) {
   //   if (node.content.content.length) {
   //     state.renderInline(node);

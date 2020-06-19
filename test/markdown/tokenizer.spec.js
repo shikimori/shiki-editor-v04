@@ -730,6 +730,17 @@ describe('MarkdownTokenizer', () => {
           type: 'div_close'
         }]);
       });
+
+      it('[div=a b]z[/div]', () => {
+        expect(MarkdownTokenizer.parse('[div=a b]z[/div]')).to.eql([{
+          type: 'div_open',
+          attrs: [['class', 'a b']]
+        },
+        ...text('z'),
+        {
+          type: 'div_close'
+        }]);
+      });
     });
   });
 });
