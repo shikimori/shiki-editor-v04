@@ -1,19 +1,19 @@
-export default class SpoilerBlockView {
-  constructor(node, view, getPos, _decorations) {
-    this.node = node;
-    this.view = view;
-    this.getPos = getPos;
+import DOMView from './dom_view';
+
+export default class SpoilerBlockView extends DOMView {
+  constructor(options) {
+    super(options);
 
     this.dom = document.createElement('div');
     this.contentDOM = document.createElement('div');
 
     this.dom.classList.add('b-spoiler_block');
-    if (node.attrs.isOpened) {
+    if (this.node.attrs.isOpened) {
       this.dom.classList.add('is-opened');
     }
 
     const button = document.createElement('button');
-    button.innerText = node.attrs.label;
+    button.innerText = this.node.attrs.label;
     button.addEventListener('click', this.toggle.bind(this));
 
     const edit = document.createElement('span');
@@ -32,9 +32,7 @@ export default class SpoilerBlockView {
   }
 
   toggle() {
-    const { getPos, node, view } = this;
-    const { dispatch } = view;
-    const { tr } = this.view.state;
+    const { getPos, node, view, dispatch, tr } = this;
 
     const attrs = {
       ...node.attrs,
@@ -48,21 +46,16 @@ export default class SpoilerBlockView {
   }
 
   changeLabel() {
+    const { getPos, node, view, dispatch, tr } = this;
+
     const label = prompt(
       I18n.t('frontend.shiki_editor.prompt.spoiler_label'),
-      this.node.attrs.label
+      node.attrs.label
     );
     if (!label) { return; }
 
-    const { getPos, node, view } = this;
-    const { dispatch } = view;
-    const { tr } = this.view.state;
-
-
-    const attrs = { ...node.attrs, label };
-
     dispatch(
-      tr.setNodeMarkup(getPos(), null, attrs)
+      tr.setNodeMarkup(getPos(), null, this.mergeAttrs({ label }))
     );
     view.focus();
   }
