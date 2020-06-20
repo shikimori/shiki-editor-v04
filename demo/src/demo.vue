@@ -76,8 +76,10 @@ div [div=b-link_button]inside[/div] paragraph
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `z[div]x[/div]c
+    text2: ` [div]z[/div]
 `
+//     text2: `[div] [div]z[/div][/div]
+// `
   // text2: `\`[div]div [div=b-link_button]inside[/div] another div[/div]\`
   // [div]div [div=b-link_button]inside[/div] another div[/div]
   // `

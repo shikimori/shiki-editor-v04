@@ -175,11 +175,6 @@ export default class MarkdownTokenizer {
         }
       }
 
-      if (seq4 === '[div' && bbcode.startsWith('[div')) {
-        this.processInlineBlock(bbcode, '[/div]');
-        return;
-      }
-
       if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
         if (!isStart) {
           this.processParagraph();
@@ -194,19 +189,11 @@ export default class MarkdownTokenizer {
         return;
       }
 
-      this.processInline(bbcode);
+      this.processInline(char1, bbcode, seq2, seq3, seq4, seq5);
     }
   }
 
-  processInline() {
-    const {
-      bbcode,
-      char1,
-      seq2,
-      seq3,
-      seq5
-    } = this;
-
+  processInline(char1, bbcode, seq2, seq3, seq4, seq5) {
     switch (bbcode) {
       case '[b]':
         if (this.processMarkOpen('strong', '[b]', '[/b]')) { return; }
@@ -286,6 +273,11 @@ export default class MarkdownTokenizer {
 
     if (seq5 === '[url=') {
       if (this.processInlineLink(seq5)) { return; }
+    }
+
+    if (seq4 === '[div' && bbcode.startsWith('[div')) {
+      this.processInlineBlock(bbcode, '[/div]');
+      return;
     }
 
     this.appendInlineContent(char1);
@@ -396,7 +388,6 @@ export default class MarkdownTokenizer {
 
   processInlineBlock(startSequence, exitSequence) {
     this.appendInlineContent(startSequence);
-    if (this.char1 === '\n') { this.next(); }
 
     const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
     const tokens = tokenizer.parse();
@@ -404,11 +395,13 @@ export default class MarkdownTokenizer {
     if (tokens.length === 3 && tokens[0].type === 'paragraph_open') {
       tokens[1].children.forEach(token => {
         if (token.type === 'text') {
-          this.appendInlineContent(token.content);
+          this.appendInlineContent(token.content, false);
         } else {
           this.inlineTokens.push(token);
         }
       });
+    } else {
+      debugger;
     }
     this.index = tokenizer.index;
 
