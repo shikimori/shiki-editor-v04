@@ -393,6 +393,11 @@ export default class MarkdownTokenizer {
     const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
     const tokens = tokenizer.parse();
 
+    const endSequence =
+      this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+
+    if (endSequence !== exitSequence) { return false; }
+
     let slicedTokens;
     let isNewLineAtEnd = false;
 
@@ -435,6 +440,8 @@ export default class MarkdownTokenizer {
     this.tokens = [...this.tokens, ...slicedTokens];
 
     this.appendInlineContent(exitSequence);
+
+    return true;
   }
 
   processParagraph() {

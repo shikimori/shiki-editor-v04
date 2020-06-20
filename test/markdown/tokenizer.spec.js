@@ -854,6 +854,12 @@ describe('MarkdownTokenizer', () => {
           ...text('[div]z')
         ]);
       });
+
+      it(' [div]z', () => {
+        expect(MarkdownTokenizer.parse(' [div]z')).to.eql([
+          ...text(' [div]z')
+        ]);
+      });
     });
   });
 });
