@@ -155,39 +155,22 @@ export default class MarkdownTokenizer {
         }
 
         if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
-          this.processBlock(
-            'div',
-            bbcode,
-            '[/div]',
-            parseDivMeta(match[1])
-          );
-          if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
+          const meta = parseDivMeta(match[1]);
+          this.processBlock('div', bbcode, '[/div]', meta);
           return;
         }
-//////////////////TODO: CLEANUP ALL BBCODES FROM META CONTENT. META REGEXP SHOULD ALLOW INCLUDE BBCODES
+        //////////////////TODO: CLEANUP ALL BBCODES FROM META CONTENT. META REGEXP SHOULD ALLOW INCLUDE BBCODES
         if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
-          this.processBlock(
-            'spoiler_block',
-            bbcode,
-            '[/spoiler]',
-            parseSpoilerMeta(match[1])
-          );
-          if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
+          const meta = parseSpoilerMeta(match[1]);
+          this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta);
           return;
         }
       }
 
       if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
-        if (!isStart) {
-          this.processParagraph();
-        }
-        this.processBlock(
-          'quote',
-          bbcode,
-          '[/quote]',
-          parseQuoteMeta(match[1])
-        );
-        if (this.char1 === '\n' || this.char1 === undefined) { this.next(); }
+        if (!isStart) { this.processParagraph(); }
+        const meta = parseQuoteMeta(match[1]);
+        this.processBlock('quote', bbcode, '[/quote]', meta);
         return;
       }
 
@@ -373,19 +356,35 @@ export default class MarkdownTokenizer {
   }
 
   processBlock(type, startSequence, exitSequence, metaAttributes) {
+    let index = this.index + startSequence.length;
+    if (this.text[index] === '\n') { index += 1; }
+
+    const tokenizer = new MarkdownTokenizer(this.text, index, exitSequence);
+    const tokens = tokenizer.parse();
+
+    const endSequence =
+      this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+
+    if (endSequence !== exitSequence) {
+      this.appendInlineContent(startSequence);
+      return false;
+    }
+
     this.next(startSequence.length);
     this.push(this.tagOpen(type, metaAttributes));
-
     if (this.char1 === '\n') { this.next(); }
-
-    const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
-    const tokens = tokenizer.parse();
 
     this.tokens = this.tokens.concat(tokens);
     this.index = tokenizer.index;
 
     this.next(exitSequence.length);
     this.push(this.tagClose(type));
+
+    if (this.char1 === '\n' || this.char1 === undefined) {
+      this.next();
+    }
+
+    return true;
   }
 
   processInlineBlock(startSequence, exitSequence) {

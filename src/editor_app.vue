@@ -211,7 +211,7 @@ textarea.ProseMirror
   outline: 1px solid #8cf
 
   &:before
-    background: rgba(#fff, 0.75)
+    background: rgba(#fcfcfc, 0.75)
     color: #2b8acc
     content: attr(data-div)
     cursor: pointer
