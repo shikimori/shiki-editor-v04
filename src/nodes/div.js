@@ -38,7 +38,7 @@ export default class Div extends Node {
             'data-div': (
               `[div${serializeClassAttr(node)}${serializeDataAttr(node)}]`
             ),
-             ...attributes
+            ...attributes
           },
           0
         ];

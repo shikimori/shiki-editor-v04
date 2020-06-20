@@ -45,7 +45,7 @@ export function parseDivMeta(meta) {
   const data = [];
 
   meta.split(' ').forEach(value => {
-    if (value.length > 5 && value.startsWith("data-")) {
+    if (value.length > 5 && value.startsWith('data-')) {
       data.push(value);
     } else {
       classes.push(value);

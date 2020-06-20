@@ -32,8 +32,8 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn1: true,
-    isColumn2: false,
+    isColumn1: false,
+    isColumn2: true,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -76,7 +76,8 @@ div [div=b-link_button]inside[/div] paragraph
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `[div=b-link_button data-test]test[/div]
+    text2: `\`[div]div [div=b-link_button]inside[/div] another div[/div]\`
+[div]div [div=b-link_button]inside[/div] another div[/div]
 `
   // [url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark data-test]Вкратце о CSS[/div][/url]
   }),
