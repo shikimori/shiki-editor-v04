@@ -30,7 +30,7 @@ export default class Div extends Node {
         if (node.attrs.class) {
           attributes.class = node.attrs.class;
         }
-        node.attrs.data.forEach(data => attributes[data] = '');
+        node.attrs.data.forEach(data => attributes[data[0]] = data[1]);
 
         return [
           'div',
@@ -67,5 +67,11 @@ function serializeClassAttr(node) {
 }
 
 function serializeDataAttr(node) {
-  return node.attrs.data.length ? ` ${node.attrs.data.join(' ')}` : '';
+  if (!node.attrs.data.length) { return ''; }
+
+  const data = node.attrs.data
+    .map(v => v[1] ? `${v[0]}=${v[1]}` : v[0])
+    .join(' ');
+
+  return ` ${data}`;
 }
