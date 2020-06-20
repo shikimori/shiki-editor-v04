@@ -5,11 +5,13 @@ import { fixUrl } from '../utils';
 import {
   extractBbCode,
   extractUntil,
-  hasInlineSequence
+  hasInlineSequence,
+  extractMarkdownLanguage
 } from './tokenizer_helpers';
 import {
   parseQuoteMeta,
   parseSpoilerMeta,
+  parseCodeMeta,
   parseDivMeta
 } from './bbcode_helpers';
 
@@ -23,8 +25,7 @@ export default class MarkdownTokenizer {
   MAX_BBCODE_SIZE = 50; // [quote=...] can be so long
   MAX_URL_SIZE = 512;
 
-  QUOTE_REGEXP = /\[quote(?:=([^\]]+))?\]/;
-  SPOILER_REGEXP = /\[spoiler(?:=([^\]]+))?\]/;
+  BLOCK_BBCODE_REGEXP = /\[(?:quote|spoiler|code)(?:=([^\]]+))?\]/;
   DIV_REGEXP = /\[div(?:(?:=| )([^\]]+))?\]/;
 
   constructor(text, index, exitSequence) {
@@ -139,7 +140,7 @@ export default class MarkdownTokenizer {
 
         switch (seq3) {
           case '```':
-            this.processCode(seq3);
+            this.processCode(seq3, '\n```')
             break outer;
         }
 
@@ -169,16 +170,22 @@ export default class MarkdownTokenizer {
             return;
           }
           //////////////////TODO: CLEANUP ALL BBCODES FROM META CONTENT. META REGEXP SHOULD ALLOW INCLUDE BBCODES
-          if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
+          if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
             const meta = parseSpoilerMeta(match[1]);
             this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta);
+            return;
+          }
+
+          if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
+            const meta = parseCodeMeta(match[1]);
+            this.processCode(bbcode, '[/code]', meta);
             return;
           }
         }
       }
 
       if (bbcode) {
-        if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
+        if (seq5 === '[quot' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           if (!isStart) { this.processParagraph(); }
           const meta = parseQuoteMeta(match[1]);
           this.processBlock('quote', bbcode, '[/quote]', meta);
@@ -508,43 +515,43 @@ export default class MarkdownTokenizer {
     } while (this.isContinued(newSequence));
   }
 
-  processCode(sequence) {
-    this.next(sequence.length);
-    const language = this.extractLanguage();
-    const startIndex = this.index;
+  processCode(startSequence, endSequence, meta) {
+    const isMarkdown = startSequence === '```';
+    let index = this.index + startSequence.length;
+    let language;
+
+    if (isMarkdown) {
+      language = extractMarkdownLanguage(this.text, index);
+    } else if (meta && meta.language) {
+      language = meta.language;
+    }
+
+    if (isMarkdown) {
+      index += language ? language.length + 1 : 1;
+    } else if (this.text[index] === '\n') {
+      index += 1;
+    }
+    const startIndex = index;
     let isEnded = false;
 
-    while (this.index <= this.text.length) {
-      if (this.seq4 === '\n```') {
-        this.next(5);
+    while (index <= this.text.length) {
+      if (this.text[index] === endSequence[0] &&
+        this.text.slice(index, index + endSequence.length) === endSequence
+      ) {
         isEnded = true;
         break;
       }
-      this.next();
+      index += 1;
     }
+    if (!isEnded) { return false; }
 
-    const token = new Token(
-      'code_block',
-      this.text.slice(startIndex, isEnded ? this.index - 5 : this.index),
-      null,
-      language ? [['language', language]] : null
-    );
+    const text = this.text.slice(startIndex, index);
+    const languageAttr = language ? [['language', language]] : null;
+    index += endSequence.length;
+
+    const token = new Token('code_block', text, null, languageAttr);
     this.push(token);
-  }
-
-  extractLanguage() {
-    const startIndex = this.index;
-
-    while (this.index <= this.text.length) {
-      const isEnd = this.char1 === '\n' || this.char1 === undefined;
-      this.next();
-
-      if (isEnd) {
-        return this.text.slice(startIndex, this.index - 1);
-      }
-    }
-
-    return null;
+    this.next(index - this.index + endSequence.length);
   }
 
   tagOpen(type, attributes = null) {
