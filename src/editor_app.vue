@@ -208,19 +208,23 @@ textarea.ProseMirror
 
 /deep/ div[data-div]:hover
   position: relative
-  outline: 2px solid #8cf
+  outline: 1px solid #8cf
 
   &:before
-    position: absolute
+    background: rgba(#fff, 0.75)
     color: #2b8acc
+    content: attr(data-div)
     cursor: pointer
     display: inline
+    font-size: 8px
     font-weight: normal
-    font-size: 10px
-    letter-spacing: 0.8px
-    background: #fff
-    z-index: 999
-    content: attr(data-div)
     left: 0
+    letter-spacing: 0.8px
+    line-height: 1
+    padding: 2px
+    pointer-events: none
+    position: absolute
+    text-shadow: 1px 1px 0px #fff
     top: 0
+    z-index: 999
 </style>
