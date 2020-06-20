@@ -392,7 +392,10 @@ export default class MarkdownTokenizer {
     this.appendInlineContent(startSequence);
 
     const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
-    let tokens = tokenizer.parse();
+    const tokens = tokenizer.parse();
+
+    let slicedTokens;
+    let isNewLineAtEnd = false;
 
     // append first paragraph to current inlineTokens
     if (tokens[0].type === 'paragraph_open') {
@@ -403,31 +406,35 @@ export default class MarkdownTokenizer {
           this.inlineTokens.push(token);
         }
       });
-      tokens = tokens.slice(3);
+      slicedTokens = tokens.slice(3);
+      // close parahraph after prior content was joined
+      if (slicedTokens.length) {
+        this.processParagraph();
+      }
+    } else {
+      slicedTokens = tokens;
     }
 
     this.index = tokenizer.index;
 
-    if (tokens.length) {
-      this.processParagraph();
-      this.tokens = [...this.tokens, ...tokens.slice(3)];
-    } else {
-      // insert new line at the end in order to maitian original formatting
-      if (this.text[this.index - 1] == '\n') {
+    // insert new line at the end to maintain original formatting
+    if (tokens[tokens.length - 1].type === 'paragraph_close') {
+      if (this.text[this.index - 1] === '\n') {
+        isNewLineAtEnd = true;
         this.processParagraph();
       }
     }
 
-    // if (tokens[tokens.length - 1].type === 'paragraph_close') {
-    // }
+    // unwrap final paragraph
+    if (!isNewLineAtEnd && slicedTokens.length &&
+      slicedTokens[slicedTokens.length - 1].type === 'paragraph_close'
+    ) {
+      this.inlineTokens = slicedTokens[slicedTokens.length - 2].children;
+      slicedTokens = slicedTokens.slice(0, slicedTokens.length - 3);
+    }
 
-    // if (tokens.length > 3) {
-      // close current paragraph if there is more content
-    // }
+    this.tokens = [...this.tokens, ...slicedTokens];
 
-    // if (tokens.length
-    //   this.tokens = [...this.tokens, ...tokens.slice(3)];
-    // }
     this.appendInlineContent(exitSequence);
   }
 

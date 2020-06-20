@@ -76,8 +76,10 @@ div [div=b-link_button]inside[/div] paragraph
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: ` [div]z
-[/div]`
+  text2: `\`[div]div [div=b-link_button]inside[/div] another div[/div]\`
+[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark data-test]Вкратце о CSS[/div][/url]
+`
+`
 //     text2: ` [div]z\nx\nc[/div]
 // `
 //     text2: `[div] [div]z[/div][/div]
