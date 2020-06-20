@@ -735,6 +735,18 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
+    describe('center', () => {
+      it('[center]z[/center]', () => {
+        expect(MarkdownTokenizer.parse('[center]z[/center]')).to.eql([{
+          type: 'center_open'
+        },
+        ...text('z'),
+        {
+          type: 'center_close'
+        }]);
+      });
+    });
+
     describe('div', () => {
       it('[div]z[/div]', () => {
         expect(MarkdownTokenizer.parse('[div]z[/div]')).to.eql([{

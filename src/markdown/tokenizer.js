@@ -152,6 +152,10 @@ export default class MarkdownTokenizer {
                 bbcode
             );
             break outer;
+
+          case '[center]':
+            this.processBlock('center', bbcode, '[/center]');
+            return;
         }
 
         if (bbcode) {

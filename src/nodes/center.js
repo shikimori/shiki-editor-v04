@@ -14,7 +14,7 @@ export default class Center extends Node {
       parseDOM: [{
         tag: 'center'
       }],
-      toDOM: (node) => ['center', 0]
+      toDOM: (node) => ['center', { 'data-div': '[center]' }, 0]
     };
   }
 

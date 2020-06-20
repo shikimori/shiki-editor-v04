@@ -206,7 +206,7 @@ textarea.ProseMirror
   outline: none
   width: 100%
 
-/deep/ div[data-div]:hover
+/deep/ [data-div]:hover
   position: relative
   outline: 1px solid #8cf
 
