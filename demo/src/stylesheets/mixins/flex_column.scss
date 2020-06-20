@@ -1,5 +1,3 @@
-@import 'mixins/responsive';
-
 @mixin fcolumn-responsive(
   $columns: '', // one argument to rule all columns
   $portrait-columns: '',
