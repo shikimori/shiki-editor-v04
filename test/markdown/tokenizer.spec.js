@@ -39,6 +39,17 @@ describe('MarkdownTokenizer', () => {
         ...text('xxx')
       ]);
     });
+
+    it('\\n', () => {
+      expect(MarkdownTokenizer.parse('\n')).to.eql([{
+        type: 'paragraph_open'
+      }, {
+        type: 'inline',
+        children: []
+      }, {
+        type: 'paragraph_close'
+      }]);
+    });
   });
 
   describe('marks', () => {
@@ -808,6 +819,13 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
 
+      // it(' [div]\\n[/div]', () => {
+      //   expect(MarkdownTokenizer.parse(' [div]\n[/div]')).to.eql([
+      //     ...text(' [div]'),
+      //     ...text('[/div]')
+      //   ]);
+      // });
+
       // it(' [div]z\\nx\\nc[/div]', () => {
       //   expect(MarkdownTokenizer.parse(' [div]z\nx\nc[/div]')).to.eql([
       //     ...text(' [div]z'),
@@ -815,7 +833,7 @@ describe('MarkdownTokenizer', () => {
       //     ...text('c[/div]')
       //   ]);
       // });
-      //
+
       // it(' [div]z\\nx\\nc[/div]v', () => {
       //   expect(MarkdownTokenizer.parse(' [div]z\nx\nc[/div]v')).to.eql([
       //     ...text(' [div]z'),

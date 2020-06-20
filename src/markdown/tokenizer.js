@@ -390,10 +390,10 @@ export default class MarkdownTokenizer {
     this.appendInlineContent(startSequence);
 
     const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
-    const tokens = tokenizer.parse();
+    let tokens = tokenizer.parse();
 
     // append first paragraph to current inlineTokens
-    if (tokens.length && tokens[0].type === 'paragraph_open') {
+    if (tokens[0].type === 'paragraph_open') {
       tokens[1].children.forEach(token => {
         if (token.type === 'text') {
           this.appendInlineContent(token.content, false);
@@ -401,17 +401,25 @@ export default class MarkdownTokenizer {
           this.inlineTokens.push(token);
         }
       });
-    }
-    if (tokens.length > 3) {
-      // close current paragraph if there is more content
-      this.processParagraph();
+      tokens = tokens.slice(3);
     }
 
-    // if (tokens.length 
+    if (tokens.length) {
+      this.processParagraph();
+      this.tokens = [...this.tokens, ...tokens.slice(3)];
+    }
+
+    // if (tokens[tokens.length - 1].type === 'paragraph_close') {
+    // }
+
+    // if (tokens.length > 3) {
+      // close current paragraph if there is more content
+    // }
+
+    // if (tokens.length
     //   this.tokens = [...this.tokens, ...tokens.slice(3)];
     // }
     this.index = tokenizer.index;
-
     this.appendInlineContent(exitSequence);
   }
 
