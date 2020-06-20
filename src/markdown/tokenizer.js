@@ -175,8 +175,12 @@ export default class MarkdownTokenizer {
         }
       }
 
+      if (seq4 === '[div' && bbcode.startsWith('[div')) {
+        this.processInlineBlock(bbcode, '[/div]');
+        return;
+      }
 
-      if (seq5 === '[quot' && ( match = bbcode.match(this.QUOTE_REGEXP))) {
+      if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
         if (!isStart) {
           this.processParagraph(startIndex);
         }
@@ -196,7 +200,6 @@ export default class MarkdownTokenizer {
 
   processInline() {
     const {
-      inlineTokens,
       bbcode,
       char1,
       seq2,
@@ -285,13 +288,7 @@ export default class MarkdownTokenizer {
       if (this.processInlineLink(seq5)) { return; }
     }
 
-    const prevToken = inlineTokens[inlineTokens.length - 1];
-    if (!prevToken || prevToken.type !== 'text') {
-      inlineTokens.push(new Token('text'));
-    }
-    const token = inlineTokens[inlineTokens.length - 1];
-
-    token.content = token.content ? token.content + this.char1 : this.char1;
+    this.appendInlineContent(char1);
     this.next();
   }
 
@@ -398,6 +395,22 @@ export default class MarkdownTokenizer {
     this.push(this.tagClose(type));
   }
 
+  processInlineBlock(type, startSequence, exitSequence, metaAttributes) {
+    // this.next(startSequence.length);
+    // this.push(this.tagOpen(type, metaAttributes));
+    // 
+    // if (this.char1 === '\n') { this.next(); }
+    // 
+    // const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
+    // const tokens = tokenizer.parse();
+    // 
+    // this.tokens = this.tokens.concat(tokens);
+    // this.index = tokenizer.index;
+    // 
+    // this.next(exitSequence.length);
+    // this.push(this.tagClose(type));
+  }
+
   processParagraph(startIndex) {
     const text = this.text.slice(startIndex, this.index);
 
@@ -500,6 +513,15 @@ export default class MarkdownTokenizer {
 
   push(token) {
     this.tokens.push(token);
+  }
+
+  appendInlineContent(sequence) {
+    const prevToken = this.inlineTokens[this.inlineTokens.length - 1];
+    if (!prevToken || prevToken.type !== 'text') {
+      this.inlineTokens.push(new Token('text'));
+    }
+    const token = this.inlineTokens[this.inlineTokens.length - 1];
+    token.content = token.content ? token.content + sequence : sequence;
   }
 
   isContinued(sequence) {
