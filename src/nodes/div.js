@@ -21,7 +21,11 @@ export default class Div extends Node {
           class: node.getAttribute('class'),
           data: node
             .getAttributeNames()
-            .filter(name => name != 'data-div' && name.startsWith('data-'))
+            .filter(name => (
+              name != 'data-div' && name != 'data-pm-slice' &&
+                name.startsWith('data-')
+            ))
+            .map(attribute => [attribute, node.getAttribute(attribute)])
         })
       }],
       toDOM: (node) => {
