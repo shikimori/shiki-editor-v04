@@ -1,10 +1,106 @@
+@import 'mixins/responsive';
+
 @mixin fcolumn-responsive(
   $columns: '', // one argument to rule all columns
-  $gutter: 40px,
-  $offset: 40px,
+  $portrait-columns: '',
+  $landscape-columns: '',
+  $ipad-columns: '',
+  $laptop-columns: '',
+  $desktop-columns: '',
+  $gutter: '',
+  $offset: '',
+  $gutter-mobile: $flex-gutter-mobile,
+  $offset-mobile: $flex-offset-mobile,
+  $gutter-tablet: '',
+  $offset-tablet: '',
+  $gutter-laptop: '',
+  $offset-laptop: '',
+  $gutter-desktop: $flex-gutter-desktop,
+  $offset-desktop: $flex-offset-desktop,
   $selector: '.f-column'
 ) {
-  @include fcolumn($columns, $gutter, $offset, $selector);
+  @if ($columns != '') {
+    @if ($portrait-columns == '') {
+      $portrait-columns: $columns;
+    }
+    @if ($landscape-columns == '') {
+      $landscape-columns: $columns;
+    }
+    @if ($ipad-columns == '') {
+      $ipad-columns: $columns;
+    }
+    @if ($laptop-columns == '') {
+      $laptop-columns: $columns;
+    }
+    @if ($desktop-columns == '') {
+      $desktop-columns: $columns;
+    }
+  } @else {
+    @if ($portrait-columns == '') {
+      $portrait-columns: 1;
+    }
+    @if ($landscape-columns == '') {
+      $landscape-columns: 2;
+    }
+  }
+
+  @if ($gutter != '') {
+    $gutter-mobile: $gutter;
+    $gutter-desktop: $gutter;
+  }
+  @if ($offset != '') {
+    $offset-mobile: $offset;
+    $offset-desktop: $offset;
+  }
+  @if ($offset-tablet == '') {
+    $offset-tablet: $offset-desktop;
+  }
+  @if ($gutter-tablet == '') {
+    $gutter-tablet: $gutter-desktop;
+  }
+  @if ($offset-laptop == '') {
+    $offset-laptop: $offset-desktop;
+  }
+  @if ($gutter-laptop == '') {
+    $gutter-laptop: $gutter-desktop;
+  }
+  @if ($laptop-columns == '') {
+    $laptop-columns: $ipad-columns;
+  }
+  @if ($desktop-columns == '') {
+    $desktop-columns: $laptop-columns;
+  }
+
+  @if ($portrait-columns != 0) {
+    @include iphone-portrait {
+      @include fcolumn($portrait-columns, $gutter-mobile, $offset-mobile, $selector);
+    }
+  }
+
+  @if ($landscape-columns != 0) {
+    @include iphone-landscape {
+      @include fcolumn($landscape-columns, $gutter-mobile, $offset-mobile, $selector);
+    }
+  }
+
+  @if ($ipad-columns != 0) {
+    @include ipad {
+      @include fcolumn($ipad-columns, $gutter-tablet, $offset-tablet, $selector);
+    }
+  }
+
+  @if ($laptop-columns != $desktop-columns) {
+    @include laptop {
+      @include fcolumn($laptop-columns, $gutter-laptop, $offset-laptop, $selector);
+    }
+    @include gt_laptop {
+      @include fcolumn($desktop-columns, $gutter-desktop, $offset-desktop, $selector);
+    }
+  } @else  {
+    @include gte_laptop {
+      @include fcolumn($desktop-columns, $gutter-desktop, $offset-desktop, $selector);
+    }
+  }
 }
 
 @mixin fcolumn($columns, $gutter, $offset, $selector) {
