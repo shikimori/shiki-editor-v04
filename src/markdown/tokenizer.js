@@ -154,24 +154,26 @@ export default class MarkdownTokenizer {
             break outer;
         }
 
-        if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
-          const meta = parseDivMeta(match[1]);
-          this.processBlock('div', bbcode, '[/div]', meta);
-          return;
+        if (bbcode) {
+          if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
+            const meta = parseDivMeta(match[1]);
+            this.processBlock('div', bbcode, '[/div]', meta);
+            return;
+          }
+          //////////////////TODO: CLEANUP ALL BBCODES FROM META CONTENT. META REGEXP SHOULD ALLOW INCLUDE BBCODES
+          if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
+            const meta = parseSpoilerMeta(match[1]);
+            this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta);
+            return;
+          }
         }
-        //////////////////TODO: CLEANUP ALL BBCODES FROM META CONTENT. META REGEXP SHOULD ALLOW INCLUDE BBCODES
-        if (seq5 === '[spoi' && (match = bbcode.match(this.SPOILER_REGEXP))) {
-          const meta = parseSpoilerMeta(match[1]);
-          this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta);
-          return;
-        }
-      }
 
-      if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
-        if (!isStart) { this.processParagraph(); }
-        const meta = parseQuoteMeta(match[1]);
-        this.processBlock('quote', bbcode, '[/quote]', meta);
-        return;
+        if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
+          if (!isStart) { this.processParagraph(); }
+          const meta = parseQuoteMeta(match[1]);
+          this.processBlock('quote', bbcode, '[/quote]', meta);
+          return;
+        }
       }
 
       this.processInline(char1, bbcode, seq2, seq3, seq4, seq5);
