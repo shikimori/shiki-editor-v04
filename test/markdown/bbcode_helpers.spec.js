@@ -45,6 +45,21 @@ describe('tokenizer_helpers', () => {
   });
 
   it('parseDivMeta', () => {
+    expect(parseDivMeta('')).to.eq(null);
+    expect(parseDivMeta('aa bb cc')).to.eql({
+      class: 'aa bb cc'
+    });
+    expect(parseDivMeta('data-a data-b')).to.eql({
+      data: [['data-a', ''], ['data-b', '']]
+    });
+    expect(parseDivMeta('a data-b')).to.eql({
+      class: 'a',
+      data: [['data-b', '']]
+    });
+    expect(parseDivMeta('a data-b data-c=d')).to.eql({
+      class: 'a',
+      data: [['data-b', ''], ['data-c', 'd']]
+    });
   });
 });
 
