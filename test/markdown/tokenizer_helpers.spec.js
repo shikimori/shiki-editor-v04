@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import {
   extractBbCode,
   extractUntil,
-  hasInlineSequence
+  hasInlineSequence,
+  extractMarkdownLanguage
 } from '../../src/markdown/tokenizer_helpers';
 
 describe('tokenizer_helpers', () => {
@@ -39,5 +40,12 @@ describe('tokenizer_helpers', () => {
 
     expect(hasInlineSequence('te1st', '1', 0, 99)).to.eq(true);
     expect(hasInlineSequence('te1st', '1', 0, 1)).to.eq(false);
+  });
+
+  it('extractMarkdownLanguage', () => {
+    expect(extractMarkdownLanguage('test', 0)).to.eq('test');
+    expect(extractMarkdownLanguage('```\n', 3)).to.eq('');
+    expect(extractMarkdownLanguage('```test', 3)).to.eq('test');
+    expect(extractMarkdownLanguage('```test\n', 3)).to.eq('test');
   });
 });
