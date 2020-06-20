@@ -527,6 +527,20 @@ describe('MarkdownTokenizer', () => {
     });
 
     describe('code_block', () => {
+      it('```\\nzxc\\n```', () => {
+        expect(MarkdownTokenizer.parse('```\nzxc\n```')).to.eql([{
+          content: 'zxc',
+          type: 'code_block'
+        }]);
+      });
+
+      it('[code]\\nzxc\\n[/code]', () => {
+        expect(MarkdownTokenizer.parse('[code]\nzxc\n[/code]')).to.eql([{
+          content: 'zxc',
+          type: 'code_block'
+        }]);
+      });
+
       it('```\\nzxc\\nvbn\\n```', () => {
         expect(MarkdownTokenizer.parse('```\nzxc\nvbn\n```')).to.eql([{
           content: 'zxc\nvbn',
