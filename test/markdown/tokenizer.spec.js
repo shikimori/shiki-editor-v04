@@ -812,11 +812,11 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
-      // it('z[div]x[/div]c', () => {
-      //   expect(MarkdownTokenizer.parse('z[div]x[/div]c')).to.eql([
-      //     ...text('z[div]x[/div]c')
-      //   ]);
-      // });
+      it('z[div]x[/div]c', () => {
+        expect(MarkdownTokenizer.parse('z[div]x[/div]c')).to.eql([
+          ...text('z[div]x[/div]c')
+        ]);
+      });
     });
   });
 });

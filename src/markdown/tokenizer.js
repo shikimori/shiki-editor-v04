@@ -289,7 +289,6 @@ export default class MarkdownTokenizer {
     }
 
     this.appendInlineContent(char1);
-    this.next();
   }
 
   processMarkOpen(type, openBbcode, closeBbcode) {
@@ -395,20 +394,25 @@ export default class MarkdownTokenizer {
     this.push(this.tagClose(type));
   }
 
-  processInlineBlock(type, startSequence, exitSequence, metaAttributes) {
-    // this.next(startSequence.length);
-    // this.push(this.tagOpen(type, metaAttributes));
-    // 
-    // if (this.char1 === '\n') { this.next(); }
-    // 
-    // const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
-    // const tokens = tokenizer.parse();
-    // 
-    // this.tokens = this.tokens.concat(tokens);
-    // this.index = tokenizer.index;
-    // 
-    // this.next(exitSequence.length);
-    // this.push(this.tagClose(type));
+  processInlineBlock(startSequence, exitSequence) {
+    this.appendInlineContent(startSequence);
+    if (this.char1 === '\n') { this.next(); }
+
+    const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
+    const tokens = tokenizer.parse();
+
+    if (tokens.length === 3 && tokens[0].type === 'paragraph_open') {
+      tokens[1].children.forEach(token => {
+        if (token.type === 'text') {
+          this.appendInlineContent(token.content);
+        } else {
+          this.inlineTokens.push(token);
+        }
+      });
+    }
+    this.index = tokenizer.index;
+
+    this.appendInlineContent(exitSequence);
   }
 
   processParagraph(startIndex) {
@@ -515,13 +519,17 @@ export default class MarkdownTokenizer {
     this.tokens.push(token);
   }
 
-  appendInlineContent(sequence) {
+  appendInlineContent(sequence, isMoveNext = true) {
     const prevToken = this.inlineTokens[this.inlineTokens.length - 1];
     if (!prevToken || prevToken.type !== 'text') {
       this.inlineTokens.push(new Token('text'));
     }
     const token = this.inlineTokens[this.inlineTokens.length - 1];
     token.content = token.content ? token.content + sequence : sequence;
+
+    if (isMoveNext) {
+      this.next(sequence.length);
+    }
   }
 
   isContinued(sequence) {
