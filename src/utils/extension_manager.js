@@ -195,7 +195,7 @@ export default class ExtensionManager {
             return false;
           }
           view.focus();
-          return cb(attrs)(view.state, view.dispatch, view);
+          return cb(attrs, view.state)(view.state, view.dispatch, view);
         };
 
         const handle = (_name, _value) => {

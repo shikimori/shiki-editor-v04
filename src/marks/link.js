@@ -39,7 +39,7 @@ export default class Link extends Mark {
   }
 
   commands({ type }) {
-    return state => {
+    return (_attrs, state) => {
       let marks = [];
       const { from, to } = state.selection;
 
@@ -54,7 +54,7 @@ export default class Link extends Mark {
       } else {
         const href = prompt(I18n.t('frontend.shiki_editor.prompt.link_url'));
         return href ?
-          updateMark(type, { href }) :
+          updateMark(type, { href: fixUrl(href) }) :
           () => {};
       }
     };
