@@ -167,7 +167,9 @@ export default class MarkdownTokenizer {
             return;
           }
         }
+      }
 
+      if (bbcode) {
         if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
           if (!isStart) { this.processParagraph(); }
           const meta = parseQuoteMeta(match[1]);
@@ -175,6 +177,7 @@ export default class MarkdownTokenizer {
           return;
         }
       }
+
 
       this.processInline(char1, bbcode, seq2, seq3, seq4, seq5);
     }

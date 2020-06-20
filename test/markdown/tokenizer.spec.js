@@ -676,19 +676,18 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
-      ////////NOTE:FIX !!!!!!!!!!!!!!1
-      // it('q[quote]z[/quote]', () => {
-      //   expect(MarkdownTokenizer.parse('q[quote]z[/quote]')).to.eql([
-      //     ...text('q'),
-      //     {
-      //       type: 'quote_open'
-      //     },
-      //     ...text('z'),
-      //     {
-      //       type: 'quote_close'
-      //     }
-      //   ]);
-      // });
+      it('q[quote]z[/quote]', () => {
+        expect(MarkdownTokenizer.parse('q[quote]z[/quote]')).to.eql([
+          ...text('q'),
+          {
+            type: 'quote_open'
+          },
+          ...text('z'),
+          {
+            type: 'quote_close'
+          }
+        ]);
+      });
 
       it('[quote]z[/quote]q', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]q')).to.eql([{

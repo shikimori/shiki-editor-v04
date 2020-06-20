@@ -76,7 +76,7 @@ div [div=b-link_button]inside[/div] paragraph
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `[div]z
+    text2: `q[quote]z[/quote]
 `
 //     text2: ` [div]z\nx\nc[/div]
 // `
