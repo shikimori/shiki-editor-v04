@@ -819,20 +819,20 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
 
-      // it(' [div]\\n[/div]', () => {
-      //   expect(MarkdownTokenizer.parse(' [div]\n[/div]')).to.eql([
-      //     ...text(' [div]'),
-      //     ...text('[/div]')
-      //   ]);
-      // });
+      it(' [div]\\n[/div]', () => {
+        expect(MarkdownTokenizer.parse(' [div]\n[/div]')).to.eql([
+          ...text(' [div]'),
+          ...text('[/div]')
+        ]);
+      });
 
-      // it(' [div]z\\nx\\nc[/div]', () => {
-      //   expect(MarkdownTokenizer.parse(' [div]z\nx\nc[/div]')).to.eql([
-      //     ...text(' [div]z'),
-      //     ...text('x'),
-      //     ...text('c[/div]')
-      //   ]);
-      // });
+      it(' [div]z\\nx\\nc[/div]', () => {
+        expect(MarkdownTokenizer.parse(' [div]z\nx\nc[/div]')).to.eql([
+          ...text(' [div]z'),
+          ...text('x'),
+          ...text('c[/div]')
+        ]);
+      });
 
       // it(' [div]z\\nx\\nc[/div]v', () => {
       //   expect(MarkdownTokenizer.parse(' [div]z\nx\nc[/div]v')).to.eql([

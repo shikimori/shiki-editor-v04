@@ -119,6 +119,8 @@ export default class MarkdownTokenizer {
       if (isEnd) {
         this.processParagraph();
         this.next();
+        // add aditional parahraph when meet \n before exitSequesnce
+        // if (this.isExitSequence) { this.processParagraph(); }
         return;
       }
 
@@ -404,9 +406,16 @@ export default class MarkdownTokenizer {
       tokens = tokens.slice(3);
     }
 
+    this.index = tokenizer.index;
+
     if (tokens.length) {
       this.processParagraph();
       this.tokens = [...this.tokens, ...tokens.slice(3)];
+    } else {
+      // insert new line at the end in order to maitian original formatting
+      if (this.text[this.index - 1] == '\n') {
+        this.processParagraph();
+      }
     }
 
     // if (tokens[tokens.length - 1].type === 'paragraph_close') {
@@ -419,7 +428,6 @@ export default class MarkdownTokenizer {
     // if (tokens.length
     //   this.tokens = [...this.tokens, ...tokens.slice(3)];
     // }
-    this.index = tokenizer.index;
     this.appendInlineContent(exitSequence);
   }
 
