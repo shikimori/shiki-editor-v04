@@ -415,7 +415,7 @@ export default class MarkdownTokenizer {
     this.appendInlineContent(exitSequence);
   }
 
-  processParagraph(startIndex) {
+  processParagraph() {
     this.push(this.tagOpen('paragraph'));
     this.push(new Token('inline', null, this.inlineTokens));
     this.push(this.tagClose('paragraph'));
