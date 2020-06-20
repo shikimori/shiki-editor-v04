@@ -11,17 +11,17 @@ export function parseQuoteMeta(meta) {
 
     switch (split[0][0]) {
       case 'c':
-        attributes.comment_id = id;
+        attributes.comment_id = parseInt(id);
         break;
       case 'm':
-        attributes.message_id = id;
+        attributes.message_id = parseInt(id);
         break;
       case 't':
-        attributes.topic_id = id;
+        attributes.topic_id = parseInt(id);
         break;
     }
 
-    attributes.user_id = split[1];
+    attributes.user_id = parseInt(split[1]);
     attributes.nickname = split[2];
   }
 
@@ -46,7 +46,8 @@ export function parseDivMeta(meta) {
 
   meta.split(' ').forEach(value => {
     if (value.length > 5 && value.startsWith('data-')) {
-      data.push(value);
+      const values = value.split('=');
+      data.push([values[0], values[1] || '']);
     } else {
       classes.push(value);
     }
