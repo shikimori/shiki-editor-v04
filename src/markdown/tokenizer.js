@@ -112,12 +112,12 @@ export default class MarkdownTokenizer {
       const isEnd = char1 === '\n' || char1 === undefined;
 
       if (this.isExitSequence) {
-        this.processParagraph(startIndex);
+        this.processParagraph();
         return;
       }
 
       if (isEnd) {
-        this.processParagraph(startIndex);
+        this.processParagraph();
         this.next();
         return;
       }
@@ -182,7 +182,7 @@ export default class MarkdownTokenizer {
 
       if (seq5 === '[quot' && (match = bbcode.match(this.QUOTE_REGEXP))) {
         if (!isStart) {
-          this.processParagraph(startIndex);
+          this.processParagraph();
         }
         this.processBlock(
           'quote',
@@ -416,10 +416,8 @@ export default class MarkdownTokenizer {
   }
 
   processParagraph(startIndex) {
-    const text = this.text.slice(startIndex, this.index);
-
     this.push(this.tagOpen('paragraph'));
-    this.push(new Token('inline', text, this.inlineTokens));
+    this.push(new Token('inline', null, this.inlineTokens));
     this.push(this.tagClose('paragraph'));
 
     this.inlineTokens = [];

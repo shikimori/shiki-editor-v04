@@ -5,7 +5,6 @@ function text(content) {
   return [{
     type: 'paragraph_open'
   }, {
-    content,
     type: 'inline',
     children: [{
       content,
@@ -48,7 +47,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[b]zxc[/b]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[b]zxc[/b]',
           type: 'inline',
           children: [{
             type: 'strong_open'
@@ -79,7 +77,6 @@ describe('MarkdownTokenizer', () => {
       //   expect(MarkdownTokenizer.parse('**zxc**')).to.eql([{
       //     type: 'paragraph_open'
       //   }, {
-      //     content: '**zxc**',
       //     type: 'inline',
       //     children: [{
       //       type: 'strong_open'
@@ -110,7 +107,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('a[b]zxc[/b]A')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: 'a[b]zxc[/b]A',
           type: 'inline',
           children: [{
             content: 'a',
@@ -137,7 +133,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[i]zxc[/i]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[i]zxc[/i]',
           type: 'inline',
           children: [{
             type: 'em_open'
@@ -162,7 +157,6 @@ describe('MarkdownTokenizer', () => {
       //   expect(MarkdownTokenizer.parse('*zxc*')).to.eql([{
       //     type: 'paragraph_open'
       //   }, {
-      //     content: '*zxc*',
       //     type: 'inline',
       //     children: [{
       //       type: 'em_open'
@@ -183,7 +177,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[u]zxc[/u]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[u]zxc[/u]',
           type: 'inline',
           children: [{
             type: 'underline_open'
@@ -210,7 +203,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[s]zxc[/s]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[s]zxc[/s]',
           type: 'inline',
           children: [{
             type: 'deleted_open'
@@ -237,7 +229,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('`zxc`')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '`zxc`',
           type: 'inline',
           children: [{
             content: 'zxc',
@@ -252,7 +243,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('``zxc```')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '``zxc```',
           type: 'inline',
           children: [{
             content: 'zxc',
@@ -270,7 +260,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('a`zxc`A')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: 'a`zxc`A',
           type: 'inline',
           children: [{
             content: 'a',
@@ -300,7 +289,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('||zxc||')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '||zxc||',
           type: 'inline',
           children: [{
             type: 'spoiler_inline_open'
@@ -333,7 +321,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[url=https://ya.ru]zxc[/url]',
           type: 'inline',
           children: [{
             type: 'link_open',
@@ -353,7 +340,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[url=ya.ru]zxc[/url]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[url=ya.ru]zxc[/url]',
           type: 'inline',
           children: [{
             type: 'link_open',
@@ -568,7 +554,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[img]https://test.com[/img]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[img]https://test.com[/img]',
           type: 'inline',
           children: [{
             type: 'image',
@@ -583,7 +568,6 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse('[poster]https://test.com[/poster]')).to.eql([{
           type: 'paragraph_open'
         }, {
-          content: '[poster]https://test.com[/poster]',
           type: 'inline',
           children: [{
             type: 'image',
