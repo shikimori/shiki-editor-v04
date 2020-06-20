@@ -7,6 +7,8 @@ import {
 
 describe('tokenizer_helpers', () => {
   it('parseQuoteMeta', () => {
+    expect(parseQuoteMeta('')).to.eq(null);
+
     expect(parseQuoteMeta('qwe')).to.eql({
       nickname: 'qwe'
     });
@@ -36,6 +38,10 @@ describe('tokenizer_helpers', () => {
   });
 
   it('parseSpoilerMeta', () => {
+    expect(parseSpoilerMeta('')).to.eq(null);
+    expect(parseSpoilerMeta('qwe')).to.eql({
+      label: 'qwe'
+    });
   });
 
   it('parseDivMeta', () => {
