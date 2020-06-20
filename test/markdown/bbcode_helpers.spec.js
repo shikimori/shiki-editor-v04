@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import {
   parseQuoteMeta,
   parseSpoilerMeta,
+  parseCodeMeta,
   parseDivMeta
 } from '../../src/markdown/bbcode_helpers';
 
@@ -44,6 +45,13 @@ describe('tokenizer_helpers', () => {
     });
   });
 
+  it('parseCodeMeta', () => {
+    expect(parseCodeMeta('')).to.eq(null);
+    expect(parseCodeMeta('qwe')).to.eql({
+      language: 'qwe'
+    });
+  });
+
   it('parseDivMeta', () => {
     expect(parseDivMeta('')).to.eq(null);
     expect(parseDivMeta('aa bb cc')).to.eql({
@@ -62,4 +70,3 @@ describe('tokenizer_helpers', () => {
     });
   });
 });
-

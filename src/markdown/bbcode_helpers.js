@@ -36,6 +36,14 @@ export function parseSpoilerMeta(meta) {
   };
 }
 
+export function parseCodeMeta(meta) {
+  if (!meta) { return null; }
+
+  return {
+    language: meta
+  };
+}
+
 export function parseDivMeta(meta) {
   if (!meta) { return null; }
 
