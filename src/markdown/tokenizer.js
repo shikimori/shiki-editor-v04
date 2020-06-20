@@ -153,9 +153,13 @@ export default class MarkdownTokenizer {
             );
             break outer;
 
-          case '[center]':
-            this.processBlock('center', bbcode, '[/center]');
-            return;
+            case '[center]':
+              this.processBlock('center', bbcode, '[/center]');
+              return;
+
+            case '[right]':
+              this.processBlock('right', bbcode, '[/right]');
+              return;
         }
 
         if (bbcode) {

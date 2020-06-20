@@ -10,3 +10,4 @@ export { default as Quote } from './quote';
 export { default as SpoilerBlock } from './spoiler_block';
 export { default as Text } from './text';
 export { default as Center } from './center';
+export { default as Right } from './right';

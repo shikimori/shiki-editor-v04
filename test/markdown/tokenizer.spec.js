@@ -747,6 +747,18 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
+    describe('right', () => {
+      it('[right]z[/right]', () => {
+        expect(MarkdownTokenizer.parse('[right]z[/right]')).to.eql([{
+          type: 'right_open'
+        },
+        ...text('z'),
+        {
+          type: 'right_close'
+        }]);
+      });
+    });
+
     describe('div', () => {
       it('[div]z[/div]', () => {
         expect(MarkdownTokenizer.parse('[div]z[/div]')).to.eql([{

@@ -211,12 +211,13 @@ textarea.ProseMirror
   outline: 1px solid #8cf
 
   &:before
-    background: rgba(#fcfcfc, 0.75)
+    background: #fcfcfc
+    font-family: Monaco, Menlo, Consolas, Courier New, monospace;
     color: #2b8acc
     content: attr(data-div)
     cursor: pointer
     display: inline
-    font-size: 8px
+    font-size: 9px
     font-weight: normal
     left: 0
     letter-spacing: 0.8px
