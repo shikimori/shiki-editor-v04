@@ -347,17 +347,17 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
-      //it('||z', () => {
-      //  expect(MarkdownTokenizer.parse('||z')).to.eql([
-      //    ...text('||z')
-      //  ]);
-      //});
+      it('[color=red]z', () => {
+        expect(MarkdownTokenizer.parse('[color=red]z')).to.eql([
+          ...text('[color=red]z')
+        ]);
+      });
 
-      //it('z||', () => {
-      //  expect(MarkdownTokenizer.parse('z||')).to.eql([
-      //    ...text('z||')
-      //  ]);
-      //});
+      it('z[/color]', () => {
+        expect(MarkdownTokenizer.parse('z[/color]')).to.eql([
+          ...text('z[/color]')
+        ]);
+      });
     });
 
     describe('link', () => {
