@@ -327,7 +327,7 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
-    describe('spoiler_inline', () => {
+    describe('color', () => {
       it('[color=red]zxc[/color]', () => {
         expect(MarkdownTokenizer.parse('[color=red]zxc[/color]')).to.eql([{
           type: 'paragraph_open'
@@ -356,6 +356,39 @@ describe('MarkdownTokenizer', () => {
       it('z[/color]', () => {
         expect(MarkdownTokenizer.parse('z[/color]')).to.eql([
           ...text('z[/color]')
+        ]);
+      });
+    });
+
+    describe('size', () => {
+      it('[size=20]zxc[/size]', () => {
+        expect(MarkdownTokenizer.parse('[size=20]zxc[/size]')).to.eql([{
+          type: 'paragraph_open'
+        }, {
+          type: 'inline',
+          children: [{
+            type: 'size_open',
+            attrs: [['size', '20']]
+          }, {
+            content: 'zxc',
+            type: 'text'
+          }, {
+            type: 'size_close'
+          }]
+        }, {
+          type: 'paragraph_close'
+        }]);
+      });
+
+      it('[size=20]z', () => {
+        expect(MarkdownTokenizer.parse('[size=20]z')).to.eql([
+          ...text('[size=20]z')
+        ]);
+      });
+
+      it('z[/size]', () => {
+        expect(MarkdownTokenizer.parse('z[/size]')).to.eql([
+          ...text('z[/size]')
         ]);
       });
     });
