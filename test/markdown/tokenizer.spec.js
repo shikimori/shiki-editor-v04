@@ -711,6 +711,18 @@ describe('MarkdownTokenizer', () => {
           type: 'spoiler_block_close'
         }]);
       });
+
+      it('[spoiler=q[b]w[i]e[/i]r[/b]t]z[/spoiler]', () => {
+        expect(MarkdownTokenizer.parse('[spoiler=q[b]w[i]e[/i]r[/b]t]z[/spoiler]')).to.eql([{
+          type: 'spoiler_block_open',
+          attrs: [['label', 'q[b]w[i]e[/i]r[/b]t']]
+        },
+        ...text('z'),
+        {
+          type: 'spoiler_block_close'
+        }]);
+      });
+
       it('[spoiler=qw er]z[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([{
           type: 'spoiler_block_open',
