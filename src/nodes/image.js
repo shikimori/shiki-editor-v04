@@ -15,7 +15,11 @@ export default class Image extends Node {
       inline: true,
       attrs: {
         src: {},
-        isPoster: { default: false }
+        isPoster: { default: false },
+        width: { default: null },
+        height: { default: null },
+        isNoZoom: { default: false },
+        class: { default: null }
       },
       group: 'inline',
       draggable: true,

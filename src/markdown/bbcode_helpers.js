@@ -33,11 +33,33 @@ export function parseDivMeta(meta) {
   return attributes;
 }
 
+const IMAGE_ATTIRUBYTES = /(?:c(?:lass)?=(?<css_class>[\w_-]+))|(?:(?<width>\d+)x(?<height>\d+))|(?:w(?:idth)?=(?<width2>\d+))|(?:h(?:eight)?=(?<height2>\d+))|(?<no_zoom>no-zoom)/;
+
 export function parseImageMeta(meta) {
   if (!meta) { return null; }
+  const attributes = {};
+  const split = meta.split(' ');
 
-  return {
-  };
+  split.forEach(attribute => {
+    let match = attribute.match(IMAGE_ATTIRUBYTES);
+    if (!match) { return; }
+
+    if (match.groups.no_zoom) {
+      attributes.isNoZoom = true;
+    } else if (match.groups.width || match.groups.width2) {
+      attributes.width = match.groups.width || match.groups.width2;
+    } if (match.groups.height || match.groups.height2) {
+      attributes.height = match.groups.height || match.groups.height2;
+    } if (match.groups.css_class) {
+      if (attributes.css_class) {
+        attributes.class += ` ${match.groups.css_class}`;
+      } else {
+        attributes.class = match.groups.css_class;
+      }
+    }
+  });
+
+  return attributes;
 }
 
 export function parseQuoteMeta(meta) {

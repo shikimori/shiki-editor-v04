@@ -1,12 +1,54 @@
 import { expect } from 'chai';
 import {
-  parseQuoteMeta,
-  parseSpoilerMeta,
   parseCodeMeta,
-  parseDivMeta
+  parseDivMeta,
+  parseImageMeta,
+  parseQuoteMeta,
+  parseSpoilerMeta
 } from '../../src/markdown/bbcode_helpers';
 
 describe('tokenizer_helpers', () => {
+  it('parseCodeMeta', () => {
+    expect(parseCodeMeta('')).to.eq(null);
+    expect(parseCodeMeta('qwe')).to.eql({
+      language: 'qwe'
+    });
+  });
+
+  it('parseDivMeta', () => {
+    expect(parseDivMeta('')).to.eq(null);
+    expect(parseDivMeta('aa bb cc')).to.eql({
+      class: 'aa bb cc'
+    });
+    expect(parseDivMeta('data-a data-b')).to.eql({
+      data: [['data-a', ''], ['data-b', '']]
+    });
+    expect(parseDivMeta('a data-b')).to.eql({
+      class: 'a',
+      data: [['data-b', '']]
+    });
+    expect(parseDivMeta('a data-b data-c=d')).to.eql({
+      class: 'a',
+      data: [['data-b', ''], ['data-c', 'd']]
+    });
+  });
+
+  it('parseImageMeta', () => {
+    expect(parseImageMeta('class=qwe')).to.eql({
+      class: 'qwe'
+    });
+
+    expect(parseImageMeta('100x500')).to.eql({
+      width: '100',
+      height: '500'
+    });
+
+    expect(parseImageMeta('width=100 no-zoom')).to.eql({
+      width: '100',
+      isNoZoom: true
+    });
+  });
+
   it('parseQuoteMeta', () => {
     expect(parseQuoteMeta('')).to.eq(null);
 
@@ -42,31 +84,6 @@ describe('tokenizer_helpers', () => {
     expect(parseSpoilerMeta('')).to.eq(null);
     expect(parseSpoilerMeta('qwe')).to.eql({
       label: 'qwe'
-    });
-  });
-
-  it('parseCodeMeta', () => {
-    expect(parseCodeMeta('')).to.eq(null);
-    expect(parseCodeMeta('qwe')).to.eql({
-      language: 'qwe'
-    });
-  });
-
-  it('parseDivMeta', () => {
-    expect(parseDivMeta('')).to.eq(null);
-    expect(parseDivMeta('aa bb cc')).to.eql({
-      class: 'aa bb cc'
-    });
-    expect(parseDivMeta('data-a data-b')).to.eql({
-      data: [['data-a', ''], ['data-b', '']]
-    });
-    expect(parseDivMeta('a data-b')).to.eql({
-      class: 'a',
-      data: [['data-b', '']]
-    });
-    expect(parseDivMeta('a data-b data-c=d')).to.eql({
-      class: 'a',
-      data: [['data-b', ''], ['data-c', 'd']]
     });
   });
 });
