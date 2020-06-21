@@ -18,8 +18,8 @@
     <img
       ref='image'
       :src='node.attrs.src'
-      :width='node.attrs.width'
-      :height='node.attrs.height'
+      :width='width'
+      :height='height'
     >
   </div>
 </template>
@@ -38,14 +38,23 @@ export default {
   },
   computed: {
     isCheckWidth() {
-      return false;
-      // return !this.isPoster;
+      return !this.isPoster &&
+        !this.node.attrs.width &&
+        !this.node.attrs.height;
     },
     isPoster() {
       return this.node.attrs.isPoster;
     },
     customClass() {
       return this.node.attrs.class;
+    },
+    width() {
+      if (this.isPoster) { return null; }
+      return this.node.attrs.width;
+    },
+    height() {
+      if (this.isPoster) { return null; }
+      return this.node.attrs.height;
     },
     serializedAttributes() {
       return JSON.stringify(this.node.attrs);
@@ -71,15 +80,6 @@ export default {
     },
     expand() {
       this.updateAttrs({ ...this.node.attrs, isPoster: true });
-
-      // NOTE: example with transaction
-      // this.view.dispatch(
-      //   this.view.state.tr.setNodeMarkup(
-      //     this.getPos(),
-      //     null,
-      //     { ...this.node.attrs, isPoster: true }
-      //   )
-      // );
     },
     collapse() {
       this.updateAttrs({ ...this.node.attrs, isPoster: false });
