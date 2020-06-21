@@ -32,7 +32,6 @@ export default class Image extends Node {
       }],
       toDOM: node => {
         const serializedAttributes = JSON.stringify(node.attrs);
-
         if (node.attrs.isPoster) {
           return [
             'img',
@@ -43,6 +42,7 @@ export default class Image extends Node {
             }
           ];
         }
+
         const attrs = { src: node.attrs.src };
         if (node.attrs.width) {
           attrs.width = node.attrs.width;
