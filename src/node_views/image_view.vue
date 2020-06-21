@@ -4,7 +4,9 @@
     :class='{
       "is-prosemirror-selected": selected,
       "b-poster": isPoster,
-      "check-width": !isPoster
+      "check-width": isCheckWidth,
+      "no-zoom": node.attrs.isNoZoom,
+       [customClass]: isCustomClass
     }'
     :data-src='node.attrs.src'
     @click='select'
@@ -14,7 +16,12 @@
       <div v-else class='expand' @click='expand' />
       <div class='delete' @click='remove' />
     </div>
-    <img ref='image' :src='node.attrs.src'>
+    <img
+      ref='image'
+      :src='node.attrs.src'
+      :width='node.attrs.width'
+      :height='node.attrs.height'
+    >
   </span>
 </template>
 
@@ -31,8 +38,18 @@ export default {
     updateAttrs: { type: Function, required: true }
   },
   computed: {
+    isCheckWidth() {
+      return false;
+      // return !this.isPoster;
+    },
     isPoster() {
       return this.node.attrs.isPoster;
+    },
+    customClass() {
+      return this.node.attrs.class;
+    },
+    isCustomClass() {
+      return !!this.customClass;
     }
   },
   methods: {

@@ -24,7 +24,7 @@ export default class Image extends Node {
       group: 'inline',
       draggable: true,
       parseDOM: [{
-        tag: 'span.b-image',
+        tag: '.b-image',
         getAttrs: node => ({
           src: node.children[0].src,
           isPoster: node.classList.contains('b-poster')
@@ -33,15 +33,31 @@ export default class Image extends Node {
         tag: 'img.b-poster',
         getAttrs: node => ({ src: node.src, isPoster: true })
       }],
-      toDOM: node => (
-        node.attrs.isPoster ?
-          ['img', { class: 'b-poster', src: node.attrs.src }] :
-          [
-            'span',
-            { class: 'b-image unprocessed no-zoom' },
-            ['img', { src: node.attrs.src }]
-          ]
-      )
+      toDOM: node => {
+        if (node.attrs.isPoster) {
+          return ['img', { class: 'b-poster', src: node.attrs.src }];
+        }
+        const attrs = { src: node.attrs.src };
+        if (node.attrs.width) {
+          attrs.width = node.attrs.width;
+        }
+        if (node.attrs.height) {
+          attrs.height = node.attrs.height;
+        }
+        const classes = ['b-image', 'unprocessed'];
+        if (node.attrs.class) {
+          classes.push(node.attrs.class);
+        }
+        if (node.attrs.isNoZoom) {
+          classes.push('no-zoom');
+        }
+
+        return [
+          'span',
+          { class: classes },
+          [ 'img', attrs ]
+        ];
+      }
     };
   }
 

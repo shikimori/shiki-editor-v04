@@ -198,7 +198,6 @@ export default class MarkdownTokenizer {
         }
       }
 
-
       this.processInline(char1, bbcode, seq2, seq3, seq4, seq5);
     }
   }
