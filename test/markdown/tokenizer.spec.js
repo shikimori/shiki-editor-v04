@@ -610,6 +610,18 @@ describe('MarkdownTokenizer', () => {
           type: 'paragraph_close'
         }]);
       });
+
+      it('[img]zxc', () => {
+        expect(MarkdownTokenizer.parse('[img]zxc')).to.eql([
+          ...text('[img]zxc')
+        ]);
+      });
+
+      it('[poster]zxc', () => {
+        expect(MarkdownTokenizer.parse('[poster]zxc')).to.eql([
+          ...text('[poster]zxc')
+        ]);
+      });
     });
 
     describe('spoiler', () => {

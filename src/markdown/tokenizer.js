@@ -9,10 +9,11 @@ import {
   extractMarkdownLanguage
 } from './tokenizer_helpers';
 import {
+  parseCodeMeta,
+  parseDivMeta,
+  parseImageMeta,
   parseQuoteMeta,
   parseSpoilerMeta,
-  parseCodeMeta,
-  parseDivMeta
 } from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
@@ -21,12 +22,12 @@ export default class MarkdownTokenizer {
     bullet_list: 'ul',
     list_item: 'li',
     underline: 'span'
-  };
-  MAX_BBCODE_SIZE = 50; // [quote=...] can be so long
-  MAX_URL_SIZE = 512;
+  }
+  MAX_BBCODE_SIZE = 250 // [quote=...] can be so long... spoiler too...
+  MAX_URL_SIZE = 512
 
-  BLOCK_BBCODE_REGEXP = /\[(?:quote|spoiler|code)(?:=([^\]]+))?\]/;
-  DIV_REGEXP = /\[div(?:(?:=| )([^\]]+))?\]/;
+  BLOCK_BBCODE_REGEXP = /\[(?:quote|spoiler|code)(?:=([^\]]+))?\]/
+  DIV_REGEXP = /\[div(?:(?:=| )([^\]]+))?\]/
 
   constructor(text, index, exitSequence) {
     this.text = text;
@@ -240,10 +241,6 @@ export default class MarkdownTokenizer {
         if (this.processMarkClose('link', '[url]', '[/url]')) { return; }
         break;
 
-      case '[img]':
-        if (this.processInlineImage(bbcode, '[/img]', false)) { return; }
-        break;
-
       case '[poster]':
         if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
         break;
@@ -280,13 +277,21 @@ export default class MarkdownTokenizer {
     //   }
     // }
 
-    if (seq5 === '[url=') {
-      if (this.processInlineLink(seq5)) { return; }
+
+    if (bbcode) {
+      if (seq4 === '[div') {
+        this.processInlineBlock(bbcode, '[/div]');
+        return;
+      }
+
+      if (seq4 === '[img') {
+        const meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
+        if (this.processInlineImage(bbcode, '[/img]', false, meta)) { return; }
+      }
     }
 
-    if (seq4 === '[div' && bbcode.startsWith('[div')) {
-      this.processInlineBlock(bbcode, '[/div]');
-      return;
+    if (seq5 === '[url=') {
+      if (this.processInlineLink(seq5)) { return; }
     }
 
     this.appendInlineContent(char1);
@@ -363,7 +368,7 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineImage(tagStart, tagEnd, isPoster) {
+  processInlineImage(tagStart, tagEnd, isPoster, metaAttributes) {
     let index = this.index + tagStart.length;
 
     const src = extractUntil(this.text, tagEnd, index, index + 255);

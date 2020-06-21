@@ -1,3 +1,45 @@
+export function parseCodeMeta(meta) {
+  if (!meta) { return null; }
+
+  return {
+    language: meta
+  };
+}
+
+export function parseDivMeta(meta) {
+  if (!meta) { return null; }
+
+  const attributes = {};
+
+  const classes = [];
+  const data = [];
+
+  meta.split(' ').forEach(value => {
+    if (value.length > 5 && value.startsWith('data-')) {
+      const values = value.split('=');
+      data.push([values[0], values[1] || '']);
+    } else {
+      classes.push(value);
+    }
+  });
+
+  if (classes.length) {
+    attributes.class = classes.join(' ');
+  }
+  if (data.length) {
+    attributes.data = data;
+  }
+
+  return attributes;
+}
+
+export function parseImageMeta(meta) {
+  if (!meta) { return null; }
+
+  return {
+  };
+}
+
 export function parseQuoteMeta(meta) {
   if (!meta) { return null; }
 
@@ -34,39 +76,4 @@ export function parseSpoilerMeta(meta) {
   return {
     label: meta
   };
-}
-
-export function parseCodeMeta(meta) {
-  if (!meta) { return null; }
-
-  return {
-    language: meta
-  };
-}
-
-export function parseDivMeta(meta) {
-  if (!meta) { return null; }
-
-  const attributes = {};
-
-  const classes = [];
-  const data = [];
-
-  meta.split(' ').forEach(value => {
-    if (value.length > 5 && value.startsWith('data-')) {
-      const values = value.split('=');
-      data.push([values[0], values[1] || '']);
-    } else {
-      classes.push(value);
-    }
-  });
-
-  if (classes.length) {
-    attributes.class = classes.join(' ');
-  }
-  if (data.length) {
-    attributes.data = data;
-  }
-
-  return attributes;
 }

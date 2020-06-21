@@ -92,9 +92,10 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `[code]\nzxc\n[/code]
-test
+    text2: `[url=ya.ru][img no-zoom w=132 h=132]https://kawai.shikimori.one/system/animes/original/38481.jpg?1592053805[/img][/url]
 `
+    // text2: `[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/83-gotovye-stili][div=b-link_button dark]Готовые стили[/div][/url]
+// `
 ///    text2: `[code]
 ///q
 ///[/code]
