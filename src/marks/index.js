@@ -1,5 +1,7 @@
 export { default as Strong } from './strong';
 export { default as Em } from './em';
+export { default as Size } from './size';
+export { default as Color } from './color';
 export { default as Underline } from './underline';
 export { default as Deleted } from './deleted';
 export { default as SpoilerInline } from './spoiler_inline';

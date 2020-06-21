@@ -20,7 +20,7 @@ import {
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
 import { VueView } from './node_views';
-import { trackFocus, nodesAndMarks } from './plugins';
+import { trackFocus, buildNodesAndMarks } from './plugins';
 
 export default class ShikiEditor extends Emitter {
   options = {
@@ -81,7 +81,7 @@ export default class ShikiEditor extends Emitter {
 
   createExtensions() {
     return new ExtensionManager([
-      ...nodesAndMarks(this),
+      ...buildNodesAndMarks(this),
       ...this.options.extensions
     ], this);
   }
@@ -260,7 +260,7 @@ export default class ShikiEditor extends Emitter {
       nodeViews: this.initNodeViews({
         parent: component,
         extensions: [
-          ...nodesAndMarks(this),
+          ...buildNodesAndMarks(this),
           ...this.options.extensions
         ],
         editable: this.options.editable

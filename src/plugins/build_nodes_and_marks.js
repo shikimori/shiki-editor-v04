@@ -1,24 +1,26 @@
 import {
-  Doc,
-  Text,
-  Paragraph,
-  Center,
-  Right,
   Blockquote,
   BulltList,
+  Center,
   CodeBlock,
   Div,
+  Doc,
   Image,
   ListItem,
+  Paragraph,
   Quote,
-  SpoilerBlock
+  Right,
+  SpoilerBlock,
+  Text
 } from '../nodes';
 
 import {
   CodeInline,
+  Color,
   Deleted,
   Em,
   Link,
+  Size,
   SpoilerInline,
   Strong,
   Underline
@@ -33,6 +35,8 @@ export default function(editor) {
     new Link(),
     new Strong(),
     new Em(),
+    new Color(),
+    new Size(),
     new Underline(),
     new Deleted(),
     new CodeInline(),
