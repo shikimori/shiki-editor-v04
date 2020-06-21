@@ -206,26 +206,40 @@ textarea.ProseMirror
   outline: none
   width: 100%
 
-/deep/ [data-div]:hover
-  position: relative
-  outline: 1px solid #8cf
+/deep/
+  [data-image]:hover,
+  [data-image].is-prosemirror-selected,
+  [data-div]:hover,
+  [data-div].is-prosemirror-selected
+    position: relative
 
-  &:before
-    background: #fcfcfc
-    font-family: Monaco, Menlo, Consolas, Courier New, monospace;
-    color: #2b8acc
-    content: attr(data-div)
-    cursor: pointer
-    display: inline
-    font-size: 9px
-    font-weight: normal
-    left: 0
-    letter-spacing: 0.8px
-    line-height: 1
-    padding: 2px
-    pointer-events: none
-    position: absolute
-    text-shadow: 1px 1px 0px #fff
-    top: 0
-    z-index: 999
+    &:before
+      background: #fcfcfc
+      font-family: Monaco, Menlo, Consolas, Courier New, monospace;
+      color: #2b8acc
+      cursor: pointer
+      display: inline
+      font-size: 9px
+      font-weight: normal
+      left: 0
+      letter-spacing: 0.8px
+      line-height: 1
+      padding: 2px
+      pointer-events: none
+      position: absolute
+      text-shadow: 1px 1px 0px #fff
+      top: 0
+      z-index: 999
+
+  [data-div]
+    outline: 1px solid #8cf
+
+    &.is-prosemirror-selected:before,
+    &:hover:before
+      content: attr(data-div)
+
+  [data-image]
+    &.is-prosemirror-selected:before,
+    &:hover:before
+      content: attr(data-image)
 </style>

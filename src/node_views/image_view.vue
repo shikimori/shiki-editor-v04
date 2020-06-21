@@ -8,6 +8,7 @@
       "no-zoom": node.attrs.isNoZoom,
     }]'
     :data-attrs='serializedAttributes'
+    :data-image='tagPreview'
     @click='select'
   >
     <div class='controls'>
@@ -27,6 +28,9 @@
 <script>
 import imagesloaded from 'imagesloaded';
 import { NodeSelection } from 'prosemirror-state';
+
+import { serializeImageAttributes } from '../nodes/image';
+
 
 export default {
   name: 'ImageView',
@@ -66,6 +70,10 @@ export default {
     isExpandable() {
       if (!this.isLoaded) { return false; }
       return this.$refs.image.naturalWidth > this.$refs.image.width;
+    },
+    tagPreview() {
+      if (this.node.attrs.isPoster) { return '[poster]'; }
+      return `[img${serializeImageAttributes(this.node)}]`;
     }
   },
   mounted() {
@@ -106,20 +114,14 @@ export default {
     outline: 2px solid #8cf
     z-index: 9
 
-    &:after,
-    &:before
+    &:after
+      border: 1px solid rgba(#fff, 0.5)
       bottom: 0
       content: ''
       left: 0
       position: absolute
       right: 0
       top: 0
-
-    &:before
-      border: 1px solid rgba(#000, 0.5)
-
-    &:after
-      border: 1px solid rgba(#fff, 0.5)
 
     img
       opacity: 1

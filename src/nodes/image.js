@@ -5,7 +5,7 @@ import { ImageView } from '../node_views';
 
 const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
-export default class Image extends Node {
+export class Image extends Node {
   get name() {
     return 'image';
   }
@@ -105,27 +105,35 @@ export default class Image extends Node {
   }
 
   markdownSerialize(state, node) {
+    const seq = serializeImageAttributes(node);
+
     if (node.attrs.isPoster) {
-      state.write(`[poster]${state.esc(node.attrs.src)}[/poster]`);
+      state.write(`[poster${seq}]${state.esc(node.attrs.src)}[/poster]`);
       return;
     }
 
-    const attributes = [];
-    if (node.attrs.isNoZoom) {
-      attributes.push('no-zoom');
-    }
-    if (node.attrs.width && node.attrs.height) {
-      attributes.push(`${node.attrs.width}x${node.attrs.height}`);
-    } else {
-      if (node.attrs.width) {
-        attributes.push(`width=${node.attrs.width}`);
-      }
-      if (node.attrs.height) {
-        attributes.push(`height=${node.attrs.height}`);
-      }
-    }
-    const attributes_line = attributes.length ? ' ' + attributes.join(' ') : '';
 
-    state.write(`[img${attributes_line}]${state.esc(node.attrs.src)}[/img]`);
+    state.write(`[img${seq}]${state.esc(node.attrs.src)}[/img]`);
   }
+}
+
+export function serializeImageAttributes(node) {
+  if (node.attrs.isPoster) { return ''; }
+
+  const attributes = [];
+  if (node.attrs.isNoZoom) {
+    attributes.push('no-zoom');
+  }
+  if (node.attrs.width && node.attrs.height) {
+    attributes.push(`${node.attrs.width}x${node.attrs.height}`);
+  } else {
+    if (node.attrs.width) {
+      attributes.push(`width=${node.attrs.width}`);
+    }
+    if (node.attrs.height) {
+      attributes.push(`height=${node.attrs.height}`);
+    }
+  }
+
+  return attributes.length ? ' ' + attributes.join(' ') : '';
 }
