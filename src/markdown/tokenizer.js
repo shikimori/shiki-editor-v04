@@ -543,7 +543,10 @@ export default class MarkdownTokenizer {
       }
       index += 1;
     }
-    if (!isEnded) { return false; }
+    if (!isEnded) {
+      this.appendInlineContent(startSequence + language);
+      return false;
+    }
 
     const endIndex = isMarkdown ?
       index :
