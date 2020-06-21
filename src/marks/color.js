@@ -14,7 +14,7 @@ export default class Color extends Mark {
         tag: 'span',
         style: 'color',
         getAttrs: node => ({
-          color: style.color
+          color: node.style.color
         })
       }],
       toDOM: (node) => [
