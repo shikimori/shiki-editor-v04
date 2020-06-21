@@ -26,8 +26,13 @@ export default class MarkdownTokenizer {
   MAX_BBCODE_SIZE = 250 // [quote=...] can be so long... spoiler too...
   MAX_URL_SIZE = 512
 
-  BLOCK_BBCODE_REGEXP = /\[(?:quote|spoiler|code)(?:=([^\]]+))?\]/
-  DIV_REGEXP = /\[div(?:(?:=| )([^\]]+))?\]/
+  BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=([^\]]+))?\]$/
+  DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
+  COLOR_REGEXP = /^\[color=(\#[\da-f]+|\w+)\]$/
+
+  MARK_STACK_MAPPINGS = {
+    color: '[color]'
+  }
 
   constructor(text, index, exitSequence) {
     this.text = text;
@@ -240,6 +245,10 @@ export default class MarkdownTokenizer {
         if (this.processMarkClose('link', '[url]', '[/url]')) { return; }
         break;
 
+      case '[/color]':
+        if (this.processMarkClose('color', '[color]', '[/color]')) { return; }
+        break;
+
       case '[poster]':
         if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
         break;
@@ -278,29 +287,37 @@ export default class MarkdownTokenizer {
 
 
     if (bbcode) {
-      if (seq4 === '[div') {
+      switch (seq4) {
+        case '[div':
         this.processInlineBlock(bbcode, '[/div]');
         return;
+
+        case '[img':
+          const meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
+          if (this.processInlineImage(bbcode, '[/img]', false, meta)) { return; }
       }
 
-      if (seq4 === '[img') {
-        const meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
-        if (this.processInlineImage(bbcode, '[/img]', false, meta)) { return; }
-      }
-    }
+      switch (seq5) {
+        case '[url=':
+          if (this.processInlineLink(seq5)) { return; }
 
-    if (seq5 === '[url=') {
-      if (this.processInlineLink(seq5)) { return; }
+        case '[colo':
+          const meta = bbcode.match(this.COLOR_REGEXP);
+          const attrs = meta ? { color: meta[1] } : null;
+          if (attrs) {
+            if (this.processMarkOpen('color', bbcode, '[/color]', attrs)) { return; }
+          }
+      }
     }
 
     this.appendInlineContent(char1);
   }
 
-  processMarkOpen(type, openBbcode, closeBbcode) {
+  processMarkOpen(type, openBbcode, closeBbcode, attributes) {
     if (!hasInlineSequence(this.text, closeBbcode, this.index)) { return false; }
 
-    this.marksStack.push(openBbcode);
-    this.inlineTokens.push(this.tagOpen(type));
+    this.marksStack.push(this.MARK_STACK_MAPPINGS[type] || openBbcode);
+    this.inlineTokens.push(this.tagOpen(type, attributes));
     this.next(openBbcode.length);
     return true;
   }
