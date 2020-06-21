@@ -29,9 +29,11 @@ export default class MarkdownTokenizer {
   BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=([^\]]+))?\]$/
   DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
   COLOR_REGEXP = /^\[color=(\#[\da-f]+|\w+)\]$/
+  SIZE_REGEXP = /^\[size=(\d+)\]$/
 
   MARK_STACK_MAPPINGS = {
-    color: '[color]'
+    color: '[color]',
+    size: '[size]'
   }
 
   constructor(text, index, exitSequence) {
@@ -249,6 +251,10 @@ export default class MarkdownTokenizer {
         if (this.processMarkClose('color', '[color]', '[/color]')) { return; }
         break;
 
+      case '[/size]':
+        if (this.processMarkClose('size', '[size]', '[/size]')) { return; }
+        break;
+
       case '[poster]':
         if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
         break;
@@ -289,24 +295,39 @@ export default class MarkdownTokenizer {
     if (bbcode) {
       switch (seq4) {
         case '[div':
-        this.processInlineBlock(bbcode, '[/div]');
-        return;
+          this.processInlineBlock(bbcode, '[/div]');
+          return;
 
         case '[img':
           const meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
-          if (this.processInlineImage(bbcode, '[/img]', false, meta)) { return; }
+          if (this.processInlineImage(bbcode, '[/img]', false, meta)) {
+            return;
+          }
+          break;
       }
 
       switch (seq5) {
         case '[url=':
           if (this.processInlineLink(seq5)) { return; }
+          break;
 
         case '[colo':
-          const meta = bbcode.match(this.COLOR_REGEXP);
-          const attrs = meta ? { color: meta[1] } : null;
-          if (attrs) {
-            if (this.processMarkOpen('color', bbcode, '[/color]', attrs)) { return; }
+          const colorMeta = bbcode.match(this.COLOR_REGEXP);
+          const colorAttrs = colorMeta ? { color: colorMeta[1] } : null;
+          if (colorAttrs &&
+             this.processMarkOpen('color', bbcode, '[/color]', colorAttrs)) {
+            return;
           }
+          break;
+
+        case '[size':
+          const sizeMeta = bbcode.match(this.SIZE_REGEXP);
+          const sizeAttrs = sizeMeta ? { size: sizeMeta[1] } : null;
+          if (sizeAttrs &&
+             this.processMarkOpen('size', bbcode, '[/size]', sizeAttrs)) {
+            return;
+          }
+          break;
       }
     }
 
