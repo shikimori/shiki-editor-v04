@@ -13,7 +13,7 @@ import {
   parseDivMeta,
   parseImageMeta,
   parseQuoteMeta,
-  parseSpoilerMeta,
+  parseSpoilerMeta
 } from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
@@ -375,7 +375,16 @@ export default class MarkdownTokenizer {
 
     if (src) {
       this.inlineTokens.push(
-        new Token('image', null, null, [['src', src], ['isPoster', isPoster]])
+        new Token(
+          'image',
+          null,
+          null,
+          {
+            src,
+            isPoster,
+            ...(metaAttributes || {})
+          }
+        )
       );
       this.next(src.length + tagStart.length + tagEnd.length);
       return true;
