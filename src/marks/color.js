@@ -1,6 +1,8 @@
 import { Mark } from '../base';
 
 export default class Color extends Mark {
+  COLOR_REGEXP = /^(\#[\da-f]+|\w+)$/
+
   get name() {
     return 'color';
   }
@@ -11,11 +13,11 @@ export default class Color extends Mark {
         color: {}
       },
       parseDOM: [{
-        tag: 'span',
         style: 'color',
-        getAttrs: node => ({
-          color: node.style.color
-        })
+        getAttrs: value => {
+          const match = value.match(this.COLOR_REGEXP);
+          return match ? { color: match[1] } : null;
+        }
       }],
       toDOM: (node) => [
         'span',

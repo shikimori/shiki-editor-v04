@@ -32,14 +32,16 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn1: false,
-    isColumn2: true,
+    isColumn1: true,
+    isColumn2: false,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t
 Inline c\`ode tex\`t
-Inline s||poiler tex||t
+Inline s||poiler tex||t    \`||spoiler content||\`
+C[color=red]olored tex[/color]t   \`[color=red]...[/color]\`
+s[size=18]ized tex[/size]t   \`[size=18]...[/size]\`
 L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
 [spoiler=spoiler block with label]
 spoiler \`content\`
@@ -93,8 +95,6 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
     text2: `
-[color=red]color=red[/color]
-[size=20]size=20[/size]
 `
 
 //

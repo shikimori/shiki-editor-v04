@@ -1,6 +1,9 @@
 import { Mark } from '../base';
+import { ensureDimension } from '../utils';
 
 export default class Size extends Mark {
+  SIZE_REGEXP = /^(\d+)/
+
   get name() {
     return 'size';
   }
@@ -11,22 +14,19 @@ export default class Size extends Mark {
         size: {}
       },
       parseDOM: [{
-        tag: 'span',
         style: 'font-size',
-        getAttrs: node => ({
-          size: style.fontSize
-        })
+        getAttrs: value => {
+          const match = value.match(this.SIZE_REGEXP);
+          return match ? { size: match[1] } : null;
+        }
       }],
-      toDOM: (node) => {
-        const size = node.attrs.size === String(parseInt(node.attrs.size)) ?
-          `${node.attrs.size}px` : node.attrs.size;
-
-        return [
-          'span',
-          { style: `font-size: ${size};` },
-          0
-        ];
-      }
+      toDOM: (node) => [
+        'span',
+        {
+          style: `font-size: ${ensureDimension(node.attrs.size, 'px')};`
+        },
+        0
+      ]
     };
   }
 
