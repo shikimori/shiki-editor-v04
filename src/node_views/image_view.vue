@@ -1,14 +1,13 @@
 <template>
-  <span
-    class='b-image no-zoom'
-    :class='{
+  <div
+    class='b-image'
+    :class='[customClass, {
       "is-prosemirror-selected": selected,
       "b-poster": isPoster,
       "check-width": isCheckWidth,
       "no-zoom": node.attrs.isNoZoom,
-       [customClass]: isCustomClass
-    }'
-    :data-src='node.attrs.src'
+    }]'
+    :data-attrs='serializedAttributes'
     @click='select'
   >
     <div class='controls'>
@@ -22,7 +21,7 @@
       :width='node.attrs.width'
       :height='node.attrs.height'
     >
-  </span>
+  </div>
 </template>
 
 <script>
@@ -48,8 +47,8 @@ export default {
     customClass() {
       return this.node.attrs.class;
     },
-    isCustomClass() {
-      return !!this.customClass;
+    serializedAttributes() {
+      return JSON.stringify(this.node.attrs);
     }
   },
   methods: {

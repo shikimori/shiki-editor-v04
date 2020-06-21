@@ -25,17 +25,23 @@ export default class Image extends Node {
       draggable: true,
       parseDOM: [{
         tag: '.b-image',
-        getAttrs: node => ({
-          src: node.children[0].src,
-          isPoster: node.classList.contains('b-poster')
-        })
+        getAttrs: node => JSON.parse(node.getAttribute('data-attrs'))
       }, {
         tag: 'img.b-poster',
         getAttrs: node => ({ src: node.src, isPoster: true })
       }],
       toDOM: node => {
+        const serializedAttributes = JSON.stringify(node.attrs);
+
         if (node.attrs.isPoster) {
-          return ['img', { class: 'b-poster', src: node.attrs.src }];
+          return [
+            'img',
+            {
+              class: 'b-poster',
+              src: node.attrs.src,
+              'data-attrs': serializedAttributes
+            }
+          ];
         }
         const attrs = { src: node.attrs.src };
         if (node.attrs.width) {
@@ -44,7 +50,7 @@ export default class Image extends Node {
         if (node.attrs.height) {
           attrs.height = node.attrs.height;
         }
-        const classes = ['b-image', 'unprocessed'];
+        const classes = ['b-image'];
         if (node.attrs.class) {
           classes.push(node.attrs.class);
         }
@@ -53,8 +59,11 @@ export default class Image extends Node {
         }
 
         return [
-          'span',
-          { class: classes },
+          'div',
+          {
+            class: classes.join(' '),
+            'data-attrs': serializedAttributes
+          },
           [ 'img', attrs ]
         ];
       }
