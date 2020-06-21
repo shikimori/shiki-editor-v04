@@ -2,7 +2,7 @@ import { Mark } from '../base';
 
 export default class Color extends Mark {
   get name() {
-    return 'size';
+    return 'color';
   }
 
   get schema() {

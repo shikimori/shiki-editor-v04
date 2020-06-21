@@ -10,7 +10,6 @@ function maybeMerge(a, b) {
 // Object used to track the context of a running parse.
 export default class MarkdownParseState {
   constructor(schema, tokenHandlers) {
-    debugger
     this.schema = schema;
     this.stack = [{ type: schema.topNodeType, content: [] }];
     this.marks = Mark.none;
