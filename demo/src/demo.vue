@@ -92,10 +92,12 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `[size=20]size=20[/size]
+    text2: `
 [color=red]color=red[/color]
 `
 
+// [size=20]size=20[/size]
+//
     // text2: `[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/83-gotovye-stili][div=b-link_button dark]Готовые стили[/div][/url]
 // `
 ///    text2: `[code]

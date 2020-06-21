@@ -12,7 +12,7 @@ export default class Color extends Mark {
       },
       parseDOM: [{
         tag: 'span',
-        style: 'font-color',
+        style: 'color',
         getAttrs: node => ({
           color: style.color
         })
@@ -22,6 +22,13 @@ export default class Color extends Mark {
         { style: `color: ${node.attrs.color};` },
         0
       ]
+    };
+  }
+
+  get markdownParserToken() {
+    return {
+      mark: this.name,
+      getAttrs: token => token.serializeAttributes()
     };
   }
 

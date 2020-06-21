@@ -17,11 +17,23 @@ export default class Size extends Mark {
           size: style.fontSize
         })
       }],
-      toDOM: (node) => [
-        'span',
-        { style: `font-size: ${node.attrs.size};` },
-        0
-      ]
+      toDOM: (node) => {
+        const size = node.attrs.size === String(parseInt(node.attrs.size)) ?
+          `${node.attrs.size}px` : node.attrs.size;
+
+        return [
+          'span',
+          { style: `font-size: ${size};` },
+          0
+        ];
+      }
+    };
+  }
+
+  get markdownParserToken() {
+    return {
+      mark: this.name,
+      getAttrs: token => token.serializeAttributes()
     };
   }
 
