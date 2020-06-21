@@ -140,7 +140,7 @@ export default class MarkdownTokenizer {
 
         switch (seq3) {
           case '```':
-            this.processCode(seq3, '\n```')
+            this.processCode(seq3, '\n```');
             break outer;
         }
 
@@ -154,13 +154,13 @@ export default class MarkdownTokenizer {
             );
             break outer;
 
-            case '[center]':
-              this.processBlock('center', bbcode, '[/center]');
-              return;
+          case '[center]':
+            this.processBlock('center', bbcode, '[/center]');
+            return;
 
-            case '[right]':
-              this.processBlock('right', bbcode, '[/right]');
-              return;
+          case '[right]':
+            this.processBlock('right', bbcode, '[/right]');
+            return;
         }
 
         if (bbcode) {
@@ -522,15 +522,16 @@ export default class MarkdownTokenizer {
 
     if (isMarkdown) {
       language = extractMarkdownLanguage(this.text, index);
-    } else if (meta && meta.language) {
-      language = meta.language;
+      index += language ? language.length + 1 : 1;
+    } else {
+      if (meta && meta.language) {
+        language = meta.language;
+      }
+      if (this.text[index] === '\n') {
+        index += 1;
+      }
     }
 
-    if (isMarkdown) {
-      index += language ? language.length + 1 : 1;
-    } else if (this.text[index] === '\n') {
-      index += 1;
-    }
     const startIndex = index;
     let isEnded = false;
 
@@ -545,7 +546,10 @@ export default class MarkdownTokenizer {
     }
     if (!isEnded) { return false; }
 
-    const text = this.text.slice(startIndex, index);
+    const endIndex = isMarkdown ?
+      index :
+      this.text[index - 1] === '\n' ? index - 1 : index;
+    const text = this.text.slice(startIndex, endIndex);
     const languageAttr = language ? [['language', language]] : null;
     index += endSequence.length;
 
