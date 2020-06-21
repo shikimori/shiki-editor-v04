@@ -212,6 +212,7 @@ textarea.ProseMirror
   [data-div]:hover,
   [data-div].is-prosemirror-selected
     position: relative
+    outline: 1px solid #8cf
 
     &:before
       background: #fcfcfc
@@ -232,8 +233,6 @@ textarea.ProseMirror
       z-index: 999
 
   [data-div]
-    outline: 1px solid #8cf
-
     &.is-prosemirror-selected:before,
     &:hover:before
       content: attr(data-div)
