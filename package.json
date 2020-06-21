@@ -39,6 +39,7 @@
     "glob": "^7.1.6",
     "html-webpack-plugin": "^3.0.0",
     "http-server": "^0.12.1",
+    "imagesloaded": "^4.1.4",
     "lodash": "^4.17.15",
     "markdown-it": "^11.0.0",
     "memoize-decorator": "^1.0.2",

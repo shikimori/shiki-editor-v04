@@ -12,7 +12,7 @@
   >
     <div class='controls'>
       <div v-if='isPoster' class='collapse' @click='collapse' />
-      <div v-else class='expand' @click='expand' />
+      <div v-else-if='isExpandable' class='expand' @click='expand' />
       <div class='delete' @click='remove' />
     </div>
     <img
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import imagesloaded from 'imagesloaded';
 import { NodeSelection } from 'prosemirror-state';
 
 export default {
@@ -36,6 +37,9 @@ export default {
     selected: { type: Boolean, required: true },
     updateAttrs: { type: Function, required: true }
   },
+  data: () => ({
+    isLoaded: false
+  }),
   computed: {
     isCheckWidth() {
       return !this.isPoster &&
@@ -58,7 +62,14 @@ export default {
     },
     serializedAttributes() {
       return JSON.stringify(this.node.attrs);
+    },
+    isExpandable() {
+      if (!this.isLoaded) { return false; }
+      return this.$refs.image.naturalWidth > this.$refs.image.width;
     }
+  },
+  mounted() {
+    imagesloaded(this.$refs.image, () => this.isLoaded = true);
   },
   methods: {
     remove(e) {

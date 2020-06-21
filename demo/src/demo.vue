@@ -32,7 +32,7 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn1: false,
+    isColumn1: true,
     isColumn2: true,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
@@ -80,6 +80,7 @@ css code block
 
 Image
 [img]https://kawai.shikimori.one/system/characters/original/166521.jpg?1591393014[/img] test [img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
+[img no-zoom 225x317]https://kawai.shikimori.one/system/animes/original/38481.jpg?1592053805[/img]     [img no-zoom width=200]https://kawai.shikimori.one/system/animes/original/38481.jpg?1592053805[/img]     [img]https://kawai.shikimori.one/system/animes/original/38481.jpg?1592053805[/img]
 Poster
 [poster]https://www.ljmu.ac.uk/~/media/ljmu/news/starsedit.jpg[/poster]
 
@@ -92,14 +93,9 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `[url=//ya.ru][img no-zoom 225x317]https://kawai.shikimori.one/system/animes/original/38481.jpg?1592053805[/img][/url]
-
-
-[img no-zoom width=200]https://kawai.shikimori.one/system/animes/original/38481.jpg?1592053805[/img]
-
-
-[img]https://kawai.shikimori.one/system/animes/original/38481.jpg?1592053805[/img]
+    text2: `[img]https://kawai.shikimori.one/system/users/x160/1.png?1591612283[/img]
 `
+
     // text2: `[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/83-gotovye-stili][div=b-link_button dark]Готовые стили[/div][/url]
 // `
 ///    text2: `[code]
