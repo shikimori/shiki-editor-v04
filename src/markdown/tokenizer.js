@@ -273,6 +273,10 @@ export default class MarkdownTokenizer {
         if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
         break;
 
+      case '[code]':
+        if (this.processInlineCode(bbcode, '[/code]')) { return; }
+        break;
+
       case '[br]':
         this.next(bbcode.length);
         this.processParagraph();
@@ -299,7 +303,7 @@ export default class MarkdownTokenizer {
     // }
 
     if (char1 === '`') {
-      if (this.processInlineCode()) { return; }
+      if (this.processInlineCode(char1)) { return; }
     }
 
     // if (char1 == '*' && seq2 !== '**') {
@@ -373,39 +377,42 @@ export default class MarkdownTokenizer {
     return true;
   }
 
-  processInlineCode() {
-    let index = this.index + 1;
-    let tag = '`';
-    let isFirstSymbolPassed = false;
-    let startIndex = index;
+  processInlineCode(startSequence, endSequence) {
+    if (!endSequence) {
+      let index = this.index + 1;
+      let tag = startSequence;
+      let isFirstSymbolPassed = false;
 
-    while (index <= this.text.length) {
-      const char = this.text[index];
-      const isEnd = char === '\n' || char === undefined;
+      while (index <= this.text.length) {
+        const char = this.text[index];
+        const isEnd = char === '\n' || char === undefined;
 
-      if (!isFirstSymbolPassed) {
-        if (char === '`') {
-          tag += '`';
-        } else {
-          startIndex = index;
-          isFirstSymbolPassed = true;
-          break;
+        if (!isFirstSymbolPassed) {
+          if (char === '`') {
+            tag += '`';
+          } else {
+            isFirstSymbolPassed = true;
+            break;
+          }
         }
-      }
 
-      if (isEnd) {
-        return false;
-      }
+        if (isEnd) {
+          return false;
+        }
 
-      index += 1;
+        index += 1;
+      }
+      startSequence = tag; // eslint-disable-line no-param-reassign
+      endSequence = tag; // eslint-disable-line no-param-reassign
     }
 
-    const code = extractUntil(this.text, tag, startIndex);
+    const startIndex = this.index + startSequence.length;
+    const code = extractUntil(this.text, endSequence, startIndex);
     if (code) {
       this.inlineTokens.push(
         new Token('code_inline', code)
       );
-      this.next(code.length + tag.length * 2);
+      this.next(code.length + startSequence.length + endSequence.length);
       return true;
     }
 

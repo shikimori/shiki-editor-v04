@@ -257,6 +257,23 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
+      it('qwe [code]zxc[/code]', () => {
+        expect(MarkdownTokenizer.parse('qwe [code]zxc[/code]')).to.eql([{
+          type: 'paragraph_open'
+        }, {
+          type: 'inline',
+          children: [{
+            content: 'qwe ',
+            type: 'text'
+          }, {
+            content: 'zxc',
+            type: 'code_inline'
+          }]
+        }, {
+          type: 'paragraph_close'
+        }]);
+      });
+
       it('``zxc```', () => {
         expect(MarkdownTokenizer.parse('``zxc```')).to.eql([{
           type: 'paragraph_open'
