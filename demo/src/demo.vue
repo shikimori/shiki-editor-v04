@@ -32,8 +32,8 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn1: false,
-    isColumn2: true,
+    isColumn1: true,
+    isColumn2: false,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -50,6 +50,8 @@ spoiler \`content\`
 spoiler content
 [/spoiler]
 
+[hr]
+
 Custom DIV
 \`[div=fc-2][div=f-column][/div][div=f-column][/div][/div]\`
 
@@ -62,8 +64,12 @@ Custom DIV
 [/div]
 [/div]
 
+[hr]
+
 [right]\`[right]...[/right]\`[/right]
 [center]\`[center]...[/center]\`[/center]
+
+[hr]
 
 \`\`\`
 code block
