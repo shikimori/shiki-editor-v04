@@ -273,6 +273,11 @@ export default class MarkdownTokenizer {
         if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
         break;
 
+      case '[br]':
+        this.next(bbcode.length);
+        this.processParagraph();
+        return;
+
       default:
         break;
     }

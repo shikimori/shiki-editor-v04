@@ -50,6 +50,13 @@ describe('MarkdownTokenizer', () => {
         type: 'paragraph_close'
       }]);
     });
+
+    it('[br]', () => {
+      expect(MarkdownTokenizer.parse('qwe[br]zxc')).to.eql([
+        ...text('qwe'),
+        ...text('zxc')
+      ]);
+    });
   });
 
   describe('marks', () => {
