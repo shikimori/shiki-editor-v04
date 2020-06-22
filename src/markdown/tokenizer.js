@@ -26,7 +26,7 @@ export default class MarkdownTokenizer {
   MAX_BBCODE_SIZE = 250 // [quote=...] can be so long... spoiler too...
   MAX_URL_SIZE = 512
 
-  BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=([^\]]+))?\]$/
+  BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=(.+?))?\]$/
   DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
   COLOR_REGEXP = /^\[color=(#[\da-f]+|\w+)\]$/
   SIZE_REGEXP = /^\[size=(\d+)\]$/
@@ -181,7 +181,6 @@ export default class MarkdownTokenizer {
             this.processBlock('div', bbcode, '[/div]', meta);
             return;
           }
-          //////////////////TODO: CLEANUP ALL BBCODES FROM META CONTENT. META REGEXP SHOULD ALLOW INCLUDE BBCODES
           if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
             const meta = parseSpoilerMeta(match[1]);
             this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta);
