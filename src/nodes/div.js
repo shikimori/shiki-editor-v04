@@ -1,4 +1,3 @@
-// import { setBlockType } from 'prosemirror-commands';
 import { Node } from '../base';
 
 export default class Div extends Node {

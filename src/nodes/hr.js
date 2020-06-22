@@ -1,4 +1,4 @@
-// import { setBlockType } from 'prosemirror-commands';
+import { nodeInputRule } from '../commands';
 import { Node } from '../base';
 
 export default class Hr extends Node {
@@ -14,6 +14,12 @@ export default class Hr extends Node {
       }],
       toDOM: () => ['hr']
     };
+  }
+
+  inputRules({ type }) {
+    return [
+      nodeInputRule(/^(?:---|___\s|\*\*\*\s)$/, type)
+    ];
   }
 
   markdownSerialize(state, node) {
