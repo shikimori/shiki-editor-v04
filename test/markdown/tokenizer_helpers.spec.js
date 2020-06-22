@@ -9,7 +9,8 @@ import {
 describe('tokenizer_helpers', () => {
   it('extractBbCode', () => {
     expect(extractBbCode('test[zxc]qwe', 4)).to.eq('[zxc]');
-    expect(extractBbCode('test[zxc]qwe', 1)).to.eq('est[zxc]');
+    expect(extractBbCode('test[z[b]x[/b]c]qwe', 4)).to.eq('[z[b]x[/b]c]');
+    expect(extractBbCode('test[zxc]qwe', 1)).to.eq(null);
 
     expect(extractBbCode('test[zxcqwe', 1)).to.eq(null);
 
