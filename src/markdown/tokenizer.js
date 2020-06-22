@@ -280,7 +280,7 @@ export default class MarkdownTokenizer {
 
       case '[hr]':
         this.processHr(bbcode);
-        break;
+        return;
 
       case '[br]':
         this.next(bbcode.length);
