@@ -1,9 +1,10 @@
-import { Node } from '../base';
 import {
   splitListItem,
   liftListItem,
   sinkListItem
 } from 'prosemirror-schema-list';
+
+import { Node } from '../base';
 
 export default class ListItem extends Node {
   get name() {
