@@ -1064,6 +1064,14 @@ describe('MarkdownTokenizer', () => {
           ...text('x')
         ]);
       });
+
+      it('z[hr]x', () => {
+        expect(MarkdownTokenizer.parse('z[hr]x')).to.eql([
+          ...text('z'),
+          { type: 'hr' },
+          ...text('x')
+        ]);
+      });
     });
   });
 });

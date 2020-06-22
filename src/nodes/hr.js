@@ -20,4 +20,8 @@ export default class Hr extends Node {
     state.write('[hr]');
     state.closeBlock(node);
   }
+
+  get markdownParserToken() {
+    return { node: this.name };
+  }
 }

@@ -167,10 +167,6 @@ export default class MarkdownTokenizer {
                 bbcode
             );
             break outer;
-
-          case '[hr]':
-            this.processHr(bbcode);
-            break outer;
         }
       }
 
@@ -280,6 +276,10 @@ export default class MarkdownTokenizer {
 
       case '[code]':
         if (this.processInlineCode(bbcode, '[/code]')) { return; }
+        break;
+
+      case '[hr]':
+        this.processHr(bbcode);
         break;
 
       case '[br]':
@@ -644,6 +644,7 @@ export default class MarkdownTokenizer {
   }
 
   processHr(bbcode) {
+    this.ensureParagraphClosed();
     this.next(bbcode.length, true);
     this.push(new Token('hr', null, null, null));
   }
@@ -670,6 +671,12 @@ export default class MarkdownTokenizer {
 
     if (isMoveNext) {
       this.next(sequence.length);
+    }
+  }
+
+  ensureParagraphClosed() {
+    if (this.inlineTokens.length) {
+      this.processParagraph();
     }
   }
 
