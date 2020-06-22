@@ -30,6 +30,7 @@ export default class MarkdownTokenizer {
   DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
   COLOR_REGEXP = /^\[color=(#[\da-f]+|\w+)\]$/
   SIZE_REGEXP = /^\[size=(\d+)\]$/
+  EMPTY_SPACES_REGEXP = /^ +$/
 
   MARK_STACK_MAPPINGS = {
     color: '[color]',
@@ -291,12 +292,23 @@ export default class MarkdownTokenizer {
     // }
 
 
+    let match;
     let meta;
     let attrs;
+
     if (bbcode) {
       switch (seq4) {
         case '[div':
-          this.processInlineBlock(bbcode, '[/div]');
+          if (this.isOnlyInlineSpacingsBefore() &&
+            (match = bbcode.match(this.DIV_REGEXP))
+          ) {
+            meta = parseDivMeta(match[1]);
+            if (this.processBlock('div', bbcode, '[/div]', meta)) {
+              this.inlineTokens = this.inlineTokens.slice(1);
+            }
+          } else {
+            this.processInlineBlock(bbcode, '[/div]');
+          }
           return;
 
         case '[img':
@@ -640,5 +652,10 @@ export default class MarkdownTokenizer {
   isContinued(sequence) {
     return this.text.slice(this.index, this.index + sequence.length) ===
       sequence;
+  }
+
+  isOnlyInlineSpacingsBefore() {
+    return this.inlineTokens.length == 1 &&
+      this.inlineTokens[0].content.match(this.EMPTY_SPACES_REGEXP);
   }
 }

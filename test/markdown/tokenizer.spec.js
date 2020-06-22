@@ -882,6 +882,16 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
+      it('  [div]z[/div]', () => {
+        expect(MarkdownTokenizer.parse('  [div]z[/div]')).to.eql([{
+          type: 'div_open'
+        },
+        ...text('z'),
+        {
+          type: 'div_close'
+        }]);
+      });
+
       it('[div][div]z[/div][/div]', () => {
         expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([{
           type: 'div_open'
@@ -896,6 +906,19 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
+      it('[div]  [div]z[/div][/div]', () => {
+        expect(MarkdownTokenizer.parse('[div]  [div]z[/div][/div]')).to.eql([{
+          type: 'div_open'
+        }, {
+          type: 'div_open'
+        },
+        ...text('z'),
+        {
+          type: 'div_close'
+        }, {
+          type: 'div_close'
+        }]);
+      });
 
       it('[div][div]z[/div][/div]', () => {
         expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([{
@@ -944,11 +967,11 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
-      it('[div] [div]z[/div][/div]', () => {
-        expect(MarkdownTokenizer.parse('[div] [div]z[/div][/div]')).to.eql([{
+      it('[div]q[div]z[/div][/div]', () => {
+        expect(MarkdownTokenizer.parse('[div]q[div]z[/div][/div]')).to.eql([{
           type: 'div_open'
         },
-        ...text(' [div]z[/div]'),
+        ...text('q[div]z[/div]'),
         {
           type: 'div_close'
         }]);
@@ -966,31 +989,31 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
 
-      it(' [div]\\n[/div]', () => {
-        expect(MarkdownTokenizer.parse(' [div]\n[/div]')).to.eql([
-          ...text(' [div]'),
+      it('a[div]\\n[/div]', () => {
+        expect(MarkdownTokenizer.parse('a[div]\n[/div]')).to.eql([
+          ...text('a[div]'),
           ...text('[/div]')
         ]);
       });
 
-      it(' [div]\\nc[/div]', () => {
-        expect(MarkdownTokenizer.parse(' [div]\nc[/div]')).to.eql([
-          ...text(' [div]'),
+      it('a[div]\\nc[/div]', () => {
+        expect(MarkdownTokenizer.parse('a[div]\nc[/div]')).to.eql([
+          ...text('a[div]'),
           ...text('c[/div]')
         ]);
       });
 
-      it(' [div]z\\nx\\nc[/div]', () => {
-        expect(MarkdownTokenizer.parse(' [div]z\nx\nc[/div]')).to.eql([
-          ...text(' [div]z'),
+      it('a[div]z\\nx\\nc[/div]', () => {
+        expect(MarkdownTokenizer.parse('a[div]z\nx\nc[/div]')).to.eql([
+          ...text('a[div]z'),
           ...text('x'),
           ...text('c[/div]')
         ]);
       });
 
-      it(' [div]z\\nx\\nc[/div]v', () => {
-        expect(MarkdownTokenizer.parse(' [div]z\nx\nc[/div]v')).to.eql([
-          ...text(' [div]z'),
+      it('a[div]z\\nx\\nc[/div]v', () => {
+        expect(MarkdownTokenizer.parse('a[div]z\nx\nc[/div]v')).to.eql([
+          ...text('a[div]z'),
           ...text('x'),
           ...text('c[/div]v')
         ]);
