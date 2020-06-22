@@ -1,7 +1,7 @@
 import { Mark } from '../base';
 
 export default class Color extends Mark {
-  COLOR_REGEXP = /^(\#[\da-f]+|\w+)$/
+  COLOR_REGEXP = /^(#[\da-f]+|\w+)$/
 
   get name() {
     return 'color';

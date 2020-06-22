@@ -28,7 +28,7 @@ export default class MarkdownTokenizer {
 
   BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=([^\]]+))?\]$/
   DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
-  COLOR_REGEXP = /^\[color=(\#[\da-f]+|\w+)\]$/
+  COLOR_REGEXP = /^\[color=(#[\da-f]+|\w+)\]$/
   SIZE_REGEXP = /^\[size=(\d+)\]$/
 
   MARK_STACK_MAPPINGS = {
@@ -292,6 +292,8 @@ export default class MarkdownTokenizer {
     // }
 
 
+    let meta;
+    let attrs;
     if (bbcode) {
       switch (seq4) {
         case '[div':
@@ -299,7 +301,7 @@ export default class MarkdownTokenizer {
           return;
 
         case '[img':
-          const meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
+          meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
           if (this.processInlineImage(bbcode, '[/img]', false, meta)) {
             return;
           }
@@ -312,19 +314,19 @@ export default class MarkdownTokenizer {
           break;
 
         case '[colo':
-          const colorMeta = bbcode.match(this.COLOR_REGEXP);
-          const colorAttrs = colorMeta ? { color: colorMeta[1] } : null;
-          if (colorAttrs &&
-             this.processMarkOpen('color', bbcode, '[/color]', colorAttrs)) {
+          meta = bbcode.match(this.COLOR_REGEXP);
+          attrs = meta ? { color: meta[1] } : null;
+          if (attrs &&
+             this.processMarkOpen('color', bbcode, '[/color]', attrs)) {
             return;
           }
           break;
 
         case '[size':
-          const sizeMeta = bbcode.match(this.SIZE_REGEXP);
-          const sizeAttrs = sizeMeta ? { size: sizeMeta[1] } : null;
-          if (sizeAttrs &&
-             this.processMarkOpen('size', bbcode, '[/size]', sizeAttrs)) {
+          meta = bbcode.match(this.SIZE_REGEXP);
+          attrs = meta ? { size: meta[1] } : null;
+          if (attrs &&
+             this.processMarkOpen('size', bbcode, '[/size]', attrs)) {
             return;
           }
           break;

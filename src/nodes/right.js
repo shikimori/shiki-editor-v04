@@ -14,7 +14,7 @@ export default class Right extends Node {
       parseDOM: [{
         tag: 'div.right-text'
       }],
-      toDOM: (node) => [
+      toDOM: () => [
         'div',
         {
           class: 'right-text',
@@ -26,7 +26,7 @@ export default class Right extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.write(`[right]`);
+    state.write('[right]');
     state.ensureNewLine();
     state.renderContent(node);
     state.write('[/right]');

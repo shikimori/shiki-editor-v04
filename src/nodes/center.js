@@ -14,12 +14,12 @@ export default class Center extends Node {
       parseDOM: [{
         tag: 'center'
       }],
-      toDOM: (node) => ['center', { 'data-div': '[center]' }, 0]
+      toDOM: () => ['center', { 'data-div': '[center]' }, 0]
     };
   }
 
   markdownSerialize(state, node) {
-    state.write(`[center]`);
+    state.write('[center]');
     state.ensureNewLine();
     state.renderContent(node);
     state.write('[/center]');
