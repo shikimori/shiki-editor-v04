@@ -42,7 +42,9 @@ export default {
     updateAttrs: { type: Function, required: true }
   },
   data: () => ({
-    isLoaded: false
+    isLoaded: false,
+    imageNaturalWidth: undefined,
+    imageWidth: undefined
   }),
   computed: {
     isCheckWidth() {
@@ -69,7 +71,7 @@ export default {
     },
     isExpandable() {
       if (!this.isLoaded) { return false; }
-      return this.$refs.image.naturalWidth > this.$refs.image.width;
+      return this.imageNaturalWidth > this.imageWidth;
     },
     tagPreview() {
       if (this.node.attrs.isPoster) { return '[poster]'; }
@@ -77,7 +79,11 @@ export default {
     }
   },
   mounted() {
-    imagesloaded(this.$refs.image, () => this.isLoaded = true);
+    imagesloaded(this.$refs.image, () => {
+      this.isLoaded = true;
+      this.imageNaturalWidth = this.$refs.image.naturalWidth;
+      this.imageWidth = this.$refs.image.width;
+    });
   },
   methods: {
     remove(e) {
@@ -102,6 +108,8 @@ export default {
     },
     collapse() {
       this.updateAttrs({ ...this.node.attrs, isPoster: false });
+      // have to update image width when animation is completed
+      setTimeout(() => this.imageWidth = this.$refs.image.width, 350);
     }
   }
 };
