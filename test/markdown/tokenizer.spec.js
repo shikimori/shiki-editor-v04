@@ -1055,5 +1055,15 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
     });
+
+    describe('hr', () => {
+      it('z\\n[hr]\\nx', () => {
+        expect(MarkdownTokenizer.parse('z\n[hr]\nx')).to.eql([
+          ...text('z'),
+          { type: 'hr' },
+          ...text('x')
+        ]);
+      });
+    });
   });
 });

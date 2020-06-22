@@ -158,14 +158,19 @@ export default class MarkdownTokenizer {
             break outer;
         }
 
-        if (bbcode === '[*]') {
-          this.processBulletList(
-            nestedSequence,
-            this.text[this.index + bbcode.length] === ' ' ?
-              bbcode + ' ' :
-              bbcode
-          );
-          break outer;
+        switch (bbcode) {
+          case '[*]':
+            this.processBulletList(
+              nestedSequence,
+              this.text[this.index + bbcode.length] === ' ' ?
+                bbcode + ' ' :
+                bbcode
+            );
+            break outer;
+
+          case '[hr]':
+            this.processHr(bbcode);
+            break outer;
         }
       }
 
@@ -634,9 +639,13 @@ export default class MarkdownTokenizer {
     const languageAttr = language ? [['language', language]] : null;
     index += endSequence.length;
 
-    const token = new Token('code_block', text, null, languageAttr);
-    this.push(token);
+    this.push(new Token('code_block', text, null, languageAttr));
     this.next(index - this.index, true);
+  }
+
+  processHr(bbcode) {
+    this.next(bbcode.length, true);
+    this.push(new Token('hr', null, null, null));
   }
 
   tagOpen(type, attributes = null) {
