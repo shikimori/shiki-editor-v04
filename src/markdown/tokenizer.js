@@ -122,6 +122,7 @@ export default class MarkdownTokenizer {
 
     outer: while (this.index <= this.text.length) { // eslint-disable-line no-restricted-syntax
       const { char1, seq2, seq3, seq4, seq5, bbcode } = this;
+
       const isStart = startIndex === this.index;
       const isEnd = char1 === '\n' || char1 === undefined;
 
@@ -157,42 +158,55 @@ export default class MarkdownTokenizer {
             break outer;
         }
 
-        switch (bbcode) {
-          case '[*]':
-            this.processBulletList(
-              nestedSequence,
-              this.text[this.index + bbcode.length] === ' ' ?
-                bbcode + ' ' :
-                bbcode
-            );
-            break outer;
+        if (bbcode === '[*]') {
+          this.processBulletList(
+            nestedSequence,
+            this.text[this.index + bbcode.length] === ' ' ?
+              bbcode + ' ' :
+              bbcode
+          );
+          break outer;
+        }
+      }
 
-          case '[center]':
-            this.processBlock('center', bbcode, '[/center]');
-            return;
+      const isOnlySpacingsBefore = this.isOnlyInlineSpacingsBefore();
 
-          case '[right]':
-            this.processBlock('right', bbcode, '[/right]');
-            return;
+      if (bbcode && (isStart || isOnlySpacingsBefore)) {
+        if (bbcode === '[center]') {
+          if (this.processBlock('center', bbcode, '[/center]')) {
+            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+          }
+          return;
         }
 
-        if (bbcode) {
-          if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
-            const meta = parseDivMeta(match[1]);
-            this.processBlock('div', bbcode, '[/div]', meta);
-            return;
+        if (bbcode === '[right]') {
+          if (this.processBlock('right', bbcode, '[/right]')) {
+            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
           }
-          if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-            const meta = parseSpoilerMeta(match[1]);
-            this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta);
-            return;
-          }
+          return;
+        }
 
-          if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-            const meta = parseCodeMeta(match[1]);
-            this.processCodeBlock(bbcode, '[/code]', meta);
-            return;
+        if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
+          const meta = parseDivMeta(match[1]);
+          if (this.processBlock('div', bbcode, '[/div]', meta)) {
+            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
           }
+          return;
+        }
+        if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
+          const meta = parseSpoilerMeta(match[1]);
+          if (this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta)) {
+            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+          }
+          return;
+        }
+
+        if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
+          const meta = parseCodeMeta(match[1]);
+          if (this.processCodeBlock(bbcode, '[/code]', meta)) {
+            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+          }
+          return;
         }
       }
 
@@ -291,24 +305,13 @@ export default class MarkdownTokenizer {
     //   }
     // }
 
-
-    let match;
     let meta;
     let attrs;
 
     if (bbcode) {
       switch (seq4) {
         case '[div':
-          if (this.isOnlyInlineSpacingsBefore() &&
-            (match = bbcode.match(this.DIV_REGEXP))
-          ) {
-            meta = parseDivMeta(match[1]);
-            if (this.processBlock('div', bbcode, '[/div]', meta)) {
-              this.inlineTokens = this.inlineTokens.slice(1);
-            }
-          } else {
-            this.processInlineBlock(bbcode, '[/div]');
-          }
+          this.processInlineBlock(bbcode, '[/div]');
           return;
 
         case '[img':
@@ -656,6 +659,7 @@ export default class MarkdownTokenizer {
 
   isOnlyInlineSpacingsBefore() {
     return this.inlineTokens.length == 1 &&
+      this.inlineTokens[0].type === 'text' &&
       this.inlineTokens[0].content.match(this.EMPTY_SPACES_REGEXP);
   }
 }
