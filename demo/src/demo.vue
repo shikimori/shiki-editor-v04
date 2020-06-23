@@ -33,7 +33,7 @@ export default {
   data: () => ({
     baseUrl: 'https://shikimori.one',
     isColumn1: true,
-    isColumn2: false,
+    isColumn2: true,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -100,11 +100,8 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `test
-[hr]
-zc [code]test[br]test[/code]
-
-`
+    text2: `> [div]a[/div]`
+    // text2: `> [div]\n  a\n  [/div]`
 
 //
 //

@@ -60,12 +60,10 @@ export default class SpoilerBlock extends Node {
   }
 
   markdownSerialize(state, node) {
-    const label = node.attrs.label;
-
-    state.write(`[spoiler${label ? '=' + label : ''}]\n`);
-    state.ensureNewLine();
-    state.renderContent(node);
-    state.write('[/spoiler]');
-    state.closeBlock(node);
+    state.renderBlock(
+      node,
+      'spoiler',
+      node.attrs.label ? `=${node.attrs.label}` : ''
+    );
   }
 }

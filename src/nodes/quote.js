@@ -106,9 +106,9 @@ export default class Quote extends Node {
   }
 
   markdownSerialize(state, node) {
-    if (node.attrs.nickname) {
-      const attributes = [];
+    const attributes = [];
 
+    if (node.attrs.nickname) {
       if (node.attrs.comment_id) {
         attributes.push(`c${node.attrs.comment_id}`);
       } else if (node.attrs.message_id) {
@@ -121,14 +121,12 @@ export default class Quote extends Node {
         attributes.push(node.attrs.user_id);
       }
       attributes.push(node.attrs.nickname);
-
-      state.write(`[quote=${attributes.join(';')}]`);
-    } else {
-      state.write('[quote]');
     }
-    state.ensureNewLine();
-    state.renderContent(node);
-    state.write('[/quote]');
-    state.closeBlock(node);
+
+    state.renderBlock(
+      node,
+      'quote',
+      attributes.length ? attributes.join(';') : ''
+    );
   }
 }

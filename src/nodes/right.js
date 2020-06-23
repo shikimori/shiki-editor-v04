@@ -25,10 +25,6 @@ export default class Right extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.write('[right]');
-    state.ensureNewLine();
-    state.renderContent(node);
-    state.write('[/right]');
-    state.closeBlock(node);
+    state.renderBlock(node, 'right');
   }
 }

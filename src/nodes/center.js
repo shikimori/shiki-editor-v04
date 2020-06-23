@@ -18,10 +18,6 @@ export default class Center extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.write('[center]');
-    state.ensureNewLine();
-    state.renderContent(node);
-    state.write('[/center]');
-    state.closeBlock(node);
+    state.renderBlock(node, 'center');
   }
 }

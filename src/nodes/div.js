@@ -57,11 +57,11 @@ export default class Div extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.write(`[div${serializeClassAttr(node)}${serializeDataAttr(node)}]`);
-    state.ensureNewLine();
-    state.renderContent(node);
-    state.write('[/div]');
-    state.closeBlock(node);
+    state.renderBlock(
+      node,
+      'div',
+      `${serializeClassAttr(node)}${serializeDataAttr(node)}`
+    );
   }
 }
 

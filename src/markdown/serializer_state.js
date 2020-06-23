@@ -72,17 +72,38 @@ export default class MarkdownSerializerState {
     this.flushClose();
 
     if (this.delim && this.atBlank()) {
-      this.out += this.delim;
+      this.writeInline(this.delim);
     }
     if (content) {
-      this.out += content;
+      this.writeInline(content);
     }
+  }
+
+  writeInline(content) {
+    this.out += content;
   }
 
   // :: (Node)
   // Close the block for the given node.
   closeBlock(node) {
     this.closed = node;
+  }
+
+  renderBlock(node, bbcode, meta = '') {
+    this.write(`[${bbcode}${meta}]`);
+
+    if (!this.delim) {
+      this.ensureNewLine();
+    }
+
+    this.renderContent(node);
+
+    if (this.delim) {
+      this.writeInline(`[/${bbcode}]`);
+    } else {
+      this.write(`[/${bbcode}]`);
+      this.closeBlock(node);
+    }
   }
 
   // :: (string, ?bool)

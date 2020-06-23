@@ -688,6 +688,6 @@ export default class MarkdownTokenizer {
   isOnlyInlineSpacingsBefore() {
     return this.inlineTokens.length == 1 &&
       this.inlineTokens[0].type === 'text' &&
-      this.inlineTokens[0].content.match(this.EMPTY_SPACES_REGEXP);
+      !!this.inlineTokens[0].content.match(this.EMPTY_SPACES_REGEXP);
   }
 }
