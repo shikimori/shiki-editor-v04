@@ -91,19 +91,25 @@ export default class MarkdownSerializerState {
 
   renderBlock(node, bbcode, meta = '') {
     this.write(`[${bbcode}${meta}]`);
-
-    if (!this.delim) {
-      this.ensureNewLine();
-    }
-
+    this.ensureNewLine();
     this.renderContent(node);
+    this.write(`[/${bbcode}]`);
+    this.closeBlock(node);
 
-    if (this.delim) {
-      this.writeInline(`[/${bbcode}]`);
-    } else {
-      this.write(`[/${bbcode}]`);
-      this.closeBlock(node);
-    }
+    // this.write(`[${bbcode}${meta}]`);
+    //
+    // if (!this.delim) {
+    //   this.ensureNewLine();
+    // }
+    //
+    // this.renderContent(node);
+    //
+    // if (this.delim) {
+    //   this.writeInline(`[/${bbcode}]`);
+    // } else {
+    //   this.write(`[/${bbcode}]`);
+    //   this.closeBlock(node);
+    // }
   }
 
   // :: (string, ?bool)
