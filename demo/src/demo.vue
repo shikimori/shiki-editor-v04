@@ -1,5 +1,10 @@
 <template>
   <div class='container'>
+    <div>
+      <label><input v-model='isColumn1' type='checkbox'>Editor 1</label>
+      <label><input v-model='isColumn2' type='checkbox'>Editor 2</label>
+    </div>
+
     <div class='fc-2'>
       <div v-if='isColumn1' class='f-column'>
         <Editor
@@ -100,7 +105,8 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `> [quote]\n> a\n> [/quote]
+    text2: `[url=//ya.ru][quote]block link[/quote][/url]
+[url=//ya.ru]inline link[/url]
 `
 //     text2: `- [quote]
 //   a
