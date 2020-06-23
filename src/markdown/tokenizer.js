@@ -111,15 +111,9 @@ export default class MarkdownTokenizer {
       this.text[this.index + 4];
   }
 
-  parseLine(nestedSequence = '') {
-    const skipSequence = nestedSequence || this.nestedSequence;
-
-    if (skipSequence &&
-      this.char1 === skipSequence[0] &&
-      this.text.slice(this.index, this.index + skipSequence.length) ===
-        skipSequence
-    ) {
-      this.next(skipSequence.length);
+  parseLine(skippableSequence = '') {
+    if (this.isSkippableSequence(skippableSequence || this.nestedSequence)) {
+      this.next((skippableSequence || this.nestedSequence).length);
     }
 
     const startIndex = this.index;
@@ -132,15 +126,15 @@ export default class MarkdownTokenizer {
       const isEnd = char1 === '\n' || char1 === undefined;
 
       if (this.isExitSequence) {
-        this.processParagraph();
+        this.finalizeParagraph();
         return;
       }
 
       if (isEnd) {
-        this.processParagraph();
+        this.finalizeParagraph();
         this.next();
         // add aditional parahraph when meet \n before exitSequesnce
-        // if (this.isExitSequence) { this.processParagraph(); }
+        // if (this.isExitSequence) { this.finalizeParagraph(); }
         return;
       }
 
@@ -217,7 +211,7 @@ export default class MarkdownTokenizer {
 
       if (bbcode) {
         if (seq5 === '[quot' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          if (!isStart) { this.processParagraph(); }
+          if (!isStart) { this.finalizeParagraph(); }
           const meta = parseQuoteMeta(match[1]);
           this.processBlock('quote', bbcode, '[/quote]', meta);
           return;
@@ -288,7 +282,7 @@ export default class MarkdownTokenizer {
 
       case '[br]':
         this.next(bbcode.length);
-        this.processParagraph();
+        this.finalizeParagraph();
         return;
 
       default:
@@ -514,7 +508,7 @@ export default class MarkdownTokenizer {
       slicedTokens = tokens.slice(3);
       // close parahraph after prior content was joined
       if (slicedTokens.length) {
-        this.processParagraph();
+        this.finalizeParagraph();
       }
     } else {
       slicedTokens = tokens;
@@ -526,7 +520,7 @@ export default class MarkdownTokenizer {
     if (tokens[tokens.length - 1].type === 'paragraph_close') {
       if (this.text[this.index - 1] === '\n') {
         isNewLineAtEnd = true;
-        this.processParagraph();
+        this.finalizeParagraph();
       }
     }
 
@@ -545,7 +539,9 @@ export default class MarkdownTokenizer {
     return true;
   }
 
-  processParagraph() {
+  finalizeParagraph() {
+    if (this.nestedSequence && !this.inlineTokens.length) { return; }
+
     this.push(this.tagOpen('paragraph'));
     this.push(new Token('inline', null, this.inlineTokens));
     this.push(this.tagClose('paragraph'));
@@ -683,7 +679,7 @@ export default class MarkdownTokenizer {
 
   ensureParagraphClosed() {
     if (this.inlineTokens.length) {
-      this.processParagraph();
+      this.finalizeParagraph();
     }
   }
 
@@ -694,6 +690,13 @@ export default class MarkdownTokenizer {
     );
 
     return sequenceSlice === this.nestedSequence;
+  }
+
+  isSkippableSequence(skipSequence) {
+    return skipSequence &&
+      this.text[this.index] === skipSequence[0] &&
+      this.text.slice(this.index, this.index + skipSequence.length) ===
+        skipSequence;
   }
 
   isOnlyInlineSpacingsBefore() {

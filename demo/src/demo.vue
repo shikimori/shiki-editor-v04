@@ -100,7 +100,7 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `> > a
+    text2: `> [quote]\n> a\n> [/quote]
 `
 //     text2: `- [quote]
 //   a
