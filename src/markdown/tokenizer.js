@@ -310,8 +310,8 @@ export default class MarkdownTokenizer {
       if (this.processInlineCode(char1)) { return; }
     }
 
+    let match;
     let meta;
-    let attrs;
 
     if (bbcode) {
       switch (seq4) {
@@ -329,29 +329,29 @@ export default class MarkdownTokenizer {
 
       switch (seq5) {
         case '[url=':
-          meta = bbcode.match(this.LINK_REGEXP);
-          if (!meta) { break; }
-          attrs = parseLinkMeta(meta[1]);
+          match = bbcode.match(this.LINK_REGEXP);
+          if (!match) { break; }
+          meta = parseLinkMeta(match[1]);
 
-          if (this.processLinkInline(bbcode, attrs)) { return; }
+          if (this.processLinkInline(bbcode, meta)) { return; }
           break;
 
         case '[colo':
-          meta = bbcode.match(this.COLOR_REGEXP);
-          if (!meta) { break; }
+          match = bbcode.match(this.COLOR_REGEXP);
+          if (!match) { break; }
 
-          attrs = { color: meta[1] };
-          if (this.processMarkOpen('color', bbcode, '[/color]', attrs)) {
+          meta = { color: match[1] };
+          if (this.processMarkOpen('color', bbcode, '[/color]', meta)) {
             return;
           }
           break;
 
         case '[size':
-          meta = bbcode.match(this.SIZE_REGEXP);
-          if (!meta) { break; }
+          match = bbcode.match(this.SIZE_REGEXP);
+          if (!match) { break; }
 
-          attrs = { size: meta[1] };
-          if (this.processMarkOpen('size', bbcode, '[/size]', attrs)) {
+          meta = { size: match[1] };
+          if (this.processMarkOpen('size', bbcode, '[/size]', meta)) {
             return;
           }
           break;
