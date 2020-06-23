@@ -542,12 +542,14 @@ export default class MarkdownTokenizer {
 
   processBlockQuote(nestedSequence, tagSequence) {
     const newSequence = nestedSequence + tagSequence;
+    let isFirstLine = true;
 
     this.push(this.tagOpen('blockquote'));
 
     do {
-      this.next(tagSequence.length);
+      this.next(isFirstLine ? tagSequence.length : newSequence.length);
       this.parseLine(newSequence);
+      isFirstLine = false;
     } while (this.isContinued(newSequence));
 
     this.push(this.tagClose('blockquote'));
