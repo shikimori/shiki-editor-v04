@@ -1,3 +1,5 @@
+import { fixUrl } from '../utils';
+
 export function parseCodeMeta(meta) {
   if (!meta) { return null; }
 
@@ -62,6 +64,12 @@ export function parseImageMeta(meta) {
   return attributes;
 }
 
+export function parseLinkMeta(meta) {
+  return {
+    src: fixUrl(meta)
+  };
+}
+
 export function parseQuoteMeta(meta) {
   if (!meta) { return null; }
 
@@ -93,8 +101,6 @@ export function parseQuoteMeta(meta) {
 }
 
 export function parseSpoilerMeta(meta) {
-  if (!meta) { return null; }
-
   return {
     label: meta
   };
