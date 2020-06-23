@@ -175,21 +175,22 @@ export default class MarkdownTokenizer {
         if (bbcode === '[center]') {
           if (this.processBlock('center', bbcode, '[/center]')) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+            return;
           }
-          return;
         }
 
         if (bbcode === '[right]') {
           if (this.processBlock('right', bbcode, '[/right]')) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+            return;
           }
-          return;
         }
 
         if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
           const meta = parseDivMeta(match[1]);
           if (this.processBlock('div', bbcode, '[/div]', meta)) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+            return; // TODO: UNCOMMENT AND FIX SPECS
           }
           return;
         }
@@ -197,24 +198,24 @@ export default class MarkdownTokenizer {
           const meta = parseSpoilerMeta(match[1]);
           if (this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta)) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+            return;
           }
-          return;
         }
 
         if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           const meta = parseCodeMeta(match[1]);
           if (this.processCodeBlock(bbcode, '[/code]', meta)) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+            return;
           }
-          return;
         }
 
-        if (seq5 === '[url' && (match = bbcode.match(this.LINK_REGEXP))) {
-          const meta = parseLinkMeta(meta[1]);
-          if (this.processLinkBlock(bbcode, '[/url]', meta)) {
+        if (seq4 === '[url' && (match = bbcode.match(this.LINK_REGEXP))) {
+          const meta = parseLinkMeta(match[1]);
+          if (this.processLinkBlock(bbcode, meta)) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+            return;
           }
-          return;
         }
       }
 
@@ -222,8 +223,9 @@ export default class MarkdownTokenizer {
         if (seq5 === '[quot' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           if (!isStart) { this.finalizeParagraph(); }
           const meta = parseQuoteMeta(match[1]);
-          this.processBlock('quote', bbcode, '[/quote]', meta);
-          return;
+          if (this.processBlock('quote', bbcode, '[/quote]', meta)) {
+            return;
+          }
         }
       }
 

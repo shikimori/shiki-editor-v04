@@ -1110,5 +1110,22 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
     });
+
+    describe('link_block', () => {
+      it('[url=//ya.ru][quote]z[/quote][/url]', () => {
+        expect(MarkdownTokenizer.parse('[url=//ya.ru][quote]z[/quote][/url]')).to.eql([{
+          type: 'link_block_open',
+          attrs: [['href', '//ya.ru']]
+        }, {
+          type: 'quote_open'
+        },
+        ...text('z'),
+        {
+          type: 'quote_close'
+        }, {
+          type: 'link_block_close'
+        }]);
+      });
+    });
   });
 });

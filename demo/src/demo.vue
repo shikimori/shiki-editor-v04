@@ -39,6 +39,9 @@ export default {
     baseUrl: 'https://shikimori.one',
     isColumn1: false,
     isColumn2: true,
+//    text2: `[url=//ya.ru][quote]z[/quote][/url]
+    text2: `[url=https://ya.ru]zxc[/url]
+`,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -105,32 +108,6 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `[url=//ya.ru][quote]block link[/quote][/url]
-[url=//ya.ru]inline link[/url]
-`
-//     text2: `- [quote]
-//   a
-//   [/quote]
-//   b
-// `
-
-//
-//
-    // text2: `[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/83-gotovye-stili][div=b-link_button dark]Готовые стили[/div][/url]
-// `
-///    text2: `[code]
-///q
-///[/code]
-//     text2: ` [div]z\nx\nc[/div]
-// `
-//     text2: `[div] [div]z[/div][/div]
-// `
-  // text2: `\`[div]div [div=b-link_button]inside[/div] another div[/div]\`
-  // [div]div [div=b-link_button]inside[/div] another div[/div]
-  // `
-  // text2: `\`[div]div [div=b-link_button]inside[/div] another div[/div]\`
-  // [url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark data-test]Вкратце о CSS[/div][/url]
-  // `
   }),
   mounted() {
     window.markdownTokenizer = markdownit('commonmark', { html: false });
