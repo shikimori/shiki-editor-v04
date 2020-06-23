@@ -24,6 +24,7 @@ export default class MarkdownTokenizer {
   COLOR_REGEXP = /^\[color=(#[\da-f]+|\w+)\]$/
   SIZE_REGEXP = /^\[size=(\d+)\]$/
   LINK_REGEXP = /^\[url=(.+?)\]$/
+  BLOCK_LINK_FEATURE_REGEXP = /\[quote|\[div/
   EMPTY_SPACES_REGEXP = /^ +$/
 
   MARK_STACK_MAPPINGS = {
@@ -324,7 +325,7 @@ export default class MarkdownTokenizer {
           if (!meta) { break; }
           attrs = parseLinkMeta(meta[1]);
 
-          if (this.processInlineLinkInline(bbcode, attrs)) { return; }
+          if (this.processLinkInline(bbcode, attrs)) { return; }
           break;
 
         case '[colo':
@@ -412,7 +413,7 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineLinkInline(bbcode, attrs) {
+  processLinkInline(bbcode, attrs) {
     if (!hasInlineSequence(this.text, '[/url]', this.index)) { return false; }
 
     this.marksStack.push('[url]');
@@ -422,6 +423,45 @@ export default class MarkdownTokenizer {
     this.next(bbcode.length);
     return true;
   }
+
+  // processLinkInline(bbcode, attrs) {
+  //   const content = extractUntil(this.text, '[/url]', this.index + bbcode.length);
+  //   if (!content) { return false; }
+  // 
+  //   if (this.BLOCK_LINK_FEATURE_REGEXP.test(content)) {
+  //     this.inlineTokens.push(
+  //       this.tagOpen('link_block', attrs)
+  //     );
+  //   } else {
+  //     this.inlineTokens.push(
+  //       this.tagOpen('link_inline', attrs)
+  //     );
+  //   }
+  // 
+  //   this.marksStack.push('[link]');
+  //   this.next(bbcode.length);
+  //   return true;
+  // }
+
+  // processMarkOpen(type, openBbcode, closeBbcode, attributes) {
+  //   if (!hasInlineSequence(this.text, closeBbcode, this.index)) { return false; }
+  // 
+  //   this.marksStack.push(this.MARK_STACK_MAPPINGS[type] || openBbcode);
+  //   this.inlineTokens.push(this.tagOpen(type, attributes));
+  //   this.next(openBbcode.length);
+  //   return true;
+  // }
+  // 
+  // processMarkClose(type, openBbcode, closeBbcode) {
+  //   if (this.lastMark !== openBbcode) { return false; }
+  // 
+  //   this.marksStack.pop();
+  //   this.inlineTokens.push(this.tagClose(type));
+  //   this.next(closeBbcode.length);
+  //   return true;
+  // }
+
+
 
   processInlineImage(tagStart, tagEnd, isPoster, metaAttributes) {
     let index = this.index + tagStart.length;
