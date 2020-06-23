@@ -12,10 +12,10 @@ export default function(regexp, type, getAttrs) {
         let pos = 0;
         let match;
 
-        const isLink = !!marks.filter(x => x.type.name === 'link')[0];
+        const isLinkInline = !!marks.filter(x => x.type.name === 'link_inline')[0];
 
         // eslint-disable-next-line
-        while (!isLink && (match = regexp.exec(text)) !== null) {
+        while (!isLinkInline && (match = regexp.exec(text)) !== null) {
           if (parent.type.allowsMarkType(type) && match[1]) {
             const start = match.index;
             const end = start + match[0].length;

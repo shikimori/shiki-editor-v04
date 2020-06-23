@@ -75,7 +75,7 @@ export default {
     text-transform: none
     letter-spacing: normal
 
-  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "\1f517", "spoiler_inline": "\f31a", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac", "spoiler_block": "\f31b")
+  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link_inline": "\1f517", "spoiler_inline": "\f31a", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac", "spoiler_block": "\f31b")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph

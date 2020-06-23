@@ -257,7 +257,7 @@ export default class MarkdownTokenizer {
         break;
 
       case '[/url]':
-        if (this.processMarkClose('link', '[url]', '[/url]')) { return; }
+        if (this.processMarkClose('link_inline', '[url]', '[/url]')) { return; }
         break;
 
       case '[/color]':
@@ -320,7 +320,7 @@ export default class MarkdownTokenizer {
 
       switch (seq5) {
         case '[url=':
-          if (this.processInlineLink(seq5)) { return; }
+          if (this.processInlineLinkInline(seq5)) { return; }
           break;
 
         case '[colo':
@@ -406,12 +406,12 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineLink(seq) {
+  processInlineLinkInline(seq) {
     const url = extractUntil(this.text, ']', this.index + seq.length);
     if (url) {
       this.marksStack.push('[url]');
       this.inlineTokens.push(
-        this.tagOpen('link', [['href', fixUrl(url)]])
+        this.tagOpen('link_inline', [['href', fixUrl(url)]])
       );
       this.next(seq.length + url.length + ']'.length);
       return true;

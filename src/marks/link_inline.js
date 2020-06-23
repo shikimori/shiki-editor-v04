@@ -1,12 +1,12 @@
-// based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/marks/Link.js
+// based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/marks/LinkInline.js
 import { Plugin } from 'prosemirror-state';
 import { Mark } from '../base';
 import { updateMark, removeMark, pasteRule } from '../commands';
 import { getMarkAttrs, fixUrl } from '../utils';
 
-export default class Link extends Mark {
+export default class LinkInline extends Mark {
   get name() {
-    return 'link';
+    return 'link_inline';
   }
 
   get defaultOptions() {
@@ -47,7 +47,7 @@ export default class Link extends Mark {
         marks = [...marks, ...node.marks];
       });
 
-      const mark = marks.find((markItem) => markItem.type.name === 'link');
+      const mark = marks.find((markItem) => markItem.type.name === 'link_inline');
 
       if (mark && mark.attrs.href) {
         return removeMark(type);
@@ -94,7 +94,7 @@ export default class Link extends Mark {
 
   get markdownParserToken() {
     return {
-      mark: 'link',
+      mark: 'link_inline',
       getAttrs: token => ({
         href: token.attrGet('href')
       })

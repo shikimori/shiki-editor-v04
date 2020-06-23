@@ -20,7 +20,7 @@ import {
   Color,
   Deleted,
   Em,
-  Link,
+  LinkInline,
   Size,
   SpoilerInline,
   Strong,
@@ -33,7 +33,7 @@ export default function(editor) {
     new Text(),
     new Paragraph(),
     new SpoilerInline(), // must be above other marks in order to obtain greater priorirty
-    new Link(),
+    new LinkInline(),
     new Strong(),
     new Em(),
     new Color(),

@@ -417,7 +417,7 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
-    describe('link', () => {
+    describe('link_inline', () => {
       it('[url=https://ya.ru]zxc[/url]', () => {
         expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([{
           type: 'paragraph_open'
