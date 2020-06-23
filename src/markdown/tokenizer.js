@@ -208,6 +208,14 @@ export default class MarkdownTokenizer {
           }
           return;
         }
+
+        if (seq5 === '[url' && (match = bbcode.match(this.LINK_REGEXP))) {
+          const meta = parseLinkMeta(meta[1]);
+          if (this.processLinkBlock(bbcode, '[/url]', meta)) {
+            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+          }
+          return;
+        }
       }
 
       if (bbcode) {
@@ -424,8 +432,13 @@ export default class MarkdownTokenizer {
     return true;
   }
 
-  // processLinkInline(bbcode, attrs) {
-  //   const content = extractUntil(this.text, '[/url]', this.index + bbcode.length);
+  processLinkBlock(bbcode, meta) {
+    const content =
+      extractUntil(this.text, '[/url]', this.index + bbcode.length);
+    if (!this.BLOCK_LINK_FEATURE_REGEXP.test(content)) { return false; }
+
+    return this.processBlock('link_block', bbcode, '[/url]', meta);
+  }
   //   if (!content) { return false; }
   // 
   //   if (this.BLOCK_LINK_FEATURE_REGEXP.test(content)) {
