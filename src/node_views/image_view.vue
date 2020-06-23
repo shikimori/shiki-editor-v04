@@ -43,7 +43,7 @@ export default {
   },
   data: () => ({
     isLoaded: false,
-    imageNaturalWidth: undefined,
+    naturalWidth: undefined,
     imageWidth: undefined
   }),
   computed: {
@@ -71,7 +71,7 @@ export default {
     },
     isExpandable() {
       if (!this.isLoaded) { return false; }
-      return this.imageNaturalWidth > this.imageWidth;
+      return this.naturalWidth > this.imageWidth;
     },
     tagPreview() {
       if (this.node.attrs.isPoster) { return '[poster]'; }
@@ -80,8 +80,10 @@ export default {
   },
   mounted() {
     imagesloaded(this.$refs.image, () => {
+      if (!this.$refs.image) { return; } // becase component can be already unmounted
+
       this.isLoaded = true;
-      this.imageNaturalWidth = this.$refs.image.naturalWidth;
+      this.naturalWidth = this.$refs.image.naturalWidth;
       this.imageWidth = this.$refs.image.width;
     });
   },
