@@ -17,12 +17,6 @@ import {
 } from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
-  SPECIAL_TAGS = {
-    paragraph: 'p',
-    bullet_list: 'ul',
-    list_item: 'li',
-    underline: 'span'
-  }
   MAX_BBCODE_SIZE = 250 // [quote=...] can be so long... spoiler too...
   MAX_URL_SIZE = 512
 
@@ -50,7 +44,7 @@ export default class MarkdownTokenizer {
   }
 
   static parse(text) {
-    return new MarkdownTokenizer(text, 0, undefined).parse();
+    return new MarkdownTokenizer(text, 0).parse();
   }
 
   parse() {
