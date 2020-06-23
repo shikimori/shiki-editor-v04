@@ -1,8 +1,8 @@
 <template>
   <div class='container'>
-    <div>
-      <label><input v-model='isColumn1' type='checkbox'>Editor 1</label>
-      <label><input v-model='isColumn2' type='checkbox'>Editor 2</label>
+    <div class='samples'>
+      <label><input v-model='isColumn1' type='checkbox'>Sample 1</label>
+      <label><input v-model='isColumn2' type='checkbox'>Sample 2</label>
     </div>
 
     <div class='fc-2'>
@@ -143,4 +143,15 @@ div [div=b-link_button]inside line is not parsed[/div]
 <style scoped lang='sass'>
 .f-column:first-child:last-child
   width: 100%
+
+.samples
+  margin-bottom: 16px
+
+  label
+    display: inline-flex
+    margin-right: 16px
+    align-items: center
+
+    input
+      margin-right: 5px
 </style>
