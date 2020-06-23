@@ -18,7 +18,7 @@ export default class LinkInline extends Mark {
   get schema() {
     return {
       attrs: {
-        href: { default: '' }
+        href: {}
       },
       inclusive: false,
       parseDOM: [

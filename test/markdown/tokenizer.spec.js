@@ -424,13 +424,13 @@ describe('MarkdownTokenizer', () => {
         }, {
           type: 'inline',
           children: [{
-            type: 'link_open',
+            type: 'link_inline_open',
             attrs: [['href', 'https://ya.ru']]
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'link_close'
+            type: 'link_inline_close'
           }]
         }, {
           type: 'paragraph_close'
@@ -443,13 +443,13 @@ describe('MarkdownTokenizer', () => {
         }, {
           type: 'inline',
           children: [{
-            type: 'link_open',
+            type: 'link_inline_open',
             attrs: [['href', '//ya.ru']]
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'link_close'
+            type: 'link_inline_close'
           }]
         }, {
           type: 'paragraph_close'

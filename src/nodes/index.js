@@ -7,6 +7,7 @@ export { default as Doc } from './doc';
 export { default as Hr } from './hr';
 export { Image } from './image';
 export { default as ListItem } from './list_item';
+export { default as LinkBlock } from './link_block';
 export { default as Paragraph } from './paragraph';
 export { default as Quote } from './quote';
 export { default as Right } from './right';

@@ -66,7 +66,7 @@ export function parseImageMeta(meta) {
 
 export function parseLinkMeta(meta) {
   return {
-    src: fixUrl(meta)
+    href: fixUrl(meta)
   };
 }
 
@@ -101,6 +101,8 @@ export function parseQuoteMeta(meta) {
 }
 
 export function parseSpoilerMeta(meta) {
+  if (!meta) { return null; }
+
   return {
     label: meta
   };

@@ -1,7 +1,6 @@
 import Token from './token';
 import flatten from 'lodash/flatten';
 
-import { fixUrl } from '../utils';
 import {
   extractBbCode,
   extractUntil,
@@ -12,18 +11,19 @@ import {
   parseCodeMeta,
   parseDivMeta,
   parseImageMeta,
+  parseLinkMeta,
   parseQuoteMeta,
   parseSpoilerMeta
 } from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
-  MAX_BBCODE_SIZE = 250 // [quote=...] can be so long... spoiler too...
-  MAX_URL_SIZE = 512
+  MAX_BBCODE_SIZE = 512
 
   BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=(.+?))?\]$/
   DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
   COLOR_REGEXP = /^\[color=(#[\da-f]+|\w+)\]$/
   SIZE_REGEXP = /^\[size=(\d+)\]$/
+  LINK_REGEXP = /^\[url=(.+?)\]$/
   EMPTY_SPACES_REGEXP = /^ +$/
 
   MARK_STACK_MAPPINGS = {
@@ -320,23 +320,29 @@ export default class MarkdownTokenizer {
 
       switch (seq5) {
         case '[url=':
-          if (this.processInlineLinkInline(seq5)) { return; }
+          meta = bbcode.match(this.LINK_REGEXP);
+          if (!meta) { break; }
+          attrs = parseLinkMeta(meta[1]);
+
+          if (this.processInlineLinkInline(bbcode, attrs)) { return; }
           break;
 
         case '[colo':
           meta = bbcode.match(this.COLOR_REGEXP);
-          attrs = meta ? { color: meta[1] } : null;
-          if (attrs &&
-             this.processMarkOpen('color', bbcode, '[/color]', attrs)) {
+          if (!meta) { break; }
+
+          attrs = { color: meta[1] };
+          if (this.processMarkOpen('color', bbcode, '[/color]', attrs)) {
             return;
           }
           break;
 
         case '[size':
           meta = bbcode.match(this.SIZE_REGEXP);
-          attrs = meta ? { size: meta[1] } : null;
-          if (attrs &&
-             this.processMarkOpen('size', bbcode, '[/size]', attrs)) {
+          if (!meta) { break; }
+
+          attrs = { size: meta[1] };
+          if (this.processMarkOpen('size', bbcode, '[/size]', attrs)) {
             return;
           }
           break;
@@ -406,18 +412,13 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineLinkInline(seq) {
-    const url = extractUntil(this.text, ']', this.index + seq.length);
-    if (url) {
-      this.marksStack.push('[url]');
-      this.inlineTokens.push(
-        this.tagOpen('link_inline', [['href', fixUrl(url)]])
-      );
-      this.next(seq.length + url.length + ']'.length);
-      return true;
-    }
-
-    return false;
+  processInlineLinkInline(bbcode, attrs) {
+    this.marksStack.push('[url]');
+    this.inlineTokens.push(
+      this.tagOpen('link_inline', attrs)
+    );
+    this.next(bbcode.length);
+    return true;
   }
 
   processInlineImage(tagStart, tagEnd, isPoster, metaAttributes) {

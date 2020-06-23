@@ -51,8 +51,8 @@ describe('tokenizer_helpers', () => {
   });
 
   it('parseLinkMeta', () => {
-    expect(parseLinkMeta('qwe')).to.eql({ src: '//qwe' });
-    expect(parseLinkMeta('https://ya.ru')).to.eql({ src: 'https://ya.ru' });
+    expect(parseLinkMeta('qwe')).to.eql({ href: '//qwe' });
+    expect(parseLinkMeta('https://ya.ru')).to.eql({ href: 'https://ya.ru' });
   });
 
   it('parseQuoteMeta', () => {
@@ -87,7 +87,7 @@ describe('tokenizer_helpers', () => {
   });
 
   it('parseSpoilerMeta', () => {
-    expect(parseSpoilerMeta('')).to.eql({ label: '' });
+    expect(parseSpoilerMeta('')).to.eq(null);
     expect(parseSpoilerMeta('qwe')).to.eql({ label: 'qwe' });
   });
 });
