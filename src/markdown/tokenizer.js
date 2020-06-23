@@ -31,11 +31,11 @@ export default class MarkdownTokenizer {
     size: '[size]'
   }
 
-  constructor(text, index, exitSequence) {
+  constructor(text, index, nestedSequence = '', exitSequence = undefined) {
     this.text = text;
     this.index = index;
 
-    this.nestedSequence = '';
+    this.nestedSequence = nestedSequence;
     this.exitSequence = exitSequence;
     this.isExitSequence = false;
 
@@ -53,7 +53,7 @@ export default class MarkdownTokenizer {
     this.next();
 
     while (this.index < this.text.length) {
-      this.parseLine('');
+      this.parseLine();
       if (this.isExitSequence) { break; }
     }
 
@@ -111,7 +111,17 @@ export default class MarkdownTokenizer {
       this.text[this.index + 4];
   }
 
-  parseLine() {
+  parseLine(nestedSequence = '') {
+    const skipSequence = nestedSequence || this.nestedSequence;
+
+    if (skipSequence &&
+      this.char1 === skipSequence[0] &&
+      this.text.slice(this.index, this.index + skipSequence.length) ===
+        skipSequence
+    ) {
+      this.next(skipSequence.length);
+    }
+
     const startIndex = this.index;
     let match;
 
@@ -445,7 +455,12 @@ export default class MarkdownTokenizer {
     let index = this.index + startSequence.length;
     if (this.text[index] === '\n') { index += 1; }
 
-    const tokenizer = new MarkdownTokenizer(this.text, index, exitSequence);
+    const tokenizer = new MarkdownTokenizer(
+      this.text,
+      index,
+      this.nestedSequence,
+      exitSequence
+    );
     const tokens = tokenizer.parse();
 
     const endSequence =
@@ -471,7 +486,12 @@ export default class MarkdownTokenizer {
   processInlineBlock(startSequence, exitSequence) {
     this.appendInlineContent(startSequence);
 
-    const tokenizer = new MarkdownTokenizer(this.text, this.index, exitSequence);
+    const tokenizer = new MarkdownTokenizer(
+      this.text,
+      this.index,
+      '',
+      exitSequence
+    );
     const tokens = tokenizer.parse();
 
     const endSequence =
@@ -536,15 +556,13 @@ export default class MarkdownTokenizer {
 
   processBlockQuote(tagSequence) {
     let isFirstLine = true;
-
     this.push(this.tagOpen('blockquote'));
     this.nestedSequence += tagSequence;
 
     do {
-      this.next(isFirstLine ? tagSequence.length : this.nestedSequence.length);
-      this.parseLine();
+      this.parseLine(isFirstLine ? tagSequence : '');
       isFirstLine = false;
-    } while (this.isContinued(this.nestedSequence));
+    } while (this.isSequenceContinued());
 
     this.push(this.tagClose('blockquote'));
     this.nestedSequence = this.nestedSequence
@@ -562,7 +580,7 @@ export default class MarkdownTokenizer {
       this.push(this.tagOpen('list_item'));
       this.processBulletListLines(priorSequence, '  ');
       this.push(this.tagClose('list_item'));
-    } while (this.isContinued(this.nestedSequence));
+    } while (this.isSequenceContinued());
 
     this.push(this.tagClose('bullet_list'));
     this.nestedSequence = this.nestedSequence
@@ -582,7 +600,7 @@ export default class MarkdownTokenizer {
 
       this.parseLine();
       line += 1;
-    } while (this.isContinued(this.nestedSequence));
+    } while (this.isSequenceContinued());
 
     this.nestedSequence = nestedSequenceBackup;
   }
@@ -669,9 +687,13 @@ export default class MarkdownTokenizer {
     }
   }
 
-  isContinued(sequence) {
-    return this.text.slice(this.index, this.index + sequence.length) ===
-      sequence;
+  isSequenceContinued() {
+    const sequenceSlice = this.text.slice(
+      this.index,
+      this.index + this.nestedSequence.length
+    );
+
+    return sequenceSlice === this.nestedSequence;
   }
 
   isOnlyInlineSpacingsBefore() {

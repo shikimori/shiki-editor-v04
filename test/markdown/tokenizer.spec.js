@@ -534,6 +534,20 @@ describe('MarkdownTokenizer', () => {
           type: 'blockquote_close'
         }]);
       });
+
+      it('> [quote]\\n> a\\n> [/quote]', () => {
+        expect(MarkdownTokenizer.parse('> [quote]\n> a\n> [/quote]')).to.eql([{
+          type: 'blockquote_open'
+        }, {
+          type: 'quote_open'
+        },
+        ...text('a'),
+        {
+          type: 'quote_close'
+        }, {
+          type: 'blockquote_close'
+        }]);
+      });
     });
 
     describe('bullet_list', () => {
