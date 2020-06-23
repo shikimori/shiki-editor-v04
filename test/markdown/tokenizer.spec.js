@@ -456,6 +456,12 @@ describe('MarkdownTokenizer', () => {
         }]);
       });
 
+      it('[url=a]z', () => {
+        expect(MarkdownTokenizer.parse('[url=a]z')).to.eql([
+          ...text('[url=a]z')
+        ]);
+      });
+
       it('z[/url]', () => {
         expect(MarkdownTokenizer.parse('z[/url]')).to.eql([
           ...text('z[/url]')

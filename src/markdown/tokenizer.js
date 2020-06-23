@@ -413,6 +413,8 @@ export default class MarkdownTokenizer {
   }
 
   processInlineLinkInline(bbcode, attrs) {
+    if (!hasInlineSequence(this.text, '[/url]', this.index)) { return false; }
+
     this.marksStack.push('[url]');
     this.inlineTokens.push(
       this.tagOpen('link_inline', attrs)
