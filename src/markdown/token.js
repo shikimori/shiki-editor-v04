@@ -1,7 +1,7 @@
 // based on https://github.com/markdown-it/markdown-it/blob/master/lib/token.js
 
 export default class Token {
-  constructor(type, content = null, children = null, attrs) {
+  constructor(type, content, children, attrs, bbcode) {
     this.type = type;
 
     if (children) {
@@ -16,6 +16,10 @@ export default class Token {
 
     if (content) {
       this.content = content;
+    }
+
+    if (bbcode) {
+      this.bbcode = bbcode;
     }
   }
 

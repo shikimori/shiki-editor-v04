@@ -5,7 +5,8 @@ import {
   extractBbCode,
   extractUntil,
   hasInlineSequence,
-  extractMarkdownLanguage
+  extractMarkdownLanguage,
+  rollbackUnclosedMarks
 } from './tokenizer_helpers';
 import {
   parseCodeMeta,
@@ -372,7 +373,7 @@ export default class MarkdownTokenizer {
     if (!hasInlineSequence(this.text, closeBbcode, this.index)) { return false; }
 
     this.marksStack.push(this.MARK_STACK_MAPPINGS[type] || openBbcode);
-    this.inlineTokens.push(this.tagOpen(type, attributes));
+    this.inlineTokens.push(this.tagOpen(type, attributes, openBbcode));
     this.next(openBbcode.length);
     return true;
   }
@@ -587,17 +588,6 @@ export default class MarkdownTokenizer {
     return true;
   }
 
-  finalizeParagraph() {
-    if (this.nestedSequence && !this.inlineTokens.length) { return; }
-
-    this.push(this.tagOpen('paragraph'));
-    this.push(new Token('inline', null, this.inlineTokens));
-    this.push(this.tagClose('paragraph'));
-
-    this.inlineTokens = [];
-    this.marksStack = [];
-  }
-
   processBlockQuote(tagSequence) {
     let isFirstLine = true;
     this.push(this.tagOpen('blockquote'));
@@ -714,8 +704,8 @@ export default class MarkdownTokenizer {
     this.push(new Token('hr', null, null, null));
   }
 
-  tagOpen(type, attributes = null) {
-    return new Token(`${type}_open`, null, null, attributes);
+  tagOpen(type, attributes = null, bbcode) {
+    return new Token(`${type}_open`, null, null, attributes, bbcode);
   }
 
   tagClose(type) {
@@ -743,6 +733,19 @@ export default class MarkdownTokenizer {
     if (this.inlineTokens.length) {
       this.finalizeParagraph();
     }
+  }
+
+  finalizeParagraph() {
+    if (this.nestedSequence && !this.inlineTokens.length) { return; }
+
+    this.push(this.tagOpen('paragraph'));
+    this.push(
+      new Token('inline', null, rollbackUnclosedMarks(this.inlineTokens))
+    );
+    this.push(this.tagClose('paragraph'));
+
+    this.inlineTokens = [];
+    this.marksStack = [];
   }
 
   isSequenceContinued() {

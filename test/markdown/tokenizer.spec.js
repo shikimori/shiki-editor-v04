@@ -63,7 +63,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'bold_open' },
+              { type: 'bold_open', bbcode: '[b]' },
               { type: 'text', content: 'zxc' },
               { type: 'bold_close' }
             ]
@@ -121,7 +121,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'text', content: 'a' },
-              { type: 'bold_open' },
+              { type: 'bold_open', bbcode: '[b]' },
               { type: 'text', content: 'zxc' },
               { type: 'bold_close' },
               { type: 'text', content: 'A' }
@@ -139,7 +139,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'italic_open' },
+              { type: 'italic_open', bbcode: '[i]' },
               { type: 'text', content: 'zxc' },
               { type: 'italic_close' }
             ]
@@ -180,7 +180,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'underline_open' },
+              { type: 'underline_open', bbcode: '[u]' },
               { type: 'text', content: 'zxc' },
               { type: 'underline_close' }
             ]
@@ -203,7 +203,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'strike_open' },
+              { type: 'strike_open', bbcode: '[s]' },
               { type: 'text', content: 'zxc' },
               { type: 'strike_close' }
             ]
@@ -291,7 +291,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'spoiler_inline_open' },
+              { type: 'spoiler_inline_open', bbcode: '||' },
               { type: 'text', content: 'zxc' },
               { type: 'spoiler_inline_close' }
             ]
@@ -320,7 +320,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'color_open', attrs: [['color', 'red']] },
+              { type: 'color_open', attrs: [['color', 'red']], bbcode: '[color=red]' },
               { type: 'text', content: 'zxc' },
               { type: 'color_close' }
             ]
@@ -349,7 +349,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'size_open', attrs: [['size', '20']] },
+              { type: 'size_open', attrs: [['size', '20']], bbcode: '[size=20]' },
               { type: 'text', content: 'zxc' },
               { type: 'size_close' }
             ]
