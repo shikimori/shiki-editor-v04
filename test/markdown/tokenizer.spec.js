@@ -836,6 +836,16 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
+    describe('list', () => {
+      it('[list]z[/list]', () => {
+        expect(MarkdownTokenizer.parse('[list]z[/list]')).to.eql([
+          { type: 'div', direction: 'open', attrs: [['data', [['data-list', 'remove-it']]]] },
+          ...text('z'),
+          { type: 'div', direction: 'close' }
+        ]);
+      });
+    });
+
     describe('div', () => {
       it('[div]z[/div]', () => {
         expect(MarkdownTokenizer.parse('[div]z[/div]')).to.eql([
@@ -896,30 +906,34 @@ describe('MarkdownTokenizer', () => {
       it('[div data-test data-fofo]z[/div]', () => {
         expect(MarkdownTokenizer.parse(
           '[div data-test data-fofo]z[/div]'
-        )).to.eql([{
-          type: 'div', direction: 'open',
-          attrs: [['data', [['data-test', ''], ['data-fofo', '']]]]
-        },
-        ...text('z'),
-        {
-          type: 'div', direction: 'close'
-        }]);
+        )).to.eql([
+          {
+            type: 'div', direction: 'open',
+            attrs: [['data', [['data-test', ''], ['data-fofo', '']]]]
+          },
+          ...text('z'),
+          {
+            type: 'div', direction: 'close'
+          }
+        ]);
       });
 
       it('[div=aaa bb-cd_e data-test data-fofo]z[/div]', () => {
         expect(MarkdownTokenizer.parse(
           '[div=aaa bb-cd_e data-test data-fofo]z[/div]'
-        )).to.eql([{
-          type: 'div', direction: 'open',
-          attrs: [
-            ['class', 'aaa bb-cd_e'],
-            ['data', [['data-test', ''], ['data-fofo', '']]]
-          ]
-        },
-        ...text('z'),
-        {
-          type: 'div', direction: 'close'
-        }]);
+        )).to.eql([
+          {
+            type: 'div', direction: 'open',
+            attrs: [
+              ['class', 'aaa bb-cd_e'],
+              ['data', [['data-test', ''], ['data-fofo', '']]]
+            ]
+          },
+          ...text('z'),
+          {
+            type: 'div', direction: 'close'
+          }
+        ]);
       });
 
       it('[div]q[div]z[/div][/div]', () => {

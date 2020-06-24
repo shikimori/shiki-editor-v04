@@ -82,6 +82,10 @@ export default class MarkdownTokenizer {
       const isStart = startIndex === this.index;
       const isEnd = char1 === '\n' || char1 === undefined;
 
+      let meta;
+      let isProcessed = false;
+      const isOnlySpacingsBefore = this.isOnlyInlineSpacingsBefore();
+
       if (this.isExitSequence) {
         this.finalizeParagraph();
         return;
@@ -125,15 +129,21 @@ export default class MarkdownTokenizer {
                 bbcode
             );
             break outer;
+
+          case '[list]':
+            meta = { data: [['data-list', 'remove-it']] };
+            isProcessed = this.processBlock(
+              'div', bbcode, '[/list]', meta,
+              isStart, isOnlySpacingsBefore
+            );
+            if (isProcessed) { return; }
+            break;
         }
       }
 
-      let isProcessed = false;
-      const isOnlySpacingsBefore = this.isOnlyInlineSpacingsBefore();
-
       if (bbcode && (isStart || isOnlySpacingsBefore)) {
         if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
-          const meta = parseDivMeta(match[1]);
+          meta = parseDivMeta(match[1]);
           if (this.processBlock('div', bbcode, '[/div]', meta)) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
             return; // TODO: UNCOMMENT AND FIX SPECS
