@@ -1,6 +1,7 @@
 import { Node } from '../base';
 import { fixUrl } from '../utils';
 
+// NOTE: this node cannot be generated in WYSIWYG mode
 export default class LinkBlock extends Node {
   get name() {
     return 'link_block';

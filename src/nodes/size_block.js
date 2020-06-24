@@ -1,6 +1,7 @@
 import { Node } from '../base';
 import { ensureDimension } from '../utils';
 
+// NOTE: this node cannot be generated in WYSIWYG mode
 export default class SizeBlock extends Node {
   get name() {
     return 'size_block';
