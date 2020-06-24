@@ -80,7 +80,7 @@ export default class LinkInline extends Mark {
         props: {
           handleClick: (view, pos, event) => {
             const { schema } = view.state;
-            const attrs = getMarkAttrs(schema.marks.link, view.state);
+            const attrs = getMarkAttrs(schema.marks.link_inline, view.state);
 
             if (attrs.href && event.target instanceof HTMLAnchorElement) {
               event.stopPropagation();
