@@ -657,7 +657,9 @@ describe('MarkdownTokenizer', () => {
 
     describe('image', () => {
       it('[img]https://test.com[/img]', () => {
-        expect(MarkdownTokenizer.parse('[img]https://test.com[/img]')).to.eql([{
+        expect(MarkdownTokenizer.parse(
+          '[img]https://test.com[/img]'
+        )).to.eql([{
           type: 'paragraph_open'
         }, {
           type: 'inline',
@@ -671,7 +673,9 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[poster]https://test.com[/poster]', () => {
-        expect(MarkdownTokenizer.parse('[poster]https://test.com[/poster]')).to.eql([{
+        expect(MarkdownTokenizer.parse(
+          '[poster]https://test.com[/poster]'
+        )).to.eql([{
           type: 'paragraph_open'
         }, {
           type: 'inline',
@@ -837,6 +841,16 @@ describe('MarkdownTokenizer', () => {
           { type: 'center_close' }
         ]);
       });
+
+      it('z[center]x[/center]c', () => {
+        expect(MarkdownTokenizer.parse('z[center]x[/center]c')).to.eql([
+          ...text('z'),
+          { type: 'center_open' },
+          ...text('x'),
+          { type: 'center_close' },
+          ...text('c')
+        ]);
+      });
     });
 
     describe('right', () => {
@@ -845,6 +859,16 @@ describe('MarkdownTokenizer', () => {
           { type: 'right_open' },
           ...text('z'),
           { type: 'right_close' }
+        ]);
+      });
+
+      it('z[right]x[/right]c', () => {
+        expect(MarkdownTokenizer.parse('z[right]x[/right]c')).to.eql([
+          ...text('z'),
+          { type: 'right_open' },
+          ...text('x'),
+          { type: 'right_close' },
+          ...text('c')
         ]);
       });
     });
@@ -897,7 +921,9 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[div data-test=qwe]z[/div]', () => {
-        expect(MarkdownTokenizer.parse('[div data-test=qwe]z[/div]')).to.eql([
+        expect(MarkdownTokenizer.parse(
+          '[div data-test=qwe]z[/div]'
+        )).to.eql([
           { type: 'div_open', attrs: [['data', [['data-test', 'qwe']]]] },
           ...text('z'),
           { type: 'div_close' }
@@ -905,7 +931,9 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[div data-test data-fofo]z[/div]', () => {
-        expect(MarkdownTokenizer.parse('[div data-test data-fofo]z[/div]')).to.eql([{
+        expect(MarkdownTokenizer.parse(
+          '[div data-test data-fofo]z[/div]'
+        )).to.eql([{
           type: 'div_open',
           attrs: [['data', [['data-test', ''], ['data-fofo', '']]]]
         },
@@ -916,7 +944,9 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[div=aaa bb-cd_e data-test data-fofo]z[/div]', () => {
-        expect(MarkdownTokenizer.parse('[div=aaa bb-cd_e data-test data-fofo]z[/div]')).to.eql([{
+        expect(MarkdownTokenizer.parse(
+          '[div=aaa bb-cd_e data-test data-fofo]z[/div]'
+        )).to.eql([{
           type: 'div_open',
           attrs: [['class', 'aaa bb-cd_e'], ['data', [['data-test', ''], ['data-fofo', '']]]]
         },
@@ -1009,7 +1039,9 @@ describe('MarkdownTokenizer', () => {
 
     describe('link_block', () => {
       it('[url=//ya.ru][quote]z[/quote][/url]', () => {
-        expect(MarkdownTokenizer.parse('[url=//ya.ru][quote]z[/quote][/url]')).to.eql([
+        expect(MarkdownTokenizer.parse(
+          '[url=//ya.ru][quote]z[/quote][/url]'
+        )).to.eql([
           { type: 'link_block_open', attrs: [['href', '//ya.ru']] },
           { type: 'quote_open' },
           ...text('z'),
@@ -1019,7 +1051,9 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[url=//ya.ru]\\n[quote]\\nz\\n[/quote]\\n[/url]', () => {
-        expect(MarkdownTokenizer.parse('[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]')).to.eql([
+        expect(MarkdownTokenizer.parse(
+          '[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]'
+        )).to.eql([
           { type: 'link_block_open', attrs: [['href', '//ya.ru']] },
           { type: 'quote_open' },
           ...text('z'),
@@ -1028,4 +1062,18 @@ describe('MarkdownTokenizer', () => {
       });
     });
   });
+
+  // describe('complex cases', () => {
+  //   it('apply outside broken formatting', () => {
+  //     expect(MarkdownTokenizer.parse(
+  //       '[b][center]Приветствую тебя, путник.[/center][/b]'
+  //     )).to.eq([
+  //       { type: 'center_open' },
+  //       { type: 'bold_open' },
+  //       ...text('z'),
+  //       { type: 'bold_close' },
+  //       { type: 'center_close' }
+  //     ]);
+  //   });
+  // });
 });

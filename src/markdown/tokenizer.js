@@ -173,22 +173,6 @@ export default class MarkdownTokenizer {
       const isOnlySpacingsBefore = this.isOnlyInlineSpacingsBefore();
 
       if (bbcode && (isStart || isOnlySpacingsBefore)) {
-        if (bbcode === '[center]') {
-          isProcessed = this.processBlock(
-            'center', bbcode, '[/center]', null,
-            isStart, isOnlySpacingsBefore
-          );
-          if (isProcessed) { return; }
-        }
-
-        if (bbcode === '[right]') {
-          isProcessed = this.processBlock(
-            'right', bbcode, '[/right]', null,
-            isStart, isOnlySpacingsBefore
-          );
-          if (isProcessed) { return; }
-        }
-
         if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
           const meta = parseDivMeta(match[1]);
           if (this.processBlock('div', bbcode, '[/div]', meta)) {
@@ -214,6 +198,22 @@ export default class MarkdownTokenizer {
       }
 
       if (bbcode) {
+        if (bbcode === '[center]') {
+          isProcessed = this.processBlock(
+            'center', bbcode, '[/center]', null,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+
+        if (bbcode === '[right]') {
+          isProcessed = this.processBlock(
+            'right', bbcode, '[/right]', null,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+
         if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           const meta = parseCodeMeta(match[1]);
           if (isStart || meta) {
