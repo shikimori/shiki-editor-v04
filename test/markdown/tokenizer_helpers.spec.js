@@ -5,7 +5,7 @@ import {
   hasInlineSequence,
   extractMarkdownLanguage,
   isMatchedToken,
-  rollbackUnclosedMarks
+  fixUnbalancedTokens
 } from '../../src/markdown/tokenizer_helpers';
 
 describe('tokenizer_helpers', () => {
@@ -71,8 +71,8 @@ describe('tokenizer_helpers', () => {
       .to.eq(false);
   });
 
-  it('rollbackUnclosedMarks', () => {
-    expect(rollbackUnclosedMarks([
+  it('fixUnbalancedTokens', () => {
+    expect(fixUnbalancedTokens([
       { type: 'bold', nesting: 'open', bbcode: '[b]' },
       { type: 'text', content: 'zxc' },
       { type: 'bold', nesting: 'close' }
@@ -82,12 +82,12 @@ describe('tokenizer_helpers', () => {
       { type: 'bold', nesting: 'close' }
     ]);
 
-    // expect(rollbackUnclosedMarks([
-      // { type: 'bold', nesting: 'open', bbcode: '[b]' },
-      // { type: 'text', content: 'zxc' },
+    // expect(fixUnbalancedTokens([
+    //   { type: 'bold', nesting: 'open', bbcode: '[b]' },
+    //   { type: 'text', content: 'zxc' },
     // ])).to.eql([
     //   { type: 'text', content: '[b]' },
-    //   { type: 'text', content: 'zxc' }
+    //   { type: 'text', content: 'zxc' },
     // ]);
   });
 });

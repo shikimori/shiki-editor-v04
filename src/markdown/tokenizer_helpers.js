@@ -75,10 +75,20 @@ export function isMatchedToken(token, type, nesting) {
   return !!token && token.type === type && token.nesting === nesting;
 }
 
-export function rollbackUnclosedMarks(tokens) {
+export function fixUnbalancedTokens(tokens) {
+  const counter = {};
+
   // tokens.forEach((token, index) => {
-  //   console.log(token, index);
+  //   if (!token.nesting) { return; }
+  //   if (!counter[token.type]) { counter[token.type] = 0; }
+  // 
+  //   if (token.nesting === 'open') {
+  //     if (counter[token.type] === 0) {
+  //       counter[token.type] += 1;
+  //     } else {
+  //       tokens[index] = { type: 'text', content: token.bbcode };
+  //     }
+  //   }
   // });
   return tokens;
 }
-// window.rollbackUnclosedMarks = rollbackUnclosedMarks;
