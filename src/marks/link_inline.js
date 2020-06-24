@@ -23,7 +23,7 @@ export default class LinkInline extends Mark {
       inclusive: false,
       parseDOM: [
         {
-          tag: 'a[href]:not(.prosemirror-link_block)',
+          tag: 'a[href]:not(.prosemirror-block)',
           getAttrs: node => ({
             href: node.getAttribute('href')
           })

@@ -22,7 +22,7 @@ import {
   Strike,
   Italic,
   LinkInline,
-  Size,
+  SizeInline,
   SpoilerInline,
   Bold,
   Underline
@@ -38,7 +38,7 @@ export default function(editor) {
     new Bold(),
     new Italic(),
     new Color(),
-    new Size(),
+    new SizeInline(),
     new Underline(),
     new Strike(),
     new CodeInline(),

@@ -1,7 +1,7 @@
 import { Mark } from '../base';
 import { ensureDimension } from '../utils';
 
-export default class Size extends Mark {
+export default class SizeInline extends Mark {
   SIZE_REGEXP = /^(\d+)/
 
   get name() {

@@ -26,7 +26,7 @@ export default class LinkBlock extends Node {
         'a',
         {
           href: fixUrl(node.attrs.href),
-          class: 'b-link prosemirror-link_block',
+          class: 'b-link prosemirror-block',
           rel: 'noopener noreferrer nofollow',
           target: '_blank'
         },
@@ -43,9 +43,6 @@ export default class LinkBlock extends Node {
   }
 
   markdownSerialize(state, node) {
-    // state.write(`[url=${node.attrs.href}]`);
-    // state.renderContent(node);
-    // state.write('[/url]');
     state.renderBlock(node, 'url', `=${node.attrs.href}`);
   }
 }
