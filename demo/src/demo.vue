@@ -39,7 +39,7 @@ export default {
     baseUrl: 'https://shikimori.one',
     isColumn1: false,
     isColumn2: true,
-    text2: `[b][center]Приветствую тебя, путник.[/center][/b]
+    text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
 `,
 //     text2: `[div=c-column b-catalog_entry][div=cover][div=image-decor][anime=1292][div=image-cutter]
 // [poster]https://kawai.shikimori.one/system/animes/original/1292.jpg?1578039620[/poster][/div][/anime][div=text]
