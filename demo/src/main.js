@@ -13,7 +13,7 @@ const TRANSLATIONS = {
   'frontend.shiki_editor.bold': ' Жирный',
   'frontend.shiki_editor.italic': ' Курсив',
   'frontend.shiki_editor.underline': ' Подчёркнутый',
-  'frontend.shiki_editor.deleted': ' Зачёркнутый',
+  'frontend.shiki_editor.strike': ' Зачёркнутый',
   'frontend.shiki_editor.undo': ' Отменить последнее изменение',
   'frontend.shiki_editor.redo': ' Повторить последнее изменение',
   'frontend.shiki_editor.prompt.image_url': ' URL картинки',

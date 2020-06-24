@@ -1,8 +1,8 @@
 import { Mark } from '../base';
 
-export default class Deleted extends Mark {
+export default class Strike extends Mark {
   get name() {
-    return 'deleted';
+    return 'strike';
   }
 
   get schema() {

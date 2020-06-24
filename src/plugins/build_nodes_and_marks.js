@@ -19,7 +19,7 @@ import {
 import {
   CodeInline,
   Color,
-  Deleted,
+  Strike,
   Italic,
   LinkInline,
   Size,
@@ -40,7 +40,7 @@ export default function(editor) {
     new Color(),
     new Size(),
     new Underline(),
-    new Deleted(),
+    new Strike(),
     new CodeInline(),
     new Center(),
     new Right(),

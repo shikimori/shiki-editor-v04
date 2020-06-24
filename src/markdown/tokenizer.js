@@ -260,11 +260,11 @@ export default class MarkdownTokenizer {
         break;
 
       case '[s]':
-        if (this.processMarkOpen('deleted', '[s]', '[/s]')) { return; }
+        if (this.processMarkOpen('strike', '[s]', '[/s]')) { return; }
         break;
 
       case '[/s]':
-        if (this.processMarkClose('deleted', '[s]', '[/s]')) { return; }
+        if (this.processMarkClose('strike', '[s]', '[/s]')) { return; }
         break;
 
       case '[/url]':

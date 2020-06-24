@@ -216,19 +216,19 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
-    describe('deleted', () => {
+    describe('strike', () => {
       it('[s]zxc[/s]', () => {
         expect(MarkdownTokenizer.parse('[s]zxc[/s]')).to.eql([{
           type: 'paragraph_open'
         }, {
           type: 'inline',
           children: [{
-            type: 'deleted_open'
+            type: 'strike_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'deleted_close'
+            type: 'strike_close'
           }]
         }, {
           type: 'paragraph_close'
