@@ -14,6 +14,7 @@ import {
   parseImageMeta,
   parseLinkMeta,
   parseQuoteMeta,
+  parseSizeMeta,
   parseSpoilerMeta
 } from './bbcode_helpers';
 
@@ -25,8 +26,9 @@ export default class MarkdownTokenizer {
   COLOR_REGEXP = /^\[color=(#[\da-f]+|\w+)\]$/
   SIZE_REGEXP = /^\[size=(\d+)\]$/
   LINK_REGEXP = /^\[url=(.+?)\]$/
-  BLOCK_LINK_FEATURE_REGEXP = /\[quote|\[div/
   EMPTY_SPACES_REGEXP = /^ +$/
+
+  PSEUDO_BLOCK_TEST_REGEXP = /\[(?:quote|div|spoiler)/
 
   MARK_STACK_MAPPINGS = {
     color: '[color]',
@@ -146,8 +148,17 @@ export default class MarkdownTokenizer {
         }
 
         if (seq4 === '[url' && (match = bbcode.match(this.LINK_REGEXP))) {
-          isProcessed = this.processLinkBlock(
-            bbcode, parseLinkMeta(match[1]), isStart, isOnlySpacingsBefore
+          isProcessed = this.processPseudoBlock(
+            'link_block', bbcode, '[/url]', parseLinkMeta(match[1]),
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+
+        if (seq5 === '[size' && (match = bbcode.match(this.SIZE_REGEXP))) {
+          isProcessed = this.processPseudoBlock(
+            'size_block', bbcode, '[/size]', parseSizeMeta(match[1]),
+            isStart, isOnlySpacingsBefore
           );
           if (isProcessed) { return; }
         }
@@ -317,7 +328,7 @@ export default class MarkdownTokenizer {
           match = bbcode.match(this.SIZE_REGEXP);
           if (!match) { break; }
 
-          meta = { size: match[1] };
+          meta = parseSizeMeta(match[1]);
           if (this.processMarkOpen('size', bbcode, '[/size]', meta)) {
             return;
           }
@@ -452,19 +463,27 @@ export default class MarkdownTokenizer {
     return true;
   }
 
-  processLinkBlock(bbcode, meta, isStart, isOnlySpacingsBefore) {
-    const isNewLineAhead = this.text[this.index + bbcode.length] === '\n';
+  processPseudoBlock(
+    type,
+    startSequence,
+    endSequence,
+    meta,
+    isStart,
+    isOnlySpacingsBefore
+  ) {
+    const index = this.index + startSequence.length;
+    const isNewLineAhead = this.text[index] === '\n';
     const content = extractUntil(
       this.text,
-      '[/url]',
-      this.index + bbcode.length,
+      endSequence,
+      index,
       null,
       isNewLineAhead
     );
-    if (!this.BLOCK_LINK_FEATURE_REGEXP.test(content)) { return false; }
+    if (!this.PSEUDO_BLOCK_TEST_REGEXP.test(content)) { return false; }
 
     return this.processBlock(
-      'link_block', bbcode, '[/url]', meta, isStart, isOnlySpacingsBefore
+      type, startSequence, endSequence, meta, isStart, isOnlySpacingsBefore
     );
   }
 

@@ -100,6 +100,12 @@ export function parseQuoteMeta(meta) {
   return attributes;
 }
 
+export function parseSizeMeta(meta) {
+  return {
+    size: meta
+  };
+}
+
 export function parseSpoilerMeta(meta) {
   if (!meta) { return null; }
 

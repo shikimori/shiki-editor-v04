@@ -1027,6 +1027,31 @@ describe('MarkdownTokenizer', () => {
           { type: 'link_block', direction: 'close' }]);
       });
     });
+
+    describe('size_block', () => {
+      it('[size=24][quote]z[/quote][/size]', () => {
+        expect(MarkdownTokenizer.parse(
+          '[size=24][quote]z[/quote][/size]'
+        )).to.eql([
+          { type: 'size_block', direction: 'open', attrs: [['size', '24']] },
+          { type: 'quote', direction: 'open' },
+          ...text('z'),
+          { type: 'quote', direction: 'close' },
+          { type: 'size_block', direction: 'close' }
+        ]);
+      });
+
+      it('[size=24]\\n[quote]\\nz\\n[/quote]\\n[/size]', () => {
+        expect(MarkdownTokenizer.parse(
+          '[size=24]\n[quote]\nz\n[/quote]\n[/size]'
+        )).to.eql([
+          { type: 'size_block', direction: 'open', attrs: [['size', '24']] },
+          { type: 'quote', direction: 'open' },
+          ...text('z'),
+          { type: 'quote', direction: 'close' },
+          { type: 'size_block', direction: 'close' }]);
+      });
+    });
   });
 
   describe('complex cases', () => {

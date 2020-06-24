@@ -5,6 +5,7 @@ import {
   parseImageMeta,
   parseLinkMeta,
   parseQuoteMeta,
+  parseSizeMeta,
   parseSpoilerMeta
 } from '../../src/markdown/bbcode_helpers';
 
@@ -84,6 +85,10 @@ describe('tokenizer_helpers', () => {
       user_id: 1,
       nickname: 'qwe'
     });
+  });
+
+  it('parseSizeMeta', () => {
+    expect(parseSizeMeta('qwe')).to.eql({ size: 'qwe' });
   });
 
   it('parseSpoilerMeta', () => {
