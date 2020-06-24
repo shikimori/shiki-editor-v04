@@ -1,5 +1,5 @@
 export default class Token {
-  constructor(type, content, children, attrs, nesting, bbcode) {
+  constructor(type, content, children, attrs, direction, bbcode) {
     this.type = type;
 
     if (children) {
@@ -16,8 +16,8 @@ export default class Token {
       this.content = content;
     }
 
-    if (nesting) {
-      this.nesting = nesting;
+    if (direction) {
+      this.direction = direction;
     }
 
     if (bbcode) {

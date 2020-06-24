@@ -54,36 +54,36 @@ describe('tokenizer_helpers', () => {
   });
 
   it('isMatchedToken', () => {
-    expect(isMatchedToken({ type: 'bold', nesting: 'open' }, 'bold', 'open'))
+    expect(isMatchedToken({ type: 'bold', direction: 'open' }, 'bold', 'open'))
       .to.eq(true);
 
     expect(isMatchedToken(null, 'bold', 'open'))
       .to.eq(false);
 
-    expect(isMatchedToken({ type: 'bold', nesting: 'open' }, 'size', 'open'))
+    expect(isMatchedToken({ type: 'bold', direction: 'open' }, 'size', 'open'))
       .to.eq(false);
-    expect(isMatchedToken({ type: 'bold', nesting: 'open' }, 'bold', 'close'))
+    expect(isMatchedToken({ type: 'bold', direction: 'open' }, 'bold', 'close'))
       .to.eq(false);
 
-    expect(isMatchedToken({ type: 'size', nesting: 'open' }, 'bold', 'open'))
+    expect(isMatchedToken({ type: 'size', direction: 'open' }, 'bold', 'open'))
       .to.eq(false);
-    expect(isMatchedToken({ type: 'bold', nesting: 'close' }, 'bold', 'open'))
+    expect(isMatchedToken({ type: 'bold', direction: 'close' }, 'bold', 'open'))
       .to.eq(false);
   });
 
   it('fixUnbalancedTokens', () => {
     expect(fixUnbalancedTokens([
-      { type: 'bold', nesting: 'open', bbcode: '[b]' },
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
       { type: 'text', content: 'zxc' },
-      { type: 'bold', nesting: 'close' }
+      { type: 'bold', direction: 'close' }
     ])).to.eql([
-      { type: 'bold', nesting: 'open', bbcode: '[b]' },
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
       { type: 'text', content: 'zxc' },
-      { type: 'bold', nesting: 'close' }
+      { type: 'bold', direction: 'close' }
     ]);
 
     expect(fixUnbalancedTokens([
-      { type: 'bold', nesting: 'open', bbcode: '[b]' },
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
       { type: 'text', content: 'zxc' }
     ])).to.eql([
       { type: 'text', content: '[b]' },
@@ -91,7 +91,7 @@ describe('tokenizer_helpers', () => {
     ]);
 
     expect(fixUnbalancedTokens([
-      { type: 'bold', nesting: 'close', bbcode: '[/b]' },
+      { type: 'bold', direction: 'close', bbcode: '[/b]' },
       { type: 'text', content: 'zxc' }
     ])).to.eql([
       { type: 'text', content: '[/b]' },

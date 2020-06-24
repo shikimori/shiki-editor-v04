@@ -71,18 +71,18 @@ export function extractMarkdownLanguage(text, startIndex) {
   return null;
 }
 
-export function isMatchedToken(token, type, nesting) {
-  return !!token && token.type === type && token.nesting === nesting;
+export function isMatchedToken(token, type, direction) {
+  return !!token && token.type === type && token.direction === direction;
 }
 
 export function fixUnbalancedTokens(tokens) {
   const cache = {};
 
   tokens.forEach((token, index) => {
-    if (!token.nesting) { return; }
+    if (!token.direction) { return; }
     if (!cache[token.type]) { cache[token.type] = false; }
 
-    if (token.nesting === 'open') {
+    if (token.direction === 'open') {
       if (cache[token.type]) {
         tokens[index] = { type: 'text', content: token.bbcode };
       } else {
@@ -101,7 +101,7 @@ export function fixUnbalancedTokens(tokens) {
     if (!isUnbalanced) { return; }
 
     for (let i = tokens.length - 1; i >= 0; i--) {
-      if (tokens[i].type === type && tokens[i].nesting === 'open') {
+      if (tokens[i].type === type && tokens[i].direction === 'open') {
         tokens[i] = { type: 'text', content: tokens[i].bbcode };
         return;
       }
