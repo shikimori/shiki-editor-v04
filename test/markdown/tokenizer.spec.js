@@ -1029,17 +1029,17 @@ describe('MarkdownTokenizer', () => {
     });
   });
 
-  // describe('complex cases', () => {
-  //   it('apply outside broken formatting', () => {
-  //     expect(MarkdownTokenizer.parse(
-  //       '[b][center]Приветствую тебя, путник.[/center][/b]'
-  //     )).to.eq([
-  //       { type: 'center', direction: 'open' },
-  //       { type: 'bold', direction: 'open', bbcode: '[b]' },
-  //       ...text('z'),
-  //       { type: 'bold', direction: 'close', bbcode: '[/b]' },
-  //       { type: 'center', direction: 'close' }
-  //     ]);
-  //   });
-  // });
+  describe('complex cases', () => {
+    it('outside broken formatting', () => {
+      expect(MarkdownTokenizer.parse(
+        '[b][center]z[/center][/b]'
+      )).to.eql([
+        ...text('[b]'),
+        { type: 'center', direction: 'open' },
+        ...text('z'),
+        { type: 'center', direction: 'close' },
+        ...text('[/b]')
+      ]);
+    });
+  });
 });
