@@ -70,3 +70,7 @@ export function extractMarkdownLanguage(text, startIndex) {
 
   return null;
 }
+
+export function rollbackUnclosedMarks(tokens) {
+  return tokens;
+}

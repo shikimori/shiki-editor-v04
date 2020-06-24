@@ -3,7 +3,8 @@ import {
   extractBbCode,
   extractUntil,
   hasInlineSequence,
-  extractMarkdownLanguage
+  extractMarkdownLanguage,
+  rollbackUnclosedMarks
 } from '../../src/markdown/tokenizer_helpers';
 
 describe('tokenizer_helpers', () => {
@@ -50,4 +51,24 @@ describe('tokenizer_helpers', () => {
     expect(extractMarkdownLanguage('```test', 3)).to.eq('test');
     expect(extractMarkdownLanguage('```test\n', 3)).to.eq('test');
   });
+
+  // it('rollbackUnclosedMarks', () => {
+  //   expect(rollbackUnclosedMarks([
+  //     { type: 'bold_open' },
+  //     { type: 'text', content: 'zxc' },
+  //     { type: 'bold_close' }
+  //   ])).to.eql([
+  //     { type: 'bold_open' },
+  //     { type: 'text', content: 'zxc' },
+  //     { type: 'bold_close' }
+  //   ]);
+  // 
+  //   expect(rollbackUnclosedMarks([
+  //     { type: 'bold_open' },
+  //     { type: 'text', content: 'zxc' }
+  //   ])).to.eql([
+  //     { type: 'text', content: '[b]' },
+  //     { type: 'text', content: 'zxc' }
+  //   ]);
+  // });
 });
