@@ -3,9 +3,10 @@ import flatten from 'lodash/flatten';
 
 import {
   extractBbCode,
+  extractMarkdownLanguage,
   extractUntil,
   hasInlineSequence,
-  extractMarkdownLanguage,
+  isMatchedToken,
   rollbackUnclosedMarks
 } from './tokenizer_helpers';
 import {
@@ -546,7 +547,7 @@ export default class MarkdownTokenizer {
     let isNewLineAtEnd = false;
 
     // append first paragraph to current inlineTokens
-    if (tokens[0].type === 'paragraph_open') {
+    if (isMatchedToken(tokens[0], 'paragraph', 'open')) {
       tokens[1].children.forEach(token => {
         if (token.type === 'text') {
           this.appendInlineContent(token.content, false);
@@ -566,7 +567,7 @@ export default class MarkdownTokenizer {
     this.index = tokenizer.index;
 
     // insert new line at the end to maintain original formatting
-    if (tokens[tokens.length - 1].type === 'paragraph_close') {
+    if (isMatchedToken(tokens[tokens.length - 1], 'paragraph', 'close')) {
       if (this.text[this.index - 1] === '\n') {
         isNewLineAtEnd = true;
         this.finalizeParagraph();
@@ -575,7 +576,7 @@ export default class MarkdownTokenizer {
 
     // unwrap final paragraph
     if (!isNewLineAtEnd && slicedTokens.length &&
-      slicedTokens[slicedTokens.length - 1].type === 'paragraph_close'
+      isMatchedToken(slicedTokens[slicedTokens.length - 1], 'paragraph', 'close')
     ) {
       this.inlineTokens = slicedTokens[slicedTokens.length - 2].children;
       slicedTokens = slicedTokens.slice(0, slicedTokens.length - 3);
@@ -705,11 +706,11 @@ export default class MarkdownTokenizer {
   }
 
   tagOpen(type, attributes = null, bbcode) {
-    return new Token(`${type}_open`, null, null, attributes, bbcode);
+    return new Token(type, null, null, attributes, 'open', bbcode);
   }
 
   tagClose(type) {
-    return new Token(`${type}_close`);
+    return new Token(type, null, null, null, 'close');
   }
 
   push(token) {

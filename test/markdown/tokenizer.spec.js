@@ -3,14 +3,14 @@ import { MarkdownTokenizer } from '../../src/markdown';
 
 function text(content) {
   return [
-    { type: 'paragraph_open' },
+    { type: 'paragraph', nesting: 'open' },
     {
       type: 'inline',
       children: [
         { type: 'text', content }
       ]
     },
-    { type: 'paragraph_close' }
+    { type: 'paragraph', nesting: 'close' }
   ];
 }
 
@@ -41,9 +41,9 @@ describe('MarkdownTokenizer', () => {
 
     it('\\n', () => {
       expect(MarkdownTokenizer.parse('\n')).to.eql([
-        { type: 'paragraph_open' },
+        { type: 'paragraph', nesting: 'open' },
         { type: 'inline', children: [] },
-        { type: 'paragraph_close' }
+        { type: 'paragraph', nesting: 'close' }
       ]);
     });
 
@@ -59,16 +59,16 @@ describe('MarkdownTokenizer', () => {
     describe('bold', () => {
       it('[b]zxc[/b]', () => {
         expect(MarkdownTokenizer.parse('[b]zxc[/b]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'bold_open', bbcode: '[b]' },
+              { type: 'bold', nesting: 'open', bbcode: '[b]' },
               { type: 'text', content: 'zxc' },
-              { type: 'bold_close' }
+              { type: 'bold', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -86,19 +86,19 @@ describe('MarkdownTokenizer', () => {
 
       // it('**zxc**', () => {
       //   expect(MarkdownTokenizer.parse('**zxc**')).to.eql([{
-      //     type: 'paragraph_open'
+      //     type: 'paragraph', nesting: 'open'
       //   }, {
       //     type: 'inline',
       //     children: [{
-      //       type: 'bold_open'
+      //       type: 'bold', nesting: 'open'
       //     }, {
       //       content: 'zxc',
       //       type: 'text'
       //     }, {
-      //       type: 'bold_close'
+      //       type: 'bold', nesting: 'close'
       //     }]
       //   }, {
-      //     type: 'paragraph_close'
+      //     type: 'paragraph', nesting: 'close'
       //   }]);
       // });
 
@@ -116,18 +116,18 @@ describe('MarkdownTokenizer', () => {
 
       it('a[b]zxc[/b]A', () => {
         expect(MarkdownTokenizer.parse('a[b]zxc[/b]A')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
               { type: 'text', content: 'a' },
-              { type: 'bold_open', bbcode: '[b]' },
+              { type: 'bold', nesting: 'open', bbcode: '[b]' },
               { type: 'text', content: 'zxc' },
-              { type: 'bold_close' },
+              { type: 'bold', nesting: 'close' },
               { type: 'text', content: 'A' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
     });
@@ -135,16 +135,16 @@ describe('MarkdownTokenizer', () => {
     describe('italic', () => {
       it('[i]zxc[/i]', () => {
         expect(MarkdownTokenizer.parse('[i]zxc[/i]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'italic_open', bbcode: '[i]' },
+              { type: 'italic', nesting: 'open', bbcode: '[i]' },
               { type: 'text', content: 'zxc' },
-              { type: 'italic_close' }
+              { type: 'italic', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -156,19 +156,19 @@ describe('MarkdownTokenizer', () => {
 
       // it('*zxc*', () => {
       //   expect(MarkdownTokenizer.parse('*zxc*')).to.eql([{
-      //     type: 'paragraph_open'
+      //     type: 'paragraph', nesting: 'open'
       //   }, {
       //     type: 'inline',
       //     children: [{
-      //       type: 'em_open'
+      //       type: 'em', nesting: 'open'
       //     }, {
       //       content: 'zxc',
       //       type: 'text'
       //     }, {
-      //       type: 'em_close'
+      //       type: 'em', nesting: 'close'
       //     }]
       //   }, {
-      //     type: 'paragraph_close'
+      //     type: 'paragraph', nesting: 'close'
       //   }]);
       // });
     });
@@ -176,16 +176,16 @@ describe('MarkdownTokenizer', () => {
     describe('underline', () => {
       it('[u]zxc[/u]', () => {
         expect(MarkdownTokenizer.parse('[u]zxc[/u]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'underline_open', bbcode: '[u]' },
+              { type: 'underline', nesting: 'open', bbcode: '[u]' },
               { type: 'text', content: 'zxc' },
-              { type: 'underline_close' }
+              { type: 'underline', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -199,16 +199,16 @@ describe('MarkdownTokenizer', () => {
     describe('strike', () => {
       it('[s]zxc[/s]', () => {
         expect(MarkdownTokenizer.parse('[s]zxc[/s]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'strike_open', bbcode: '[s]' },
+              { type: 'strike', nesting: 'open', bbcode: '[s]' },
               { type: 'text', content: 'zxc' },
-              { type: 'strike_close' }
+              { type: 'strike', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -222,20 +222,20 @@ describe('MarkdownTokenizer', () => {
     describe('inline_code', () => {
       it('`zxc`', () => {
         expect(MarkdownTokenizer.parse('`zxc`')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
               { type: 'code_inline', content: 'zxc' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
       it('qwe [code]zxc[/code]', () => {
         expect(MarkdownTokenizer.parse('qwe [code]zxc[/code]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
@@ -243,13 +243,13 @@ describe('MarkdownTokenizer', () => {
               { type: 'code_inline', content: 'zxc' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
       it('``zxc```', () => {
         expect(MarkdownTokenizer.parse('``zxc```')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
@@ -257,13 +257,13 @@ describe('MarkdownTokenizer', () => {
               { type: 'text', content: '`' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
       it('a`zxc`A', () => {
         expect(MarkdownTokenizer.parse('a`zxc`A')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
@@ -272,7 +272,7 @@ describe('MarkdownTokenizer', () => {
               { type: 'text', content: 'A' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -287,16 +287,16 @@ describe('MarkdownTokenizer', () => {
     describe('spoiler_inline', () => {
       it('||zxc||', () => {
         expect(MarkdownTokenizer.parse('||zxc||')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'spoiler_inline_open', bbcode: '||' },
+              { type: 'spoiler_inline', nesting: 'open', bbcode: '||' },
               { type: 'text', content: 'zxc' },
-              { type: 'spoiler_inline_close' }
+              { type: 'spoiler_inline', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -316,16 +316,16 @@ describe('MarkdownTokenizer', () => {
     describe('color', () => {
       it('[color=red]zxc[/color]', () => {
         expect(MarkdownTokenizer.parse('[color=red]zxc[/color]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'color_open', attrs: [['color', 'red']], bbcode: '[color=red]' },
+              { type: 'color', nesting: 'open', attrs: [['color', 'red']], bbcode: '[color=red]' },
               { type: 'text', content: 'zxc' },
-              { type: 'color_close' }
+              { type: 'color', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -345,16 +345,16 @@ describe('MarkdownTokenizer', () => {
     describe('size', () => {
       it('[size=20]zxc[/size]', () => {
         expect(MarkdownTokenizer.parse('[size=20]zxc[/size]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'size_open', attrs: [['size', '20']], bbcode: '[size=20]' },
+              { type: 'size', nesting: 'open', attrs: [['size', '20']], bbcode: '[size=20]' },
               { type: 'text', content: 'zxc' },
-              { type: 'size_close' }
+              { type: 'size', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -374,31 +374,31 @@ describe('MarkdownTokenizer', () => {
     describe('link_inline', () => {
       it('[url=https://ya.ru]zxc[/url]', () => {
         expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'link_inline_open', attrs: [['href', 'https://ya.ru']] },
+              { type: 'link_inline', nesting: 'open', attrs: [['href', 'https://ya.ru']] },
               { type: 'text', content: 'zxc' },
-              { type: 'link_inline_close' }
+              { type: 'link_inline', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
       it('[url=ya.ru]zxc[/url]', () => {
         expect(MarkdownTokenizer.parse('[url=ya.ru]zxc[/url]')).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
-              { type: 'link_inline_open', attrs: [['href', '//ya.ru']] },
+              { type: 'link_inline', nesting: 'open', attrs: [['href', '//ya.ru']] },
               { type: 'text', content: 'zxc' },
-              { type: 'link_inline_close' }
+              { type: 'link_inline', nesting: 'close' }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -420,62 +420,62 @@ describe('MarkdownTokenizer', () => {
     describe('blockquote', () => {
       it('> a', () => {
         expect(MarkdownTokenizer.parse('> a')).to.eql([
-          { type: 'blockquote_open' },
+          { type: 'blockquote', nesting: 'open' },
           ...text('a'),
-          { type: 'blockquote_close' }
+          { type: 'blockquote', nesting: 'close' }
         ]);
       });
 
       it('> a\\n> b\\n> c', () => {
         expect(MarkdownTokenizer.parse('> a\n> b\n> c')).to.eql([
-          { type: 'blockquote_open' },
+          { type: 'blockquote', nesting: 'open' },
           ...text('a'),
           ...text('b'),
           ...text('c'),
-          { type: 'blockquote_close' }
+          { type: 'blockquote', nesting: 'close' }
         ]);
       });
 
       it('> > a', () => {
         expect(MarkdownTokenizer.parse('> > a')).to.eql([
-          { type: 'blockquote_open' },
-          { type: 'blockquote_open' },
+          { type: 'blockquote', nesting: 'open' },
+          { type: 'blockquote', nesting: 'open' },
           ...text('a'),
-          { type: 'blockquote_close' },
-          { type: 'blockquote_close' }
+          { type: 'blockquote', nesting: 'close' },
+          { type: 'blockquote', nesting: 'close' }
         ]);
       });
 
       it('> > a\\n> b', () => {
         expect(MarkdownTokenizer.parse('> > a\n> b')).to.eql([
-          { type: 'blockquote_open' },
-          { type: 'blockquote_open' },
+          { type: 'blockquote', nesting: 'open' },
+          { type: 'blockquote', nesting: 'open' },
           ...text('a'),
-          { type: 'blockquote_close' },
+          { type: 'blockquote', nesting: 'close' },
           ...text('b'),
-          { type: 'blockquote_close' }
+          { type: 'blockquote', nesting: 'close' }
         ]);
       });
 
       it('> a\\n> > b\\n> > c', () => {
         expect(MarkdownTokenizer.parse('> a\n> > b\n> > c')).to.eql([
-          { type: 'blockquote_open' },
+          { type: 'blockquote', nesting: 'open' },
           ...text('a'),
-          { type: 'blockquote_open' },
+          { type: 'blockquote', nesting: 'open' },
           ...text('b'),
           ...text('c'),
-          { type: 'blockquote_close' },
-          { type: 'blockquote_close' }
+          { type: 'blockquote', nesting: 'close' },
+          { type: 'blockquote', nesting: 'close' }
         ]);
       });
 
       it('> [quote]\\n> a\\n> [/quote]', () => {
         expect(MarkdownTokenizer.parse('> [quote]\n> a\n> [/quote]')).to.eql([
-          { type: 'blockquote_open' },
-          { type: 'quote_open' },
+          { type: 'blockquote', nesting: 'open' },
+          { type: 'quote', nesting: 'open' },
           ...text('a'),
-          { type: 'quote_close' },
-          { type: 'blockquote_close' }
+          { type: 'quote', nesting: 'close' },
+          { type: 'blockquote', nesting: 'close' }
         ]);
       });
     });
@@ -483,67 +483,67 @@ describe('MarkdownTokenizer', () => {
     describe('bullet_list', () => {
       it('- a', () => {
         expect(MarkdownTokenizer.parse('- a')).to.eql([
-          { type: 'bullet_list_open' },
-          { type: 'list_item_open' },
+          { type: 'bullet_list', nesting: 'open' },
+          { type: 'list_item', nesting: 'open' },
           ...text('a'),
-          { type: 'list_item_close' },
-          { type: 'bullet_list_close' }
+          { type: 'list_item', nesting: 'close' },
+          { type: 'bullet_list', nesting: 'close' }
         ]);
       });
 
       it('- a\\n- b', () => {
         expect(MarkdownTokenizer.parse('- a\n- b')).to.eql([
-          { type: 'bullet_list_open' },
-          { type: 'list_item_open' },
+          { type: 'bullet_list', nesting: 'open' },
+          { type: 'list_item', nesting: 'open' },
           ...text('a'),
-          { type: 'list_item_close' },
-          { type: 'list_item_open' },
+          { type: 'list_item', nesting: 'close' },
+          { type: 'list_item', nesting: 'open' },
           ...text('b'),
-          { type: 'list_item_close' },
-          { type: 'bullet_list_close' }
+          { type: 'list_item', nesting: 'close' },
+          { type: 'bullet_list', nesting: 'close' }
         ]);
       });
 
       it('- test\\nn  zxc', () => {
         expect(MarkdownTokenizer.parse('- test\n  zxc')).to.eql([
-          { type: 'bullet_list_open' },
-          { type: 'list_item_open' },
+          { type: 'bullet_list', nesting: 'open' },
+          { type: 'list_item', nesting: 'open' },
           ...text('test'),
           ...text('zxc'),
-          { type: 'list_item_close' },
-          { type: 'bullet_list_close' }
+          { type: 'list_item', nesting: 'close' },
+          { type: 'bullet_list', nesting: 'close' }
         ]);
       });
 
       it('- > test', () => {
         expect(MarkdownTokenizer.parse('- > test')).to.eql([
-          { type: 'bullet_list_open' },
-          { type: 'list_item_open' },
-          { type: 'blockquote_open' },
+          { type: 'bullet_list', nesting: 'open' },
+          { type: 'list_item', nesting: 'open' },
+          { type: 'blockquote', nesting: 'open' },
           ...text('test'),
-          { type: 'blockquote_close' },
-          { type: 'list_item_close' },
-          { type: 'bullet_list_close' }
+          { type: 'blockquote', nesting: 'close' },
+          { type: 'list_item', nesting: 'close' },
+          { type: 'bullet_list', nesting: 'close' }
         ]);
       });
 
       it('[*] a', () => {
         expect(MarkdownTokenizer.parse('[*] a')).to.eql([
-          { type: 'bullet_list_open' },
-          { type: 'list_item_open' },
+          { type: 'bullet_list', nesting: 'open' },
+          { type: 'list_item', nesting: 'open' },
           ...text('a'),
-          { type: 'list_item_close' },
-          { type: 'bullet_list_close' }
+          { type: 'list_item', nesting: 'close' },
+          { type: 'bullet_list', nesting: 'close' }
         ]);
       });
 
       it('[*]a', () => {
         expect(MarkdownTokenizer.parse('[*]a')).to.eql([
-          { type: 'bullet_list_open' },
-          { type: 'list_item_open' },
+          { type: 'bullet_list', nesting: 'open' },
+          { type: 'list_item', nesting: 'open' },
           ...text('a'),
-          { type: 'list_item_close' },
-          { type: 'bullet_list_close' }
+          { type: 'list_item', nesting: 'close' },
+          { type: 'bullet_list', nesting: 'close' }
         ]);
       });
     });
@@ -609,7 +609,7 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse(
           '[img]https://test.com[/img]'
         )).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
@@ -619,7 +619,7 @@ describe('MarkdownTokenizer', () => {
               }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -627,7 +627,7 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse(
           '[poster]https://test.com[/poster]'
         )).to.eql([
-          { type: 'paragraph_open' },
+          { type: 'paragraph', nesting: 'open' },
           {
             type: 'inline',
             children: [
@@ -637,7 +637,7 @@ describe('MarkdownTokenizer', () => {
               }
             ]
           },
-          { type: 'paragraph_close' }
+          { type: 'paragraph', nesting: 'close' }
         ]);
       });
 
@@ -657,60 +657,60 @@ describe('MarkdownTokenizer', () => {
     describe('spoiler', () => {
       it('[spoiler]z[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]z[/spoiler]')).to.eql([
-          { type: 'spoiler_block_open' },
+          { type: 'spoiler_block', nesting: 'open' },
           ...text('z'),
-          { type: 'spoiler_block_close' }
+          { type: 'spoiler_block', nesting: 'close' }
         ]);
       });
 
       it('[spoiler=qw er]z[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([
-          { type: 'spoiler_block_open', attrs: [['label', 'qw er']] },
+          { type: 'spoiler_block', nesting: 'open', attrs: [['label', 'qw er']] },
           ...text('z'),
-          { type: 'spoiler_block_close' }
+          { type: 'spoiler_block', nesting: 'close' }
         ]);
       });
 
       // it('[spoiler=q[b]w[i]e[/i]r[/b]t]z[/spoiler]', () => {
       //   expect(MarkdownTokenizer.parse('[spoiler=q[b]w[i]e[/i]r[/b]t]z[/spoiler]')).to.eql([{
-      //     type: 'spoiler_block_open',
+      //     type: 'spoiler_block', nesting: 'open',
       //     attrs: [['label', 'q[b]w[i]e[/i]r[/b]t']]
       //   },
       //   ...text('z'),
       //   {
-      //     type: 'spoiler_block_close'
+      //     type: 'spoiler_block', nesting: 'close'
       //   }]);
       // });
 
       it('[spoiler=qw er]z[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([
-          { type: 'spoiler_block_open', attrs: [['label', 'qw er']] },
+          { type: 'spoiler_block', nesting: 'open', attrs: [['label', 'qw er']] },
           ...text('z'),
-          { type: 'spoiler_block_close' }
+          { type: 'spoiler_block', nesting: 'close' }
         ]);
       });
 
       it('[spoiler]\\nz\\n[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]\nz\n[/spoiler]')).to.eql([
-          { type: 'spoiler_block_open' },
+          { type: 'spoiler_block', nesting: 'open' },
           ...text('z'),
-          { type: 'spoiler_block_close' }
+          { type: 'spoiler_block', nesting: 'close' }
         ]);
       });
 
       it('[spoiler]\\nz[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]')).to.eql([
-          { type: 'spoiler_block_open' },
+          { type: 'spoiler_block', nesting: 'open' },
           ...text('z'),
-          { type: 'spoiler_block_close' }
+          { type: 'spoiler_block', nesting: 'close' }
         ]);
       });
 
       it('[spoiler]\\nz[/spoiler]qwe', () => {
         expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]qwe')).to.eql([
-          { type: 'spoiler_block_open' },
+          { type: 'spoiler_block', nesting: 'open' },
           ...text('z'),
-          { type: 'spoiler_block_close' },
+          { type: 'spoiler_block', nesting: 'close' },
           ...text('qwe')
         ]);
       });
@@ -719,69 +719,69 @@ describe('MarkdownTokenizer', () => {
     describe('quote', () => {
       it('[quote]z[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([
-          { type: 'quote_open' },
+          { type: 'quote', nesting: 'open' },
           ...text('z'),
-          { type: 'quote_close' }
+          { type: 'quote', nesting: 'close' }
         ]);
       });
 
       it('[quote]\\nz\\n[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote]\nz\n[/quote]')).to.eql([
-          { type: 'quote_open' },
+          { type: 'quote', nesting: 'open' },
           ...text('z'),
-          { type: 'quote_close' }
+          { type: 'quote', nesting: 'close' }
         ]);
       });
 
       it('q[quote]z[/quote]x', () => {
         expect(MarkdownTokenizer.parse('q[quote]z[/quote]x')).to.eql([
           ...text('q'),
-          { type: 'quote_open' },
+          { type: 'quote', nesting: 'open' },
           ...text('z'),
-          { type: 'quote_close' },
+          { type: 'quote', nesting: 'close' },
           ...text('x')
         ]);
       });
 
       it('[quote]z[/quote]q', () => {
         expect(MarkdownTokenizer.parse('[quote]z[/quote]q')).to.eql([
-          { type: 'quote_open' },
+          { type: 'quote', nesting: 'open' },
           ...text('z'),
-          { type: 'quote_close' },
+          { type: 'quote', nesting: 'close' },
           ...text('q')
         ]);
       });
 
       it('[quote=x]z[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote=x]z[/quote]')).to.eql([{
-          type: 'quote_open',
+          type: 'quote', nesting: 'open',
           attrs: [['nickname', 'x']]
         },
         ...text('z'),
         {
-          type: 'quote_close'
+          type: 'quote', nesting: 'close'
         }]);
       });
 
       it('[quote=t1;2;x]z[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote=t1;2;x]z[/quote]')).to.eql([{
-          type: 'quote_open',
+          type: 'quote', nesting: 'open',
           attrs: [['topic_id', 1], ['user_id', 2], ['nickname', 'x']]
         },
         ...text('z'),
         {
-          type: 'quote_close'
+          type: 'quote', nesting: 'close'
         }]);
       });
 
       it('[quote=m1;2;x]z[/quote]', () => {
         expect(MarkdownTokenizer.parse('[quote=m1;2;x]z[/quote]')).to.eql([{
-          type: 'quote_open',
+          type: 'quote', nesting: 'open',
           attrs: [['message_id', 1], ['user_id', 2], ['nickname', 'x']]
         },
         ...text('z'),
         {
-          type: 'quote_close'
+          type: 'quote', nesting: 'close'
         }]);
       });
     });
@@ -789,18 +789,18 @@ describe('MarkdownTokenizer', () => {
     describe('center', () => {
       it('[center]z[/center]', () => {
         expect(MarkdownTokenizer.parse('[center]z[/center]')).to.eql([
-          { type: 'center_open' },
+          { type: 'center', nesting: 'open' },
           ...text('z'),
-          { type: 'center_close' }
+          { type: 'center', nesting: 'close' }
         ]);
       });
 
       it('z[center]x[/center]c', () => {
         expect(MarkdownTokenizer.parse('z[center]x[/center]c')).to.eql([
           ...text('z'),
-          { type: 'center_open' },
+          { type: 'center', nesting: 'open' },
           ...text('x'),
-          { type: 'center_close' },
+          { type: 'center', nesting: 'close' },
           ...text('c')
         ]);
       });
@@ -809,18 +809,18 @@ describe('MarkdownTokenizer', () => {
     describe('right', () => {
       it('[right]z[/right]', () => {
         expect(MarkdownTokenizer.parse('[right]z[/right]')).to.eql([
-          { type: 'right_open' },
+          { type: 'right', nesting: 'open' },
           ...text('z'),
-          { type: 'right_close' }
+          { type: 'right', nesting: 'close' }
         ]);
       });
 
       it('z[right]x[/right]c', () => {
         expect(MarkdownTokenizer.parse('z[right]x[/right]c')).to.eql([
           ...text('z'),
-          { type: 'right_open' },
+          { type: 'right', nesting: 'open' },
           ...text('x'),
-          { type: 'right_close' },
+          { type: 'right', nesting: 'close' },
           ...text('c')
         ]);
       });
@@ -829,47 +829,47 @@ describe('MarkdownTokenizer', () => {
     describe('div', () => {
       it('[div]z[/div]', () => {
         expect(MarkdownTokenizer.parse('[div]z[/div]')).to.eql([
-          { type: 'div_open' },
+          { type: 'div', nesting: 'open' },
           ...text('z'),
-          { type: 'div_close' }
+          { type: 'div', nesting: 'close' }
         ]);
       });
 
       it('  [div]z[/div]', () => {
         expect(MarkdownTokenizer.parse('  [div]z[/div]')).to.eql([
-          { type: 'div_open' },
+          { type: 'div', nesting: 'open' },
           ...text('z'),
-          { type: 'div_close' }
+          { type: 'div', nesting: 'close' }
         ]);
       });
 
       it('[div][div]z[/div][/div]', () => {
         expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([
-          { type: 'div_open' },
-          { type: 'div_open' },
+          { type: 'div', nesting: 'open' },
+          { type: 'div', nesting: 'open' },
           ...text('z'),
-          { type: 'div_close' },
-          { type: 'div_close' }
+          { type: 'div', nesting: 'close' },
+          { type: 'div', nesting: 'close' }
         ]);
       });
 
       it('[div]  [div]z[/div][/div]', () => {
         expect(MarkdownTokenizer.parse('[div]  [div]z[/div][/div]')).to.eql([
-          { type: 'div_open' },
-          { type: 'div_open' },
+          { type: 'div', nesting: 'open' },
+          { type: 'div', nesting: 'open' },
           ...text('z'),
-          { type: 'div_close' },
-          { type: 'div_close' }
+          { type: 'div', nesting: 'close' },
+          { type: 'div', nesting: 'close' }
         ]);
       });
 
       it('[div][div]z[/div][/div]', () => {
         expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([
-          { type: 'div_open' },
-          { type: 'div_open' },
+          { type: 'div', nesting: 'open' },
+          { type: 'div', nesting: 'open' },
           ...text('z'),
-          { type: 'div_close' },
-          { type: 'div_close' }
+          { type: 'div', nesting: 'close' },
+          { type: 'div', nesting: 'close' }
         ]);
       });
 
@@ -877,9 +877,9 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse(
           '[div data-test=qwe]z[/div]'
         )).to.eql([
-          { type: 'div_open', attrs: [['data', [['data-test', 'qwe']]]] },
+          { type: 'div', nesting: 'open', attrs: [['data', [['data-test', 'qwe']]]] },
           ...text('z'),
-          { type: 'div_close' }
+          { type: 'div', nesting: 'close' }
         ]);
       });
 
@@ -887,12 +887,12 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse(
           '[div data-test data-fofo]z[/div]'
         )).to.eql([{
-          type: 'div_open',
+          type: 'div', nesting: 'open',
           attrs: [['data', [['data-test', ''], ['data-fofo', '']]]]
         },
         ...text('z'),
         {
-          type: 'div_close'
+          type: 'div', nesting: 'close'
         }]);
       });
 
@@ -900,7 +900,7 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse(
           '[div=aaa bb-cd_e data-test data-fofo]z[/div]'
         )).to.eql([{
-          type: 'div_open',
+          type: 'div', nesting: 'open',
           attrs: [
             ['class', 'aaa bb-cd_e'],
             ['data', [['data-test', ''], ['data-fofo', '']]]
@@ -908,15 +908,15 @@ describe('MarkdownTokenizer', () => {
         },
         ...text('z'),
         {
-          type: 'div_close'
+          type: 'div', nesting: 'close'
         }]);
       });
 
       it('[div]q[div]z[/div][/div]', () => {
         expect(MarkdownTokenizer.parse('[div]q[div]z[/div][/div]')).to.eql([
-          { type: 'div_open' },
+          { type: 'div', nesting: 'open' },
           ...text('q[div]z[/div]'),
-          { type: 'div_close' }
+          { type: 'div', nesting: 'close' }
         ]);
       });
 
@@ -998,11 +998,11 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse(
           '[url=//ya.ru][quote]z[/quote][/url]'
         )).to.eql([
-          { type: 'link_block_open', attrs: [['href', '//ya.ru']] },
-          { type: 'quote_open' },
+          { type: 'link_block', nesting: 'open', attrs: [['href', '//ya.ru']] },
+          { type: 'quote', nesting: 'open' },
           ...text('z'),
-          { type: 'quote_close' },
-          { type: 'link_block_close' }
+          { type: 'quote', nesting: 'close' },
+          { type: 'link_block', nesting: 'close' }
         ]);
       });
 
@@ -1010,11 +1010,11 @@ describe('MarkdownTokenizer', () => {
         expect(MarkdownTokenizer.parse(
           '[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]'
         )).to.eql([
-          { type: 'link_block_open', attrs: [['href', '//ya.ru']] },
-          { type: 'quote_open' },
+          { type: 'link_block', nesting: 'open', attrs: [['href', '//ya.ru']] },
+          { type: 'quote', nesting: 'open' },
           ...text('z'),
-          { type: 'quote_close' },
-          { type: 'link_block_close' }]);
+          { type: 'quote', nesting: 'close' },
+          { type: 'link_block', nesting: 'close' }]);
       });
     });
   });
@@ -1024,11 +1024,11 @@ describe('MarkdownTokenizer', () => {
   //     expect(MarkdownTokenizer.parse(
   //       '[b][center]Приветствую тебя, путник.[/center][/b]'
   //     )).to.eq([
-  //       { type: 'center_open' },
-  //       { type: 'bold_open' },
+  //       { type: 'center', nesting: 'open' },
+  //       { type: 'bold', nesting: 'open' },
   //       ...text('z'),
-  //       { type: 'bold_close' },
-  //       { type: 'center_close' }
+  //       { type: 'bold', nesting: 'close' },
+  //       { type: 'center', nesting: 'close' }
   //     ]);
   //   });
   // });

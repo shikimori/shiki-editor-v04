@@ -4,6 +4,7 @@ import {
   extractUntil,
   hasInlineSequence,
   extractMarkdownLanguage,
+  isMatchedToken,
   rollbackUnclosedMarks
 } from '../../src/markdown/tokenizer_helpers';
 
@@ -52,23 +53,41 @@ describe('tokenizer_helpers', () => {
     expect(extractMarkdownLanguage('```test\n', 3)).to.eq('test');
   });
 
-  // it('rollbackUnclosedMarks', () => {
-  //   expect(rollbackUnclosedMarks([
-  //     { type: 'bold_open' },
-  //     { type: 'text', content: 'zxc' },
-  //     { type: 'bold_close' }
-  //   ])).to.eql([
-  //     { type: 'bold_open' },
-  //     { type: 'text', content: 'zxc' },
-  //     { type: 'bold_close' }
-  //   ]);
-  // 
-  //   expect(rollbackUnclosedMarks([
-  //     { type: 'bold_open' },
-  //     { type: 'text', content: 'zxc' }
-  //   ])).to.eql([
-  //     { type: 'text', content: '[b]' },
-  //     { type: 'text', content: 'zxc' }
-  //   ]);
-  // });
+  it('isMatchedToken', () => {
+    expect(isMatchedToken({ type: 'bold', nesting: 'open' }, 'bold', 'open'))
+      .to.eq(true);
+
+    expect(isMatchedToken(null, 'bold', 'open'))
+      .to.eq(false);
+
+    expect(isMatchedToken({ type: 'bold', nesting: 'open' }, 'size', 'open'))
+      .to.eq(false);
+    expect(isMatchedToken({ type: 'bold', nesting: 'open' }, 'bold', 'close'))
+      .to.eq(false);
+
+    expect(isMatchedToken({ type: 'size', nesting: 'open' }, 'bold', 'open'))
+      .to.eq(false);
+    expect(isMatchedToken({ type: 'bold', nesting: 'close' }, 'bold', 'open'))
+      .to.eq(false);
+  });
+
+  it('rollbackUnclosedMarks', () => {
+    expect(rollbackUnclosedMarks([
+      { type: 'bold', nesting: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', nesting: 'close' }
+    ])).to.eql([
+      { type: 'bold', nesting: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', nesting: 'close' }
+    ]);
+
+    // expect(rollbackUnclosedMarks([
+      // { type: 'bold', nesting: 'open', bbcode: '[b]' },
+      // { type: 'text', content: 'zxc' },
+    // ])).to.eql([
+    //   { type: 'text', content: '[b]' },
+    //   { type: 'text', content: 'zxc' }
+    // ]);
+  });
 });

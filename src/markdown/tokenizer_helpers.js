@@ -71,6 +71,14 @@ export function extractMarkdownLanguage(text, startIndex) {
   return null;
 }
 
+export function isMatchedToken(token, type, nesting) {
+  return !!token && token.type === type && token.nesting === nesting;
+}
+
 export function rollbackUnclosedMarks(tokens) {
+  // tokens.forEach((token, index) => {
+  //   console.log(token, index);
+  // });
   return tokens;
 }
+// window.rollbackUnclosedMarks = rollbackUnclosedMarks;
