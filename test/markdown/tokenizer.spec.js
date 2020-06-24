@@ -2,17 +2,17 @@ import { expect } from 'chai';
 import { MarkdownTokenizer } from '../../src/markdown';
 
 function text(content) {
-  return [{
-    type: 'paragraph_open'
-  }, {
-    type: 'inline',
-    children: [{
-      content,
-      type: 'text'
-    }]
-  }, {
-    type: 'paragraph_close'
-  }];
+  return [
+    { type: 'paragraph_open' },
+    {
+      type: 'inline',
+      children: [{
+        content,
+        type: 'text'
+      }]
+    },
+    { type: 'paragraph_close' }
+  ];
 }
 
 describe('MarkdownTokenizer', () => {
@@ -59,21 +59,18 @@ describe('MarkdownTokenizer', () => {
   describe('marks', () => {
     describe('bold', () => {
       it('[b]zxc[/b]', () => {
-        expect(MarkdownTokenizer.parse('[b]zxc[/b]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'bold_open'
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'bold_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[b]zxc[/b]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'bold_open' },
+              { content: 'zxc', type: 'text' },
+              { type: 'bold_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('[b]z', () => {
@@ -119,47 +116,37 @@ describe('MarkdownTokenizer', () => {
       // });
 
       it('a[b]zxc[/b]A', () => {
-        expect(MarkdownTokenizer.parse('a[b]zxc[/b]A')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            content: 'a',
-            type: 'text'
-          }, {
-            type: 'bold_open'
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'bold_close'
-          }, {
-            content: 'A',
-            type: 'text'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('a[b]zxc[/b]A')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { content: 'a', type: 'text' },
+              { type: 'bold_open' },
+              { content: 'zxc', type: 'text' },
+              { type: 'bold_close' },
+              { content: 'A', type: 'text' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
     });
 
     describe('italic', () => {
       it('[i]zxc[/i]', () => {
-        expect(MarkdownTokenizer.parse('[i]zxc[/i]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'italic_open'
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'italic_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[i]zxc[/i]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'italic_open' },
+              { content: 'zxc', type: 'text' },
+              { type: 'italic_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('z[/i]', () => {
@@ -189,21 +176,18 @@ describe('MarkdownTokenizer', () => {
 
     describe('underline', () => {
       it('[u]zxc[/u]', () => {
-        expect(MarkdownTokenizer.parse('[u]zxc[/u]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'underline_open'
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'underline_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[u]zxc[/u]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'underline_open' },
+              { content: 'zxc', type: 'text' },
+              { type: 'underline_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('z[/u]', () => {
@@ -215,21 +199,18 @@ describe('MarkdownTokenizer', () => {
 
     describe('strike', () => {
       it('[s]zxc[/s]', () => {
-        expect(MarkdownTokenizer.parse('[s]zxc[/s]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'strike_open'
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'strike_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[s]zxc[/s]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'strike_open' },
+              { content: 'zxc', type: 'text' },
+              { type: 'strike_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('z[/s]', () => {
@@ -241,71 +222,59 @@ describe('MarkdownTokenizer', () => {
 
     describe('inline_code', () => {
       it('`zxc`', () => {
-        expect(MarkdownTokenizer.parse('`zxc`')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            content: 'zxc',
-            type: 'code_inline'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('`zxc`')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { content: 'zxc', type: 'code_inline' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('qwe [code]zxc[/code]', () => {
-        expect(MarkdownTokenizer.parse('qwe [code]zxc[/code]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            content: 'qwe ',
-            type: 'text'
-          }, {
-            content: 'zxc',
-            type: 'code_inline'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('qwe [code]zxc[/code]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { content: 'qwe ', type: 'text' },
+              { content: 'zxc', type: 'code_inline' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('``zxc```', () => {
-        expect(MarkdownTokenizer.parse('``zxc```')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            content: 'zxc',
-            type: 'code_inline'
-          }, {
-            content: '`',
-            type: 'text'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('``zxc```')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { content: 'zxc', type: 'code_inline' },
+              { content: '`', type: 'text' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('a`zxc`A', () => {
-        expect(MarkdownTokenizer.parse('a`zxc`A')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            content: 'a',
-            type: 'text'
-          }, {
-            content: 'zxc',
-            type: 'code_inline'
-          }, {
-            content: 'A',
-            type: 'text'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('a`zxc`A')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { content: 'a', type: 'text' },
+              { content: 'zxc', type: 'code_inline' },
+              { content: 'A', type: 'text' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('z`zxc', () => {
@@ -318,21 +287,18 @@ describe('MarkdownTokenizer', () => {
 
     describe('spoiler_inline', () => {
       it('||zxc||', () => {
-        expect(MarkdownTokenizer.parse('||zxc||')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'spoiler_inline_open'
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'spoiler_inline_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('||zxc||')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'spoiler_inline_open' },
+              { content: 'zxc', type: 'text' },
+              { type: 'spoiler_inline_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('||z', () => {
@@ -350,22 +316,18 @@ describe('MarkdownTokenizer', () => {
 
     describe('color', () => {
       it('[color=red]zxc[/color]', () => {
-        expect(MarkdownTokenizer.parse('[color=red]zxc[/color]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'color_open',
-            attrs: [['color', 'red']]
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'color_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[color=red]zxc[/color]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'color_open', attrs: [['color', 'red']] },
+              { content: 'zxc', type: 'text' },
+              { type: 'color_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('[color=red]z', () => {
@@ -383,22 +345,18 @@ describe('MarkdownTokenizer', () => {
 
     describe('size', () => {
       it('[size=20]zxc[/size]', () => {
-        expect(MarkdownTokenizer.parse('[size=20]zxc[/size]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'size_open',
-            attrs: [['size', '20']]
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'size_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[size=20]zxc[/size]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'size_open', attrs: [['size', '20']] },
+              { content: 'zxc', type: 'text' },
+              { type: 'size_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('[size=20]z', () => {
@@ -416,41 +374,33 @@ describe('MarkdownTokenizer', () => {
 
     describe('link_inline', () => {
       it('[url=https://ya.ru]zxc[/url]', () => {
-        expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'link_inline_open',
-            attrs: [['href', 'https://ya.ru']]
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'link_inline_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[url=https://ya.ru]zxc[/url]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'link_inline_open', attrs: [['href', 'https://ya.ru']] },
+              { content: 'zxc', type: 'text' },
+              { type: 'link_inline_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('[url=ya.ru]zxc[/url]', () => {
-        expect(MarkdownTokenizer.parse('[url=ya.ru]zxc[/url]')).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'link_inline_open',
-            attrs: [['href', '//ya.ru']]
-          }, {
-            content: 'zxc',
-            type: 'text'
-          }, {
-            type: 'link_inline_close'
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[url=ya.ru]zxc[/url]')).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'link_inline_open', attrs: [['href', '//ya.ru']] },
+              { content: 'zxc', type: 'text' },
+              { type: 'link_inline_close' }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('[url=a]z', () => {
@@ -659,33 +609,37 @@ describe('MarkdownTokenizer', () => {
       it('[img]https://test.com[/img]', () => {
         expect(MarkdownTokenizer.parse(
           '[img]https://test.com[/img]'
-        )).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'image',
-            attrs: [['src', 'https://test.com'], ['isPoster', false]]
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        )).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              {
+                type: 'image',
+                attrs: [['src', 'https://test.com'], ['isPoster', false]]
+              }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('[poster]https://test.com[/poster]', () => {
         expect(MarkdownTokenizer.parse(
           '[poster]https://test.com[/poster]'
-        )).to.eql([{
-          type: 'paragraph_open'
-        }, {
-          type: 'inline',
-          children: [{
-            type: 'image',
-            attrs: [['src', 'https://test.com'], ['isPoster', true]]
-          }]
-        }, {
-          type: 'paragraph_close'
-        }]);
+        )).to.eql([
+          { type: 'paragraph_open' },
+          {
+            type: 'inline',
+            children: [
+              {
+                type: 'image',
+                attrs: [['src', 'https://test.com'], ['isPoster', true]]
+              }
+            ]
+          },
+          { type: 'paragraph_close' }
+        ]);
       });
 
       it('[img]zxc', () => {
@@ -948,7 +902,10 @@ describe('MarkdownTokenizer', () => {
           '[div=aaa bb-cd_e data-test data-fofo]z[/div]'
         )).to.eql([{
           type: 'div_open',
-          attrs: [['class', 'aaa bb-cd_e'], ['data', [['data-test', ''], ['data-fofo', '']]]]
+          attrs: [
+            ['class', 'aaa bb-cd_e'],
+            ['data', [['data-test', ''], ['data-fofo', '']]]
+          ]
         },
         ...text('z'),
         {
