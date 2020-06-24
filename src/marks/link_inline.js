@@ -23,7 +23,7 @@ export default class LinkInline extends Mark {
       inclusive: false,
       parseDOM: [
         {
-          tag: 'a[href]',
+          tag: 'a[href]:not(.prosemirror-link_block)',
           getAttrs: node => ({
             href: node.getAttribute('href')
           })
@@ -95,9 +95,7 @@ export default class LinkInline extends Mark {
   get markdownParserToken() {
     return {
       mark: 'link_inline',
-      getAttrs: token => ({
-        href: token.attrGet('href')
-      })
+      getAttrs: token => token.serializeAttributes()
     };
   }
 

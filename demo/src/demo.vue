@@ -39,7 +39,10 @@ export default {
     baseUrl: 'https://shikimori.one',
     isColumn1: false,
     isColumn2: true,
-    text2: `[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]
+    text2: `a
+[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]
+b
+[url=//ya.ru]test[/url]
 `,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t

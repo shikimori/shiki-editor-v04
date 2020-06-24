@@ -1,4 +1,5 @@
 import { Node } from '../base';
+import { fixUrl } from '../utils';
 
 export default class LinkBlock extends Node {
   get name() {
@@ -24,8 +25,10 @@ export default class LinkBlock extends Node {
       toDOM: (node) => [
         'a',
         {
-          'data-link_block': '',
-          ...node.attrs
+          href: fixUrl(node.attrs.href),
+          class: 'b-link prosemirror-link_block',
+          rel: 'noopener noreferrer nofollow',
+          target: '_blank'
         },
         0
       ]
@@ -40,10 +43,9 @@ export default class LinkBlock extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.renderBlock(node, 'url', `=${node.attrs.href}`);
-
     // state.write(`[url=${node.attrs.href}]`);
     // state.renderContent(node);
     // state.write('[/url]');
+    state.renderBlock(node, 'url', `=${node.attrs.href}`);
   }
 }
