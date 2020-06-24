@@ -606,12 +606,6 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
 
-      it('[code]\\nzxc\\n[/code]', () => {
-        expect(MarkdownTokenizer.parse('[code]\nzxc\n[/code]')).to.eql([
-          { content: 'zxc', type: 'code_block' }
-        ]);
-      });
-
       it('```\\nzxc\\nvbn\\n```', () => {
         expect(MarkdownTokenizer.parse('```\nzxc\nvbn\n```')).to.eql([
           { content: 'zxc\nvbn', type: 'code_block' }
@@ -643,6 +637,20 @@ describe('MarkdownTokenizer', () => {
       it('```ruby\\nzxc\\n```', () => {
         expect(MarkdownTokenizer.parse('```ruby\nzxc\n```')).to.eql([
           { content: 'zxc', type: 'code_block', attrs: [['language', 'ruby']] }
+        ]);
+      });
+
+      it('[code]\\nzxc\\n[/code]', () => {
+        expect(MarkdownTokenizer.parse('[code]\nzxc\n[/code]')).to.eql([
+          { content: 'zxc', type: 'code_block' }
+        ]);
+      });
+
+      it('q[code=css]w[/code]e', () => {
+        expect(MarkdownTokenizer.parse('q[code=css]w[/code]e')).to.eql([
+          ...text('q'),
+          { content: 'w', type: 'code_block', attrs: [['language', 'css']] },
+          ...text('e')
         ]);
       });
     });

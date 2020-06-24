@@ -154,7 +154,7 @@ export default class MarkdownTokenizer {
 
         switch (seq3) {
           case '```':
-            this.processCodeBlock(seq3, '\n```');
+            this.processCodeBlock(seq3, '\n```', null, true);
             break outer;
         }
 
@@ -217,11 +217,11 @@ export default class MarkdownTokenizer {
         if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           const meta = parseCodeMeta(match[1]);
           if (isStart || meta) {
-            isProcessed = this.processCodeBlock(bbcode, '[/code]', meta);
-            if (isProcessed) {
-              if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-              return;
-            }
+            isProcessed = this.processCodeBlock(
+              bbcode, '[/code]', meta,
+              isStart, isOnlySpacingsBefore
+            );
+            if (isProcessed) { return; }
           }
         }
 
@@ -649,7 +649,13 @@ export default class MarkdownTokenizer {
     this.nestedSequence = nestedSequenceBackup;
   }
 
-  processCodeBlock(startSequence, endSequence, meta) {
+  processCodeBlock(
+    startSequence,
+    endSequence,
+    meta,
+    isStart,
+    isOnlySpacingsBefore
+  ) {
     const isMarkdown = startSequence === '```';
     let index = this.index + startSequence.length;
     let language;
@@ -690,8 +696,16 @@ export default class MarkdownTokenizer {
     const languageAttr = language ? [['language', language]] : null;
     index += endSequence.length;
 
+    if (isOnlySpacingsBefore) {
+      this.inlineTokens = [];
+    } else if (!isStart) {
+      this.finalizeParagraph();
+    }
+
     this.push(new Token('code_block', text, null, languageAttr));
     this.next(index - this.index, true);
+
+    return true;
   }
 
   processHr(bbcode) {
