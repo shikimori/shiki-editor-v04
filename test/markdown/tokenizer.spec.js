@@ -65,7 +65,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'bold', nesting: 'open', bbcode: '[b]' },
               { type: 'text', content: 'zxc' },
-              { type: 'bold', nesting: 'close' }
+              { type: 'bold', nesting: 'close', bbcode: '[/b]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -95,7 +95,7 @@ describe('MarkdownTokenizer', () => {
       //       content: 'zxc',
       //       type: 'text'
       //     }, {
-      //       type: 'bold', nesting: 'close'
+      //       type: 'bold', nesting: 'close', bbcode: '[/b]'
       //     }]
       //   }, {
       //     type: 'paragraph', nesting: 'close'
@@ -123,7 +123,7 @@ describe('MarkdownTokenizer', () => {
               { type: 'text', content: 'a' },
               { type: 'bold', nesting: 'open', bbcode: '[b]' },
               { type: 'text', content: 'zxc' },
-              { type: 'bold', nesting: 'close' },
+              { type: 'bold', nesting: 'close', bbcode: '[/b]' },
               { type: 'text', content: 'A' }
             ]
           },
@@ -141,7 +141,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'italic', nesting: 'open', bbcode: '[i]' },
               { type: 'text', content: 'zxc' },
-              { type: 'italic', nesting: 'close' }
+              { type: 'italic', nesting: 'close', bbcode: '[/i]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -182,7 +182,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'underline', nesting: 'open', bbcode: '[u]' },
               { type: 'text', content: 'zxc' },
-              { type: 'underline', nesting: 'close' }
+              { type: 'underline', nesting: 'close', bbcode: '[/u]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -205,7 +205,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'strike', nesting: 'open', bbcode: '[s]' },
               { type: 'text', content: 'zxc' },
-              { type: 'strike', nesting: 'close' }
+              { type: 'strike', nesting: 'close', bbcode: '[/s]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -293,7 +293,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'spoiler_inline', nesting: 'open', bbcode: '||' },
               { type: 'text', content: 'zxc' },
-              { type: 'spoiler_inline', nesting: 'close' }
+              { type: 'spoiler_inline', nesting: 'close', bbcode: '||' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -322,7 +322,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'color', nesting: 'open', attrs: [['color', 'red']], bbcode: '[color=red]' },
               { type: 'text', content: 'zxc' },
-              { type: 'color', nesting: 'close' }
+              { type: 'color', nesting: 'close', bbcode: '[/color]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -351,7 +351,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'size', nesting: 'open', attrs: [['size', '20']], bbcode: '[size=20]' },
               { type: 'text', content: 'zxc' },
-              { type: 'size', nesting: 'close' }
+              { type: 'size', nesting: 'close', bbcode: '[/size]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -380,7 +380,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'link_inline', nesting: 'open', attrs: [['href', 'https://ya.ru']] },
               { type: 'text', content: 'zxc' },
-              { type: 'link_inline', nesting: 'close' }
+              { type: 'link_inline', nesting: 'close', bbcode: '[/url]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -395,7 +395,7 @@ describe('MarkdownTokenizer', () => {
             children: [
               { type: 'link_inline', nesting: 'open', attrs: [['href', '//ya.ru']] },
               { type: 'text', content: 'zxc' },
-              { type: 'link_inline', nesting: 'close' }
+              { type: 'link_inline', nesting: 'close', bbcode: '[/url]' }
             ]
           },
           { type: 'paragraph', nesting: 'close' }
@@ -1025,9 +1025,9 @@ describe('MarkdownTokenizer', () => {
   //       '[b][center]Приветствую тебя, путник.[/center][/b]'
   //     )).to.eq([
   //       { type: 'center', nesting: 'open' },
-  //       { type: 'bold', nesting: 'open' },
+  //       { type: 'bold', nesting: 'open', bbcode: '[b]' },
   //       ...text('z'),
-  //       { type: 'bold', nesting: 'close' },
+  //       { type: 'bold', nesting: 'close', bbcode: '[/b]' },
   //       { type: 'center', nesting: 'close' }
   //     ]);
   //   });

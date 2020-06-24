@@ -383,7 +383,7 @@ export default class MarkdownTokenizer {
     if (this.lastMark !== openBbcode) { return false; }
 
     this.marksStack.pop();
-    this.inlineTokens.push(this.tagClose(type));
+    this.inlineTokens.push(this.tagClose(type, closeBbcode));
     this.next(closeBbcode.length);
     return true;
   }
@@ -709,8 +709,8 @@ export default class MarkdownTokenizer {
     return new Token(type, null, null, attributes, 'open', bbcode);
   }
 
-  tagClose(type) {
-    return new Token(type, null, null, null, 'close');
+  tagClose(type, bbcode) {
+    return new Token(type, null, null, null, 'close', bbcode);
   }
 
   push(token) {
