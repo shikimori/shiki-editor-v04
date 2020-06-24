@@ -435,8 +435,14 @@ export default class MarkdownTokenizer {
   }
 
   processLinkBlock(bbcode, meta) {
-    const content =
-      extractUntil(this.text, '[/url]', this.index + bbcode.length);
+    const isNewLineAhead = this.text[this.index + bbcode.length] === '\n';
+    const content = extractUntil(
+      this.text,
+      '[/url]',
+      this.index + bbcode.length,
+      null,
+      isNewLineAhead
+    );
     if (!this.BLOCK_LINK_FEATURE_REGEXP.test(content)) { return false; }
 
     return this.processBlock('link_block', bbcode, '[/url]', meta);

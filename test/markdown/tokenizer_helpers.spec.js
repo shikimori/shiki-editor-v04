@@ -25,6 +25,7 @@ describe('tokenizer_helpers', () => {
     expect(extractUntil('te1st', 'st', 0)).to.eq('te1');
 
     expect(extractUntil('te1\nst', 'st', 0)).to.eq(null);
+    expect(extractUntil('te1\nst2', '2', 0, null, true)).to.eq('te1\nst');
 
     expect(extractUntil('te1st', '1', 0, 99)).to.eq('te');
     expect(extractUntil('te1st', '1', 0, 1)).to.eq(null);
