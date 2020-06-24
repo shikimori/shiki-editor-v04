@@ -7,7 +7,7 @@ import {
   extractUntil,
   hasInlineSequence,
   isMatchedToken,
-  fixUnbalancedTokens
+  rollbackUnbalancedTokens
 } from './tokenizer_helpers';
 import {
   parseCodeMeta,
@@ -743,7 +743,7 @@ export default class MarkdownTokenizer {
 
     this.push(this.tagOpen('paragraph'));
     this.push(
-      new Token('inline', null, fixUnbalancedTokens(this.inlineTokens))
+      new Token('inline', null, rollbackUnbalancedTokens(this.inlineTokens))
     );
     this.push(this.tagClose('paragraph'));
 

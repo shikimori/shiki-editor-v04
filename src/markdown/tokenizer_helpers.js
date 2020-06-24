@@ -75,7 +75,7 @@ export function isMatchedToken(token, type, direction) {
   return !!token && token.type === type && token.direction === direction;
 }
 
-export function fixUnbalancedTokens(tokens) {
+export function rollbackUnbalancedTokens(tokens) {
   const cache = {};
 
   tokens.forEach((token, index) => {
