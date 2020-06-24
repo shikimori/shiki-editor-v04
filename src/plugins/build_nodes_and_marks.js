@@ -13,6 +13,7 @@ import {
   Quote,
   Right,
   SpoilerBlock,
+  SizeBlock,
   Text
 } from '../nodes';
 
@@ -45,6 +46,7 @@ export default function(editor) {
     new Center(),
     new Right(),
     new LinkBlock(),
+    new SizeBlock(),
     new Blockquote(),
     new BulltList(),
     new CodeBlock(),
