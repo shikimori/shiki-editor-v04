@@ -51,7 +51,6 @@ export default class SpoilerBlock extends Node {
     return nodeIsActive(type, state);
   }
 
-
   get markdownParserToken() {
     return {
       block: this.name,

@@ -13,9 +13,6 @@ export default class LinkBlock extends Node {
       content: 'block+',
       group: 'block',
       draggable: false,
-      // parseDOM: [{
-      //   tag: 'center'
-      // }],
       parseDOM: [
         {
           tag: 'a[href]',
@@ -24,11 +21,29 @@ export default class LinkBlock extends Node {
           })
         }
       ],
-      toDOM: (node) => ['a', { ...node.attrs }, 0]
+      toDOM: (node) => [
+        'a',
+        {
+          'data-link_block': '',
+          ...node.attrs
+        },
+        0
+      ]
     };
   }
 
-  // markdownSerialize(state, node) {
-  //   state.renderBlock(node, 'center');
-  // }
+  get markdownParserToken() {
+    return {
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
+    };
+  }
+
+  markdownSerialize(state, node) {
+    state.renderBlock(node, 'url', `=${node.attrs.href}`);
+
+    // state.write(`[url=${node.attrs.href}]`);
+    // state.renderContent(node);
+    // state.write('[/url]');
+  }
 }

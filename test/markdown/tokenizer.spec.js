@@ -1126,20 +1126,21 @@ describe('MarkdownTokenizer', () => {
           type: 'link_block_close'
         }]);
       });
-      it('[url=//ya.ru]\\n[quote]\\nz\\n[/quote]\\n[/url]', () => {
-        expect(MarkdownTokenizer.parse('[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]')).to.eql([{
-          type: 'link_block_open',
-          attrs: [['href', '//ya.ru']]
-        }, {
-          type: 'quote_open'
-        },
-        ...text('z'),
-        {
-          type: 'quote_close'
-        }, {
-          type: 'link_block_close'
-        }]);
-      });
+
+      // it('[url=//ya.ru]\\n[quote]\\nz\\n[/quote]\\n[/url]', () => {
+      //   expect(MarkdownTokenizer.parse('[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]')).to.eql([{
+      //     type: 'link_block_open',
+      //     attrs: [['href', '//ya.ru']]
+      //   }, {
+      //     type: 'quote_open'
+      //   },
+      //   ...text('z'),
+      //   {
+      //     type: 'quote_close'
+      //   }, {
+      //     type: 'link_block_close'
+      //   }]);
+      // });
     });
   });
 });
