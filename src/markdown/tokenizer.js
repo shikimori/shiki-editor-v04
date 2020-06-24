@@ -376,6 +376,7 @@ export default class MarkdownTokenizer {
     this.marksStack.push(this.MARK_STACK_MAPPINGS[type] || openBbcode);
     this.inlineTokens.push(this.tagOpen(type, attributes, openBbcode));
     this.next(openBbcode.length);
+
     return true;
   }
 
@@ -385,6 +386,7 @@ export default class MarkdownTokenizer {
     this.marksStack.pop();
     this.inlineTokens.push(this.tagClose(type, closeBbcode));
     this.next(closeBbcode.length);
+
     return true;
   }
 
@@ -435,7 +437,7 @@ export default class MarkdownTokenizer {
 
     this.marksStack.push('[url]');
     this.inlineTokens.push(
-      this.tagOpen('link_inline', attrs)
+      this.tagOpen('link_inline', attrs, bbcode)
     );
     this.next(bbcode.length);
     return true;

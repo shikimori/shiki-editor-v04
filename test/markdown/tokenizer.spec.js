@@ -378,7 +378,12 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'link_inline', nesting: 'open', attrs: [['href', 'https://ya.ru']] },
+              {
+                type: 'link_inline',
+                nesting: 'open',
+                bbcode: '[url=https://ya.ru]',
+                attrs: [['href', 'https://ya.ru']]
+              },
               { type: 'text', content: 'zxc' },
               { type: 'link_inline', nesting: 'close', bbcode: '[/url]' }
             ]
@@ -393,7 +398,12 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'link_inline', nesting: 'open', attrs: [['href', '//ya.ru']] },
+              {
+                type: 'link_inline',
+                nesting: 'open',
+                bbcode: '[url=ya.ru]',
+                attrs: [['href', '//ya.ru']]
+              },
               { type: 'text', content: 'zxc' },
               { type: 'link_inline', nesting: 'close', bbcode: '[/url]' }
             ]
