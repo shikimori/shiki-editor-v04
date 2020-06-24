@@ -1,5 +1,4 @@
 import Token from './token';
-import flatten from 'lodash/flatten';
 
 import {
   extractBbCode,
@@ -60,7 +59,7 @@ export default class MarkdownTokenizer {
       if (this.isExitSequence) { break; }
     }
 
-    return flatten(this.tokens);
+    return this.tokens;
   }
 
   next(steps = 1, isSkipNewLine = false) {
