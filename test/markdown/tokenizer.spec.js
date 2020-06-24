@@ -1041,5 +1041,16 @@ describe('MarkdownTokenizer', () => {
         ...text('[/b]')
       ]);
     });
+
+    it('treat new line after [hr]', () => {
+      expect(MarkdownTokenizer.parse(
+        '[hr]\n[spoiler]z[/spoiler]'
+      )).to.eql([
+        { type: 'hr' },
+        { type: 'spoiler_block', direction: 'open' },
+        ...text('z'),
+        { type: 'spoiler_block', direction: 'close' }
+      ]);
+    });
   });
 });

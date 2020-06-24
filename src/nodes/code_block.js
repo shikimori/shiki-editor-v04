@@ -61,6 +61,11 @@ export default class CodeBlock extends Node {
   }
 
   markdownSerialize(state, node) {
+    // state.renderBlock(
+    //   node,
+    //   'code',
+    //   node.attrs.language ? `=${node.attrs.language}` : ''
+    // );
     state.write('```' + (node.attrs.language || '') + '\n');
     state.text(node.textContent, false);
     state.ensureNewLine();

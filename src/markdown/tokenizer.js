@@ -66,57 +66,6 @@ export default class MarkdownTokenizer {
     }
   }
 
-  next(steps = 1, isSkipNewLine = false) {
-    this.index += steps;
-    this.char1 = this.text[this.index];
-
-    if (this.exitSequence) {
-      this.isExitSequence = this.char1 === this.exitSequence[0] && (
-        this.exitSequence.length === 1 ||
-        this.text.slice(this.index, this.index + this.exitSequence.length) ===
-          this.exitSequence
-      );
-    }
-
-    if (isSkipNewLine && (this.char1 === '\n' || this.char1 === undefined)) {
-      this.next();
-    }
-  }
-
-  get bbcode() {
-    return this.char1 === '[' ?
-      extractBbCode(this.text, this.index, this.index + this.MAX_BBCODE_SIZE) :
-      null;
-  }
-
-  get lastMark() {
-    return this.marksStack[this.marksStack.length - 1];
-  }
-
-  get seq2() {
-    return this.char1 + this.text[this.index + 1];
-  }
-
-  get seq3() {
-    return this.char1 +
-      this.text[this.index + 1] +
-      this.text[this.index + 2];
-  }
-
-  get seq4() {
-    return this.char1 +
-      this.text[this.index + 1] +
-      this.text[this.index + 2] +
-      this.text[this.index + 3];
-  }
-  get seq5() {
-    return this.char1 +
-      this.text[this.index + 1] +
-      this.text[this.index + 2] +
-      this.text[this.index + 3] +
-      this.text[this.index + 4];
-  }
-
   parseLine(skippableSequence = '') {
     if (this.isSkippableSequence(skippableSequence || this.nestedSequence)) {
       this.next((skippableSequence || this.nestedSequence).length);
@@ -241,7 +190,9 @@ export default class MarkdownTokenizer {
         }
       }
 
-      this.processInline(char1, bbcode, seq2, seq3, seq4, seq5);
+      if(this.processInline(char1, bbcode, seq2, seq3, seq4, seq5)) {
+        break;
+      }
     }
   }
 
@@ -301,12 +252,12 @@ export default class MarkdownTokenizer {
 
       case '[hr]':
         this.processHr(bbcode);
-        return;
+        return true;
 
       case '[br]':
         this.next(bbcode.length);
         this.finalizeParagraph();
-        return;
+        return true;
 
       default:
         break;
@@ -375,6 +326,57 @@ export default class MarkdownTokenizer {
     }
 
     this.appendInlineContent(char1);
+  }
+
+  next(steps = 1, isSkipNewLine = false) {
+    this.index += steps;
+    this.char1 = this.text[this.index];
+
+    if (this.exitSequence) {
+      this.isExitSequence = this.char1 === this.exitSequence[0] && (
+        this.exitSequence.length === 1 ||
+        this.text.slice(this.index, this.index + this.exitSequence.length) ===
+          this.exitSequence
+      );
+    }
+
+    if (isSkipNewLine && (this.char1 === '\n' || this.char1 === undefined)) {
+      this.next();
+    }
+  }
+
+  get bbcode() {
+    return this.char1 === '[' ?
+      extractBbCode(this.text, this.index, this.index + this.MAX_BBCODE_SIZE) :
+      null;
+  }
+
+  get lastMark() {
+    return this.marksStack[this.marksStack.length - 1];
+  }
+
+  get seq2() {
+    return this.char1 + this.text[this.index + 1];
+  }
+
+  get seq3() {
+    return this.char1 +
+      this.text[this.index + 1] +
+      this.text[this.index + 2];
+  }
+
+  get seq4() {
+    return this.char1 +
+      this.text[this.index + 1] +
+      this.text[this.index + 2] +
+      this.text[this.index + 3];
+  }
+  get seq5() {
+    return this.char1 +
+      this.text[this.index + 1] +
+      this.text[this.index + 2] +
+      this.text[this.index + 3] +
+      this.text[this.index + 4];
   }
 
   processMarkOpen(type, openBbcode, closeBbcode, attributes) {
