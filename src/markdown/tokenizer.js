@@ -34,12 +34,6 @@ export default class MarkdownTokenizer {
   }
 
   constructor(text, index, nestedSequence = '', exitSequence = undefined) {
-    // if (exitSequence === undefined) {
-    //   console.log(text);
-    // } else {
-    //   console.log(index, text[index], exitSequence);
-    // }
-
     this.text = text;
     this.index = index;
 
@@ -65,8 +59,11 @@ export default class MarkdownTokenizer {
       if (this.isExitSequence) { break; }
     }
 
-    // console.log(this.tokens, this.exitSequence);
-    return this.tokens;
+    if (this.exitSequence && !this.isExitSequence) {
+      return null;
+    } else {
+      return this.tokens;
+    }
   }
 
   next(steps = 1, isSkipNewLine = false) {
@@ -513,12 +510,11 @@ export default class MarkdownTokenizer {
     );
     const tokens = tokenizer.parse();
 
-    const endSequence =
-      this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    if (!tokens) { return false; }
 
-    if (endSequence !== exitSequence) {
-      return false;
-    }
+    // const endSequence =
+    //   this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    // if (endSequence !== exitSequence) { return false; }
 
     if (isOnlySpacingsBefore) {
       this.inlineTokens = [];
@@ -547,10 +543,11 @@ export default class MarkdownTokenizer {
     );
     const tokens = tokenizer.parse();
 
-    const endSequence =
-      this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    if (!tokens) { return false; }
+    // const endSequence =
+    //   this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    // if (endSequence !== exitSequence) { return false; }
 
-    if (endSequence !== exitSequence) { return false; }
     this.appendInlineContent(startSequence);
 
     let slicedTokens;
