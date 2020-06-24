@@ -153,12 +153,12 @@ describe('MarkdownTokenizer', () => {
         }, {
           type: 'inline',
           children: [{
-            type: 'em_open'
+            type: 'italic_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'em_close'
+            type: 'italic_close'
           }]
         }, {
           type: 'paragraph_close'

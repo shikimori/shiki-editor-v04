@@ -40,7 +40,7 @@ export default {
     isColumn1: false,
     isColumn2: true,
     text2: `
-[size=12][b]По всем вопросам обращаться к[/b][/size]
+aaa [spoiler=этот промо-код][code=css]@media screen and (min-width: 1600px) { .b-to-top.active .slide::before{ width:200px;left: 0; }}[/code][/spoiler] zxc
 `,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
