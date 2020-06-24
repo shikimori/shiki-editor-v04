@@ -144,10 +144,11 @@ export default class MarkdownTokenizer {
       if (bbcode && (isStart || isOnlySpacingsBefore)) {
         if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
           meta = parseDivMeta(match[1]);
-          if (this.processBlock('div', bbcode, '[/div]', meta)) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-            return; // TODO: UNCOMMENT AND FIX SPECS
-          }
+          isProcessed = this.processBlock(
+            'div', bbcode, '[/div]', meta,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
         }
         if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           isProcessed = this.processBlock(

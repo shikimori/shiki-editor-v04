@@ -58,6 +58,7 @@ export default class Div extends Node {
 
   markdownSerialize(state, node) {
     const meta = `${serializeClassAttr(node)}${serializeDataAttr(node)}`;
+
     if (meta === ' data-list=remove-it') {
       state.renderBlock(node, 'list');
     } else {
