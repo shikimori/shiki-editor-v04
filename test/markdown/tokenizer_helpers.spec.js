@@ -82,12 +82,20 @@ describe('tokenizer_helpers', () => {
       { type: 'bold', nesting: 'close' }
     ]);
 
-    // expect(fixUnbalancedTokens([
-    //   { type: 'bold', nesting: 'open', bbcode: '[b]' },
-    //   { type: 'text', content: 'zxc' },
-    // ])).to.eql([
-    //   { type: 'text', content: '[b]' },
-    //   { type: 'text', content: 'zxc' },
-    // ]);
+    expect(fixUnbalancedTokens([
+      { type: 'bold', nesting: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' }
+    ])).to.eql([
+      { type: 'text', content: '[b]' },
+      { type: 'text', content: 'zxc' }
+    ]);
+
+    expect(fixUnbalancedTokens([
+      { type: 'bold', nesting: 'close', bbcode: '[/b]' },
+      { type: 'text', content: 'zxc' }
+    ])).to.eql([
+      { type: 'text', content: '[/b]' },
+      { type: 'text', content: 'zxc' }
+    ]);
   });
 });

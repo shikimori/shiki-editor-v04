@@ -76,19 +76,37 @@ export function isMatchedToken(token, type, nesting) {
 }
 
 export function fixUnbalancedTokens(tokens) {
-  const counter = {};
+  const cache = {};
 
-  // tokens.forEach((token, index) => {
-  //   if (!token.nesting) { return; }
-  //   if (!counter[token.type]) { counter[token.type] = 0; }
-  // 
-  //   if (token.nesting === 'open') {
-  //     if (counter[token.type] === 0) {
-  //       counter[token.type] += 1;
-  //     } else {
-  //       tokens[index] = { type: 'text', content: token.bbcode };
-  //     }
-  //   }
-  // });
+  tokens.forEach((token, index) => {
+    if (!token.nesting) { return; }
+    if (!cache[token.type]) { cache[token.type] = false; }
+
+    if (token.nesting === 'open') {
+      if (cache[token.type]) {
+        tokens[index] = { type: 'text', content: token.bbcode };
+      } else {
+        cache[token.type] = true;
+      }
+    } else {
+      if (cache[token.type]) {
+        cache[token.type] = false;
+      } else {
+        tokens[index] = { type: 'text', content: token.bbcode };
+      }
+    }
+  });
+
+  Object.entries(cache).forEach(([type, isUnbalanced]) => {
+    if (!isUnbalanced) { return; }
+
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      if (tokens[i].type === type && tokens[i].nesting === 'open') {
+        tokens[i] = { type: 'text', content: tokens[i].bbcode };
+        return;
+      }
+    }
+  });
+
   return tokens;
 }
