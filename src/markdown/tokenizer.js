@@ -205,15 +205,6 @@ export default class MarkdownTokenizer {
           if (isProcessed) { return; }
         }
 
-        if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          isProcessed =
-            this.processCodeBlock(bbcode, '[/code]', parseCodeMeta(match[1]));
-          if (isProcessed) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-            return;
-          }
-        }
-
         if (seq4 === '[url' && (match = bbcode.match(this.LINK_REGEXP))) {
           isProcessed = this.processLinkBlock(
             bbcode, parseLinkMeta(match[1]), isStart, isOnlySpacingsBefore
@@ -223,6 +214,17 @@ export default class MarkdownTokenizer {
       }
 
       if (bbcode) {
+        if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
+          const meta = parseCodeMeta(match[1]);
+          if (isStart || meta) {
+            isProcessed = this.processCodeBlock(bbcode, '[/code]', meta);
+            if (isProcessed) {
+              if (isOnlySpacingsBefore) { this.inlineTokens = []; }
+              return;
+            }
+          }
+        }
+
         if (seq5 === '[quot' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           isProcessed = this.processBlock(
             'quote', bbcode, '[/quote]', parseQuoteMeta(match[1]),

@@ -785,24 +785,19 @@ describe('MarkdownTokenizer', () => {
       // });
 
       it('[spoiler=qw er]z[/spoiler]', () => {
-        expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([{
-          type: 'spoiler_block_open',
-          attrs: [['label', 'qw er']]
-        },
-        ...text('z'),
-        {
-          type: 'spoiler_block_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([
+          { type: 'spoiler_block_open', attrs: [['label', 'qw er']] },
+          ...text('z'),
+          { type: 'spoiler_block_close' }
+        ]);
       });
 
       it('[spoiler]\\nz\\n[/spoiler]', () => {
-        expect(MarkdownTokenizer.parse('[spoiler]\nz\n[/spoiler]')).to.eql([{
-          type: 'spoiler_block_open'
-        },
-        ...text('z'),
-        {
-          type: 'spoiler_block_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[spoiler]\nz\n[/spoiler]')).to.eql([
+          { type: 'spoiler_block_open' },
+          ...text('z'),
+          { type: 'spoiler_block_close' }
+        ]);
       });
 
       it('[spoiler]\\nz[/spoiler]', () => {
@@ -816,61 +811,48 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[spoiler]\\nz[/spoiler]qwe', () => {
-        expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]qwe')).to.eql([{
-          type: 'spoiler_block_open'
-        },
-        ...text('z'),
-        {
-          type: 'spoiler_block_close'
-        },
-        ...text('qwe')
+        expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]qwe')).to.eql([
+          { type: 'spoiler_block_open' },
+          ...text('z'),
+          { type: 'spoiler_block_close' },
+          ...text('qwe')
         ]);
       });
     });
 
     describe('quote', () => {
       it('[quote]z[/quote]', () => {
-        expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([{
-          type: 'quote_open'
-        },
-        ...text('z'),
-        {
-          type: 'quote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[quote]z[/quote]')).to.eql([
+          { type: 'quote_open' },
+          ...text('z'),
+          { type: 'quote_close' }
+        ]);
       });
 
       it('[quote]\\nz\\n[/quote]', () => {
-        expect(MarkdownTokenizer.parse('[quote]\nz\n[/quote]')).to.eql([{
-          type: 'quote_open'
-        },
-        ...text('z'),
-        {
-          type: 'quote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[quote]\nz\n[/quote]')).to.eql([
+          { type: 'quote_open' },
+          ...text('z'),
+          { type: 'quote_close' }
+        ]);
       });
 
-      it('q[quote]z[/quote]', () => {
-        expect(MarkdownTokenizer.parse('q[quote]z[/quote]')).to.eql([
+      it('q[quote]z[/quote]x', () => {
+        expect(MarkdownTokenizer.parse('q[quote]z[/quote]x')).to.eql([
           ...text('q'),
-          {
-            type: 'quote_open'
-          },
+          { type: 'quote_open' },
           ...text('z'),
-          {
-            type: 'quote_close'
-          }
+          { type: 'quote_close' },
+          ...text('x')
         ]);
       });
 
       it('[quote]z[/quote]q', () => {
-        expect(MarkdownTokenizer.parse('[quote]z[/quote]q')).to.eql([{
-          type: 'quote_open'
-        },
-        ...text('z'),
-        {
-          type: 'quote_close'
-        },
-        ...text('q')
+        expect(MarkdownTokenizer.parse('[quote]z[/quote]q')).to.eql([
+          { type: 'quote_open' },
+          ...text('z'),
+          { type: 'quote_close' },
+          ...text('q')
         ]);
       });
 
