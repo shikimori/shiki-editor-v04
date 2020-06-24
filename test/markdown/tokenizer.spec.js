@@ -60,19 +60,19 @@ describe('MarkdownTokenizer', () => {
   });
 
   describe('marks', () => {
-    describe('strong', () => {
+    describe('bold', () => {
       it('[b]zxc[/b]', () => {
         expect(MarkdownTokenizer.parse('[b]zxc[/b]')).to.eql([{
           type: 'paragraph_open'
         }, {
           type: 'inline',
           children: [{
-            type: 'strong_open'
+            type: 'bold_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'strong_close'
+            type: 'bold_close'
           }]
         }, {
           type: 'paragraph_close'
@@ -97,12 +97,12 @@ describe('MarkdownTokenizer', () => {
       //   }, {
       //     type: 'inline',
       //     children: [{
-      //       type: 'strong_open'
+      //       type: 'bold_open'
       //     }, {
       //       content: 'zxc',
       //       type: 'text'
       //     }, {
-      //       type: 'strong_close'
+      //       type: 'bold_close'
       //     }]
       //   }, {
       //     type: 'paragraph_close'
@@ -130,12 +130,12 @@ describe('MarkdownTokenizer', () => {
             content: 'a',
             type: 'text'
           }, {
-            type: 'strong_open'
+            type: 'bold_open'
           }, {
             content: 'zxc',
             type: 'text'
           }, {
-            type: 'strong_close'
+            type: 'bold_close'
           }, {
             content: 'A',
             type: 'text'

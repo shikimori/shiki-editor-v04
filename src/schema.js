@@ -109,10 +109,10 @@
 //       toDOM() { return ["em"] }
 //     },
 //
-//     strong: {
-//       parseDOM: [{tag: "b"}, {tag: "strong"},
+//     bold: {
+//       parseDOM: [{tag: "b"}, {tag: "bold"},
 //                  {style: "font-weight", getAttrs: value => /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null}],
-//       toDOM() { return ["strong"] }
+//       toDOM() { return ["bold"] }
 //     },
 //
 //     link: {

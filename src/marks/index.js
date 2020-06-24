@@ -1,4 +1,4 @@
-export { default as Strong } from './strong';
+export { default as Bold } from './bold';
 export { default as Em } from './em';
 export { default as Size } from './size';
 export { default as Color } from './color';

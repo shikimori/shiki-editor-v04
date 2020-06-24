@@ -236,11 +236,11 @@ export default class MarkdownTokenizer {
   processInline(char1, bbcode, seq2, seq3, seq4, seq5) {
     switch (bbcode) {
       case '[b]':
-        if (this.processMarkOpen('strong', '[b]', '[/b]')) { return; }
+        if (this.processMarkOpen('bold', '[b]', '[/b]')) { return; }
         break;
 
       case '[/b]':
-        if (this.processMarkClose('strong', '[b]', '[/b]')) { return; }
+        if (this.processMarkClose('bold', '[b]', '[/b]')) { return; }
         break;
 
       case '[i]':

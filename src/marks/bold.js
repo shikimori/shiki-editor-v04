@@ -1,9 +1,9 @@
 import { Mark } from '../base';
 import { markInputRule, markPasteRule } from '../commands';
 
-export default class Strong extends Mark {
+export default class Bold extends Mark {
   get name() {
-    return 'strong';
+    return 'bold';
   }
 
   get schema() {

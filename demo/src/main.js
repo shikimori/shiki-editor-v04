@@ -10,7 +10,7 @@ Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
 const TRANSLATIONS = {
-  'frontend.shiki_editor.strong': ' Жирный',
+  'frontend.shiki_editor.bold': ' Жирный',
   'frontend.shiki_editor.em': ' Курсив',
   'frontend.shiki_editor.underline': ' Подчёркнутый',
   'frontend.shiki_editor.deleted': ' Зачёркнутый',
