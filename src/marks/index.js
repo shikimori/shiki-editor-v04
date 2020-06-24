@@ -1,5 +1,5 @@
 export { default as Bold } from './bold';
-export { default as Em } from './em';
+export { default as Italic } from './italic';
 export { default as Size } from './size';
 export { default as Color } from './color';
 export { default as Underline } from './underline';

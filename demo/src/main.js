@@ -11,7 +11,7 @@ Vue.config.devtools = false;
 
 const TRANSLATIONS = {
   'frontend.shiki_editor.bold': ' Жирный',
-  'frontend.shiki_editor.em': ' Курсив',
+  'frontend.shiki_editor.italic': ' Курсив',
   'frontend.shiki_editor.underline': ' Подчёркнутый',
   'frontend.shiki_editor.deleted': ' Зачёркнутый',
   'frontend.shiki_editor.undo': ' Отменить последнее изменение',

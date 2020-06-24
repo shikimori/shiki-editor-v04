@@ -146,7 +146,7 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
-    describe('em', () => {
+    describe('italic', () => {
       it('[i]zxc[/i]', () => {
         expect(MarkdownTokenizer.parse('[i]zxc[/i]')).to.eql([{
           type: 'paragraph_open'

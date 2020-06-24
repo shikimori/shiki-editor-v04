@@ -78,7 +78,7 @@ export default {
     },
     menuGroups() {
       return [
-        ['bold', 'em', 'underline', 'deleted', 'spoiler_inline', 'code_inline', 'link_inline'],
+        ['bold', 'italic', 'underline', 'deleted', 'spoiler_inline', 'code_inline', 'link_inline'],
         [{
           type: 'undo',
           title: I18n.t('frontend.shiki_editor.undo'),

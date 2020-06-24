@@ -244,11 +244,11 @@ export default class MarkdownTokenizer {
         break;
 
       case '[i]':
-        if (this.processMarkOpen('em', '[i]', '[/i]')) { return; }
+        if (this.processMarkOpen('italic', '[i]', '[/i]')) { return; }
         break;
 
       case '[/i]':
-        if (this.processMarkClose('em', '[i]', '[/i]')) { return; }
+        if (this.processMarkClose('italic', '[i]', '[/i]')) { return; }
         break;
 
       case '[u]':

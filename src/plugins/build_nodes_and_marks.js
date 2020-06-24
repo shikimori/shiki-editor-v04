@@ -20,7 +20,7 @@ import {
   CodeInline,
   Color,
   Deleted,
-  Em,
+  Italic,
   LinkInline,
   Size,
   SpoilerInline,
@@ -36,7 +36,7 @@ export default function(editor) {
     new SpoilerInline(), // must be above other marks in order to obtain greater priorirty
     new LinkInline(),
     new Bold(),
-    new Em(),
+    new Italic(),
     new Color(),
     new Size(),
     new Underline(),
