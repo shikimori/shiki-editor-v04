@@ -1,13 +1,25 @@
 import { Mark } from '../base';
 
-export default class Em extends Mark {
+export default class Deleted extends Mark {
   get name() {
     return 'deleted';
   }
 
   get schema() {
     return {
-      parseDOM: [{ tag: 'del' }],
+      parseDOM: [{
+        tag: 's'
+      },
+      {
+        tag: 'del'
+      },
+      {
+        tag: 'strike'
+      },
+      {
+        style: 'text-decoration',
+        getAttrs: value => value === 'line-through'
+      }],
       toDOM: () => ['del', 0]
     };
   }
