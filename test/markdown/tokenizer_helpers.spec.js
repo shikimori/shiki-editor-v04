@@ -97,5 +97,17 @@ describe('tokenizer_helpers', () => {
       { type: 'text', content: '[/b]' },
       { type: 'text', content: 'zxc' }
     ]);
+
+    expect(rollbackUnbalancedTokens([
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', direction: 'close' }
+    ])).to.eql([
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'text', content: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', direction: 'close' }
+    ]);
   });
 });
