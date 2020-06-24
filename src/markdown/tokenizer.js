@@ -169,21 +169,24 @@ export default class MarkdownTokenizer {
         }
       }
 
+      let isProcessed = false;
       const isOnlySpacingsBefore = this.isOnlyInlineSpacingsBefore();
 
       if (bbcode && (isStart || isOnlySpacingsBefore)) {
         if (bbcode === '[center]') {
-          if (this.processBlock('center', bbcode, '[/center]')) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-            return;
-          }
+          isProcessed = this.processBlock(
+            'center', bbcode, '[/center]', null,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
         }
 
         if (bbcode === '[right]') {
-          if (this.processBlock('right', bbcode, '[/right]')) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-            return;
-          }
+          isProcessed = this.processBlock(
+            'right', bbcode, '[/right]', null,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
         }
 
         if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
@@ -195,37 +198,37 @@ export default class MarkdownTokenizer {
           return;
         }
         if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          const meta = parseSpoilerMeta(match[1]);
-          if (this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta)) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-            return;
-          }
+          isProcessed = this.processBlock(
+            'spoiler_block', bbcode, '[/spoiler]', parseSpoilerMeta(match[1]),
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
         }
 
         if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          const meta = parseCodeMeta(match[1]);
-          if (this.processCodeBlock(bbcode, '[/code]', meta)) {
+          isProcessed =
+            this.processCodeBlock(bbcode, '[/code]', parseCodeMeta(match[1]));
+          if (isProcessed) {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
             return;
           }
         }
 
         if (seq4 === '[url' && (match = bbcode.match(this.LINK_REGEXP))) {
-          const meta = parseLinkMeta(match[1]);
-          if (this.processLinkBlock(bbcode, meta)) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-            return;
-          }
+          isProcessed = this.processLinkBlock(
+            bbcode, parseLinkMeta(match[1]), isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
         }
       }
 
       if (bbcode) {
         if (seq5 === '[quot' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          if (!isStart) { this.finalizeParagraph(); }
-          const meta = parseQuoteMeta(match[1]);
-          if (this.processBlock('quote', bbcode, '[/quote]', meta)) {
-            return;
-          }
+          isProcessed = this.processBlock(
+            'quote', bbcode, '[/quote]', parseQuoteMeta(match[1]),
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
         }
       }
 
@@ -434,7 +437,7 @@ export default class MarkdownTokenizer {
     return true;
   }
 
-  processLinkBlock(bbcode, meta) {
+  processLinkBlock(bbcode, meta, isStart, isOnlySpacingsBefore) {
     const isNewLineAhead = this.text[this.index + bbcode.length] === '\n';
     const content = extractUntil(
       this.text,
@@ -445,7 +448,9 @@ export default class MarkdownTokenizer {
     );
     if (!this.BLOCK_LINK_FEATURE_REGEXP.test(content)) { return false; }
 
-    return this.processBlock('link_block', bbcode, '[/url]', meta);
+    return this.processBlock(
+      'link_block', bbcode, '[/url]', meta, isStart, isOnlySpacingsBefore
+    );
   }
 
   processInlineImage(tagStart, tagEnd, isPoster, metaAttributes) {
@@ -473,7 +478,14 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processBlock(type, startSequence, exitSequence, metaAttributes) {
+  processBlock(
+    type,
+    startSequence,
+    exitSequence,
+    metaAttributes,
+    isStart = true,
+    isOnlySpacingsBefore = false
+  ) {
     let index = this.index + startSequence.length;
     if (this.text[index] === '\n') { index += 1; }
 
@@ -491,6 +503,12 @@ export default class MarkdownTokenizer {
     if (endSequence !== exitSequence) {
       this.appendInlineContent(startSequence);
       return false;
+    }
+
+    if (isOnlySpacingsBefore) {
+      this.inlineTokens = [];
+    } else if (!isStart) {
+      this.finalizeParagraph();
     }
 
     this.next(startSequence.length);
