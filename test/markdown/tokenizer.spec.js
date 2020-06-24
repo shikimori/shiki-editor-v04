@@ -41,14 +41,11 @@ describe('MarkdownTokenizer', () => {
     });
 
     it('\\n', () => {
-      expect(MarkdownTokenizer.parse('\n')).to.eql([{
-        type: 'paragraph_open'
-      }, {
-        type: 'inline',
-        children: []
-      }, {
-        type: 'paragraph_close'
-      }]);
+      expect(MarkdownTokenizer.parse('\n')).to.eql([
+        { type: 'paragraph_open' },
+        { type: 'inline', children: [] },
+        { type: 'paragraph_close' }
+      ]);
     });
 
     it('[br]', () => {
@@ -473,215 +470,158 @@ describe('MarkdownTokenizer', () => {
   describe('nodes', () => {
     describe('blockquote', () => {
       it('> a', () => {
-        expect(MarkdownTokenizer.parse('> a')).to.eql([{
-          type: 'blockquote_open'
-        },
-        ...text('a'),
-        {
-          type: 'blockquote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('> a')).to.eql([
+          { type: 'blockquote_open' },
+          ...text('a'),
+          { type: 'blockquote_close' }
+        ]);
       });
 
       it('> a\\n> b\\n> c', () => {
-        expect(MarkdownTokenizer.parse('> a\n> b\n> c')).to.eql([{
-          type: 'blockquote_open'
-        },
-        ...text('a'),
-        ...text('b'),
-        ...text('c'),
-        {
-          type: 'blockquote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('> a\n> b\n> c')).to.eql([
+          { type: 'blockquote_open' },
+          ...text('a'),
+          ...text('b'),
+          ...text('c'),
+          { type: 'blockquote_close' }
+        ]);
       });
 
       it('> > a', () => {
-        expect(MarkdownTokenizer.parse('> > a')).to.eql([{
-          type: 'blockquote_open'
-        }, {
-          type: 'blockquote_open'
-        },
-        ...text('a'),
-        {
-          type: 'blockquote_close'
-        }, {
-          type: 'blockquote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('> > a')).to.eql([
+          { type: 'blockquote_open' },
+          { type: 'blockquote_open' },
+          ...text('a'),
+          { type: 'blockquote_close' },
+          { type: 'blockquote_close' }
+        ]);
       });
 
       it('> > a\\n> b', () => {
-        expect(MarkdownTokenizer.parse('> > a\n> b')).to.eql([{
-          type: 'blockquote_open'
-        }, {
-          type: 'blockquote_open'
-        },
-        ...text('a'),
-        {
-          type: 'blockquote_close'
-        },
-        ...text('b'),
-        {
-          type: 'blockquote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('> > a\n> b')).to.eql([
+          { type: 'blockquote_open' },
+          { type: 'blockquote_open' },
+          ...text('a'),
+          { type: 'blockquote_close' },
+          ...text('b'),
+          { type: 'blockquote_close' }
+        ]);
       });
 
       it('> a\\n> > b\\n> > c', () => {
-        expect(MarkdownTokenizer.parse('> a\n> > b\n> > c')).to.eql([{
-          type: 'blockquote_open'
-        },
-        ...text('a'),
-        {
-          type: 'blockquote_open'
-        },
-        ...text('b'),
-        ...text('c'),
-        {
-          type: 'blockquote_close'
-        }, {
-          type: 'blockquote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('> a\n> > b\n> > c')).to.eql([
+          { type: 'blockquote_open' },
+          ...text('a'),
+          { type: 'blockquote_open' },
+          ...text('b'),
+          ...text('c'),
+          { type: 'blockquote_close' },
+          { type: 'blockquote_close' }
+        ]);
       });
 
       it('> [quote]\\n> a\\n> [/quote]', () => {
-        expect(MarkdownTokenizer.parse('> [quote]\n> a\n> [/quote]')).to.eql([{
-          type: 'blockquote_open'
-        }, {
-          type: 'quote_open'
-        },
-        ...text('a'),
-        {
-          type: 'quote_close'
-        }, {
-          type: 'blockquote_close'
-        }]);
+        expect(MarkdownTokenizer.parse('> [quote]\n> a\n> [/quote]')).to.eql([
+          { type: 'blockquote_open' },
+          { type: 'quote_open' },
+          ...text('a'),
+          { type: 'quote_close' },
+          { type: 'blockquote_close' }
+        ]);
       });
     });
 
     describe('bullet_list', () => {
       it('- a', () => {
-        expect(MarkdownTokenizer.parse('- a')).to.eql([{
-          type: 'bullet_list_open'
-        }, {
-          type: 'list_item_open'
-        },
-        ...text('a'),
-        {
-          type: 'list_item_close'
-        }, {
-          type: 'bullet_list_close'
-        }]);
+        expect(MarkdownTokenizer.parse('- a')).to.eql([
+          { type: 'bullet_list_open' },
+          { type: 'list_item_open' },
+          ...text('a'),
+          { type: 'list_item_close' },
+          { type: 'bullet_list_close' }
+        ]);
       });
 
       it('- a\\n- b', () => {
-        expect(MarkdownTokenizer.parse('- a\n- b')).to.eql([{
-          type: 'bullet_list_open'
-        }, {
-          type: 'list_item_open'
-        },
-        ...text('a'),
-        {
-          type: 'list_item_close'
-        }, {
-          type: 'list_item_open'
-        },
-        ...text('b'),
-        {
-          type: 'list_item_close'
-        }, {
-          type: 'bullet_list_close'
-        }]);
+        expect(MarkdownTokenizer.parse('- a\n- b')).to.eql([
+          { type: 'bullet_list_open' },
+          { type: 'list_item_open' },
+          ...text('a'),
+          { type: 'list_item_close' },
+          { type: 'list_item_open' },
+          ...text('b'),
+          { type: 'list_item_close' },
+          { type: 'bullet_list_close' }
+        ]);
       });
 
       it('- test\\nn  zxc', () => {
-        expect(MarkdownTokenizer.parse('- test\n  zxc')).to.eql([{
-          type: 'bullet_list_open'
-        }, {
-          type: 'list_item_open'
-        },
-        ...text('test'),
-        ...text('zxc'),
-        {
-          type: 'list_item_close'
-        }, {
-          type: 'bullet_list_close'
-        }]);
+        expect(MarkdownTokenizer.parse('- test\n  zxc')).to.eql([
+          { type: 'bullet_list_open' },
+          { type: 'list_item_open' },
+          ...text('test'),
+          ...text('zxc'),
+          { type: 'list_item_close' },
+          { type: 'bullet_list_close' }
+        ]);
       });
 
       it('- > test', () => {
-        expect(MarkdownTokenizer.parse('- > test')).to.eql([{
-          type: 'bullet_list_open'
-        }, {
-          type: 'list_item_open'
-        }, {
-          type: 'blockquote_open'
-        },
-        ...text('test'),
-        {
-          type: 'blockquote_close'
-        }, {
-          type: 'list_item_close'
-        }, {
-          type: 'bullet_list_close'
-        }]);
+        expect(MarkdownTokenizer.parse('- > test')).to.eql([
+          { type: 'bullet_list_open' },
+          { type: 'list_item_open' },
+          { type: 'blockquote_open' },
+          ...text('test'),
+          { type: 'blockquote_close' },
+          { type: 'list_item_close' },
+          { type: 'bullet_list_close' }
+        ]);
       });
 
       it('[*] a', () => {
-        expect(MarkdownTokenizer.parse('[*] a')).to.eql([{
-          type: 'bullet_list_open'
-        }, {
-          type: 'list_item_open'
-        },
-        ...text('a'),
-        {
-          type: 'list_item_close'
-        }, {
-          type: 'bullet_list_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[*] a')).to.eql([
+          { type: 'bullet_list_open' },
+          { type: 'list_item_open' },
+          ...text('a'),
+          { type: 'list_item_close' },
+          { type: 'bullet_list_close' }
+        ]);
       });
 
       it('[*]a', () => {
-        expect(MarkdownTokenizer.parse('[*]a')).to.eql([{
-          type: 'bullet_list_open'
-        }, {
-          type: 'list_item_open'
-        },
-        ...text('a'),
-        {
-          type: 'list_item_close'
-        }, {
-          type: 'bullet_list_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[*]a')).to.eql([
+          { type: 'bullet_list_open' },
+          { type: 'list_item_open' },
+          ...text('a'),
+          { type: 'list_item_close' },
+          { type: 'bullet_list_close' }
+        ]);
       });
     });
 
     describe('code_block', () => {
       it('```\\nzxc\\n```', () => {
-        expect(MarkdownTokenizer.parse('```\nzxc\n```')).to.eql([{
-          content: 'zxc',
-          type: 'code_block'
-        }]);
+        expect(MarkdownTokenizer.parse('```\nzxc\n```')).to.eql([
+          { content: 'zxc', type: 'code_block' }
+        ]);
       });
 
       it('[code]\\nzxc\\n[/code]', () => {
-        expect(MarkdownTokenizer.parse('[code]\nzxc\n[/code]')).to.eql([{
-          content: 'zxc',
-          type: 'code_block'
-        }]);
+        expect(MarkdownTokenizer.parse('[code]\nzxc\n[/code]')).to.eql([
+          { content: 'zxc', type: 'code_block' }
+        ]);
       });
 
       it('```\\nzxc\\nvbn\\n```', () => {
-        expect(MarkdownTokenizer.parse('```\nzxc\nvbn\n```')).to.eql([{
-          content: 'zxc\nvbn',
-          type: 'code_block'
-        }]);
+        expect(MarkdownTokenizer.parse('```\nzxc\nvbn\n```')).to.eql([
+          { content: 'zxc\nvbn', type: 'code_block' }
+        ]);
       });
 
       it('qwe\\n```\\nzxc\\nvbn\\n```\\nrty', () => {
         expect(MarkdownTokenizer.parse('qwe\n```\nzxc\nvbn\n```\nrty')).to.eql([
           ...text('qwe'),
-          {
-            content: 'zxc\nvbn',
-            type: 'code_block'
-          },
+          { content: 'zxc\nvbn', type: 'code_block' },
           ...text('rty')
         ]);
       });
@@ -701,11 +641,9 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('```ruby\\nzxc\\n```', () => {
-        expect(MarkdownTokenizer.parse('```ruby\nzxc\n```')).to.eql([{
-          content: 'zxc',
-          type: 'code_block',
-          attrs: [['language', 'ruby']]
-        }]);
+        expect(MarkdownTokenizer.parse('```ruby\nzxc\n```')).to.eql([
+          { content: 'zxc', type: 'code_block', attrs: [['language', 'ruby']] }
+        ]);
       });
     });
 
@@ -753,24 +691,19 @@ describe('MarkdownTokenizer', () => {
 
     describe('spoiler', () => {
       it('[spoiler]z[/spoiler]', () => {
-        expect(MarkdownTokenizer.parse('[spoiler]z[/spoiler]')).to.eql([{
-          type: 'spoiler_block_open'
-        },
-        ...text('z'),
-        {
-          type: 'spoiler_block_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[spoiler]z[/spoiler]')).to.eql([
+          { type: 'spoiler_block_open' },
+          ...text('z'),
+          { type: 'spoiler_block_close' }
+        ]);
       });
 
       it('[spoiler=qw er]z[/spoiler]', () => {
-        expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([{
-          type: 'spoiler_block_open',
-          attrs: [['label', 'qw er']]
-        },
-        ...text('z'),
-        {
-          type: 'spoiler_block_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[spoiler=qw er]z[/spoiler]')).to.eql([
+          { type: 'spoiler_block_open', attrs: [['label', 'qw er']] },
+          ...text('z'),
+          { type: 'spoiler_block_close' }
+        ]);
       });
 
       // it('[spoiler=q[b]w[i]e[/i]r[/b]t]z[/spoiler]', () => {
@@ -801,13 +734,11 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[spoiler]\\nz[/spoiler]', () => {
-        expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]')).to.eql([{
-          type: 'spoiler_block_open'
-        },
-        ...text('z'),
-        {
-          type: 'spoiler_block_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[spoiler]\nz[/spoiler]')).to.eql([
+          { type: 'spoiler_block_open' },
+          ...text('z'),
+          { type: 'spoiler_block_close' }
+        ]);
       });
 
       it('[spoiler]\\nz[/spoiler]qwe', () => {
@@ -892,100 +823,77 @@ describe('MarkdownTokenizer', () => {
 
     describe('center', () => {
       it('[center]z[/center]', () => {
-        expect(MarkdownTokenizer.parse('[center]z[/center]')).to.eql([{
-          type: 'center_open'
-        },
-        ...text('z'),
-        {
-          type: 'center_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[center]z[/center]')).to.eql([
+          { type: 'center_open' },
+          ...text('z'),
+          { type: 'center_close' }
+        ]);
       });
     });
 
     describe('right', () => {
       it('[right]z[/right]', () => {
-        expect(MarkdownTokenizer.parse('[right]z[/right]')).to.eql([{
-          type: 'right_open'
-        },
-        ...text('z'),
-        {
-          type: 'right_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[right]z[/right]')).to.eql([
+          { type: 'right_open' },
+          ...text('z'),
+          { type: 'right_close' }
+        ]);
       });
     });
 
     describe('div', () => {
       it('[div]z[/div]', () => {
-        expect(MarkdownTokenizer.parse('[div]z[/div]')).to.eql([{
-          type: 'div_open'
-        },
-        ...text('z'),
-        {
-          type: 'div_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[div]z[/div]')).to.eql([
+          { type: 'div_open' },
+          ...text('z'),
+          { type: 'div_close' }
+        ]);
       });
 
       it('  [div]z[/div]', () => {
-        expect(MarkdownTokenizer.parse('  [div]z[/div]')).to.eql([{
-          type: 'div_open'
-        },
-        ...text('z'),
-        {
-          type: 'div_close'
-        }]);
+        expect(MarkdownTokenizer.parse('  [div]z[/div]')).to.eql([
+          { type: 'div_open' },
+          ...text('z'),
+          { type: 'div_close' }
+        ]);
       });
 
       it('[div][div]z[/div][/div]', () => {
-        expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([{
-          type: 'div_open'
-        }, {
-          type: 'div_open'
-        },
-        ...text('z'),
-        {
-          type: 'div_close'
-        }, {
-          type: 'div_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([
+          { type: 'div_open' },
+          { type: 'div_open' },
+          ...text('z'),
+          { type: 'div_close' },
+          { type: 'div_close' }
+        ]);
       });
 
       it('[div]  [div]z[/div][/div]', () => {
-        expect(MarkdownTokenizer.parse('[div]  [div]z[/div][/div]')).to.eql([{
-          type: 'div_open'
-        }, {
-          type: 'div_open'
-        },
-        ...text('z'),
-        {
-          type: 'div_close'
-        }, {
-          type: 'div_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[div]  [div]z[/div][/div]')).to.eql([
+          { type: 'div_open' },
+          { type: 'div_open' },
+          ...text('z'),
+          { type: 'div_close' },
+          { type: 'div_close' }
+        ]);
       });
 
       it('[div][div]z[/div][/div]', () => {
-        expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([{
-          type: 'div_open'
-        }, {
-          type: 'div_open'
-        },
-        ...text('z'),
-        {
-          type: 'div_close'
-        }, {
-          type: 'div_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[div][div]z[/div][/div]')).to.eql([
+          { type: 'div_open' },
+          { type: 'div_open' },
+          ...text('z'),
+          { type: 'div_close' },
+          { type: 'div_close' }
+        ]);
       });
 
       it('[div data-test=qwe]z[/div]', () => {
-        expect(MarkdownTokenizer.parse('[div data-test=qwe]z[/div]')).to.eql([{
-          type: 'div_open',
-          attrs: [['data', [['data-test', 'qwe']]]]
-        },
-        ...text('z'),
-        {
-          type: 'div_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[div data-test=qwe]z[/div]')).to.eql([
+          { type: 'div_open', attrs: [['data', [['data-test', 'qwe']]]] },
+          ...text('z'),
+          { type: 'div_close' }
+        ]);
       });
 
       it('[div data-test data-fofo]z[/div]', () => {
@@ -1011,13 +919,11 @@ describe('MarkdownTokenizer', () => {
       });
 
       it('[div]q[div]z[/div][/div]', () => {
-        expect(MarkdownTokenizer.parse('[div]q[div]z[/div][/div]')).to.eql([{
-          type: 'div_open'
-        },
-        ...text('q[div]z[/div]'),
-        {
-          type: 'div_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[div]q[div]z[/div][/div]')).to.eql([
+          { type: 'div_open' },
+          ...text('q[div]z[/div]'),
+          { type: 'div_close' }
+        ]);
       });
 
       it('z[div]x[/div]c', () => {
@@ -1095,33 +1001,22 @@ describe('MarkdownTokenizer', () => {
 
     describe('link_block', () => {
       it('[url=//ya.ru][quote]z[/quote][/url]', () => {
-        expect(MarkdownTokenizer.parse('[url=//ya.ru][quote]z[/quote][/url]')).to.eql([{
-          type: 'link_block_open',
-          attrs: [['href', '//ya.ru']]
-        }, {
-          type: 'quote_open'
-        },
-        ...text('z'),
-        {
-          type: 'quote_close'
-        }, {
-          type: 'link_block_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[url=//ya.ru][quote]z[/quote][/url]')).to.eql([
+          { type: 'link_block_open', attrs: [['href', '//ya.ru']] },
+          { type: 'quote_open' },
+          ...text('z'),
+          { type: 'quote_close' },
+          { type: 'link_block_close' }
+        ]);
       });
 
       it('[url=//ya.ru]\\n[quote]\\nz\\n[/quote]\\n[/url]', () => {
-        expect(MarkdownTokenizer.parse('[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]')).to.eql([{
-          type: 'link_block_open',
-          attrs: [['href', '//ya.ru']]
-        }, {
-          type: 'quote_open'
-        },
-        ...text('z'),
-        {
-          type: 'quote_close'
-        }, {
-          type: 'link_block_close'
-        }]);
+        expect(MarkdownTokenizer.parse('[url=//ya.ru]\n[quote]\nz\n[/quote]\n[/url]')).to.eql([
+          { type: 'link_block_open', attrs: [['href', '//ya.ru']] },
+          { type: 'quote_open' },
+          ...text('z'),
+          { type: 'quote_close' },
+          { type: 'link_block_close' }]);
       });
     });
   });
