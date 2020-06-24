@@ -190,7 +190,6 @@ export default class MarkdownTokenizer {
             if (isOnlySpacingsBefore) { this.inlineTokens = []; }
             return; // TODO: UNCOMMENT AND FIX SPECS
           }
-          return;
         }
         if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
           isProcessed = this.processBlock(
@@ -334,8 +333,10 @@ export default class MarkdownTokenizer {
     if (bbcode) {
       switch (seq4) {
         case '[div':
-          this.processInlineBlock(bbcode, '[/div]');
-          return;
+          if (this.processInlineBlock(bbcode, '[/div]')) {
+            return;
+          }
+          break;
 
         case '[img':
           meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
@@ -540,7 +541,7 @@ export default class MarkdownTokenizer {
   processInlineBlock(startSequence, exitSequence) {
     const tokenizer = new MarkdownTokenizer(
       this.text,
-      this.index,
+      this.index + startSequence.length,
       '',
       exitSequence
     );
