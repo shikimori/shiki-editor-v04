@@ -6,10 +6,9 @@ function text(content) {
     { type: 'paragraph_open' },
     {
       type: 'inline',
-      children: [{
-        content,
-        type: 'text'
-      }]
+      children: [
+        { type: 'text', content }
+      ]
     },
     { type: 'paragraph_close' }
   ];
@@ -65,7 +64,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'bold_open' },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'bold_close' }
             ]
           },
@@ -121,11 +120,11 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { content: 'a', type: 'text' },
+              { type: 'text', content: 'a' },
               { type: 'bold_open' },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'bold_close' },
-              { content: 'A', type: 'text' }
+              { type: 'text', content: 'A' }
             ]
           },
           { type: 'paragraph_close' }
@@ -141,7 +140,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'italic_open' },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'italic_close' }
             ]
           },
@@ -182,7 +181,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'underline_open' },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'underline_close' }
             ]
           },
@@ -205,7 +204,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'strike_open' },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'strike_close' }
             ]
           },
@@ -227,7 +226,7 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { content: 'zxc', type: 'code_inline' }
+              { type: 'code_inline', content: 'zxc' }
             ]
           },
           { type: 'paragraph_close' }
@@ -240,8 +239,8 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { content: 'qwe ', type: 'text' },
-              { content: 'zxc', type: 'code_inline' }
+              { type: 'text', content: 'qwe ' },
+              { type: 'code_inline', content: 'zxc' }
             ]
           },
           { type: 'paragraph_close' }
@@ -254,8 +253,8 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { content: 'zxc', type: 'code_inline' },
-              { content: '`', type: 'text' }
+              { type: 'code_inline', content: 'zxc' },
+              { type: 'text', content: '`' }
             ]
           },
           { type: 'paragraph_close' }
@@ -268,9 +267,9 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { content: 'a', type: 'text' },
-              { content: 'zxc', type: 'code_inline' },
-              { content: 'A', type: 'text' }
+              { type: 'text', content: 'a' },
+              { type: 'code_inline', content: 'zxc' },
+              { type: 'text', content: 'A' }
             ]
           },
           { type: 'paragraph_close' }
@@ -293,7 +292,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'spoiler_inline_open' },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'spoiler_inline_close' }
             ]
           },
@@ -322,7 +321,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'color_open', attrs: [['color', 'red']] },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'color_close' }
             ]
           },
@@ -351,7 +350,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'size_open', attrs: [['size', '20']] },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'size_close' }
             ]
           },
@@ -380,7 +379,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'link_inline_open', attrs: [['href', 'https://ya.ru']] },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'link_inline_close' }
             ]
           },
@@ -395,7 +394,7 @@ describe('MarkdownTokenizer', () => {
             type: 'inline',
             children: [
               { type: 'link_inline_open', attrs: [['href', '//ya.ru']] },
-              { content: 'zxc', type: 'text' },
+              { type: 'text', content: 'zxc' },
               { type: 'link_inline_close' }
             ]
           },
@@ -552,20 +551,20 @@ describe('MarkdownTokenizer', () => {
     describe('code_block', () => {
       it('```\\nzxc\\n```', () => {
         expect(MarkdownTokenizer.parse('```\nzxc\n```')).to.eql([
-          { content: 'zxc', type: 'code_block' }
+          { type: 'code_block', content: 'zxc' }
         ]);
       });
 
       it('```\\nzxc\\nvbn\\n```', () => {
         expect(MarkdownTokenizer.parse('```\nzxc\nvbn\n```')).to.eql([
-          { content: 'zxc\nvbn', type: 'code_block' }
+          { type: 'code_block', content: 'zxc\nvbn' }
         ]);
       });
 
       it('qwe\\n```\\nzxc\\nvbn\\n```\\nrty', () => {
         expect(MarkdownTokenizer.parse('qwe\n```\nzxc\nvbn\n```\nrty')).to.eql([
           ...text('qwe'),
-          { content: 'zxc\nvbn', type: 'code_block' },
+          { type: 'code_block', content: 'zxc\nvbn' },
           ...text('rty')
         ]);
       });
@@ -586,20 +585,20 @@ describe('MarkdownTokenizer', () => {
 
       it('```ruby\\nzxc\\n```', () => {
         expect(MarkdownTokenizer.parse('```ruby\nzxc\n```')).to.eql([
-          { content: 'zxc', type: 'code_block', attrs: [['language', 'ruby']] }
+          { type: 'code_block', content: 'zxc', attrs: [['language', 'ruby']] }
         ]);
       });
 
       it('[code]\\nzxc\\n[/code]', () => {
         expect(MarkdownTokenizer.parse('[code]\nzxc\n[/code]')).to.eql([
-          { content: 'zxc', type: 'code_block' }
+          { type: 'code_block', content: 'zxc' }
         ]);
       });
 
       it('q[code=css]w[/code]e', () => {
         expect(MarkdownTokenizer.parse('q[code=css]w[/code]e')).to.eql([
           ...text('q'),
-          { content: 'w', type: 'code_block', attrs: [['language', 'css']] },
+          { type: 'code_block', content: 'w', attrs: [['language', 'css']] },
           ...text('e')
         ]);
       });
