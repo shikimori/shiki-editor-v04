@@ -34,6 +34,12 @@ export default class MarkdownTokenizer {
   }
 
   constructor(text, index, nestedSequence = '', exitSequence = undefined) {
+    // if (exitSequence === undefined) {
+    //   console.log(text);
+    // } else {
+    //   console.log(index, text[index], exitSequence);
+    // }
+
     this.text = text;
     this.index = index;
 
@@ -59,6 +65,7 @@ export default class MarkdownTokenizer {
       if (this.isExitSequence) { break; }
     }
 
+    // console.log(this.tokens, this.exitSequence);
     return this.tokens;
   }
 
@@ -155,8 +162,11 @@ export default class MarkdownTokenizer {
 
         switch (seq3) {
           case '```':
-            this.processCodeBlock(seq3, '\n```', null, true);
-            break outer;
+            if (this.processCodeBlock(seq3, '\n```', null, true)) {
+              break outer;
+            } else {
+              break;
+            }
         }
 
         switch (bbcode) {
@@ -506,7 +516,6 @@ export default class MarkdownTokenizer {
       this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
 
     if (endSequence !== exitSequence) {
-      this.appendInlineContent(startSequence);
       return false;
     }
 
@@ -529,8 +538,6 @@ export default class MarkdownTokenizer {
   }
 
   processInlineBlock(startSequence, exitSequence) {
-    this.appendInlineContent(startSequence);
-
     const tokenizer = new MarkdownTokenizer(
       this.text,
       this.index,
@@ -543,6 +550,7 @@ export default class MarkdownTokenizer {
       this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
 
     if (endSequence !== exitSequence) { return false; }
+    this.appendInlineContent(startSequence);
 
     let slicedTokens;
     let isNewLineAtEnd = false;
@@ -677,7 +685,6 @@ export default class MarkdownTokenizer {
       index += 1;
     }
     if (!isEnded) {
-      this.appendInlineContent(startSequence + language);
       return false;
     }
 

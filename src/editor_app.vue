@@ -39,6 +39,7 @@
 
 <script>
 import Vue from 'vue';
+
 import { undo, redo } from 'prosemirror-history';
 import autosize from 'autosize';
 import withinviewport from 'withinviewport';
