@@ -1,5 +1,6 @@
 import { Node } from '../base';
 import { fixUrl } from '../utils';
+import { nodeIsActive } from '../checks';
 
 // NOTE: this node cannot be generated in WYSIWYG mode
 export default class LinkBlock extends Node {
@@ -34,6 +35,10 @@ export default class LinkBlock extends Node {
         0
       ]
     };
+  }
+
+  activeCheck(type, state) {
+    return nodeIsActive(type, state);
   }
 
   get markdownParserToken() {

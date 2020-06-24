@@ -1,31 +1,35 @@
 <template>
   <div>
-    <EditorMenuBar
-      v-slot='{ activeChecks, commands }'
+    <!--EditorMenuBar
       ref='menubar'
+      v-slot='{ activeChecks, commands }'
       :editor="editor"
-    >
-      <div class='menu-bar'>
-        <div
-          v-for='(menuItems, index) in menuGroups'
-          :key='index'
-          class='menu-group'
-        >
-          <Icon
-            v-for='item in menuItems'
-            :key='item.constructor === Object ? item.type : item'
-            v-bind='
-              item.constructor === Object ?
-                item :
-                buildMenuItem(item, activeChecks, commands)
-            '
-          />
-        </div>
-        <div class='menu-group source'>
-          <Icon v-bind='menuSourceItem' />
-        </div>
+    -->
+    <div class='menu-bar'>
+      <div
+        v-for='(items, index) in menuItems'
+        :key='index'
+        class='menu-group'
+      >
+        <Icon
+          v-for='item in items'
+          :key='item.constructor === Object ? item.type : item'
+          v-bind='item'
+          :is-active='isActive[item.type]'
+          :is-enabled='item.isEnabled ? item.isEnabled() : isEnabled'
+          @command='() => command(item.type)'
+        />
       </div>
-    </EditorMenuBar>
+      <div class='menu-group source'>
+        <Icon
+          v-bind='menuSourceItem'
+          :is-active='isSource'
+          is-enabled
+          @command='() => toggleSourceCommand()'
+        />
+      </div>
+    </div>
+    <!--/EditorMenuBar-->
 
     <textarea
       v-if='isSource'
@@ -46,15 +50,30 @@ import withinviewport from 'withinviewport';
 
 import Editor from './editor';
 import EditorContent from './components/editor_content';
-import EditorMenuBar from './components/editor_menu_bar';
+// import EditorMenuBar from './components/editor_menu_bar';
 import Icon from './components/icon';
 import { scrollTop } from './utils';
+
+const MENU_ITEMS = [
+  [
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'spoiler_inline',
+    'code_inline',
+    'link_inline'
+  ],
+  ['undo', 'redo'],
+  ['image'],
+  ['blockquote', 'spoiler_block', 'code_block', 'bullet_list']
+];
 
 export default {
   name: 'EditorApp',
   components: {
     EditorContent,
-    EditorMenuBar,
+    // EditorMenuBar,
     Icon
   },
   props: {
@@ -77,40 +96,37 @@ export default {
     isEnabled() {
       return !this.isSource;
     },
-    menuGroups() {
-      return [
-        ['bold', 'italic', 'underline', 'strike', 'spoiler_inline', 'code_inline', 'link_inline'],
-        [{
-          type: 'undo',
-          title: I18n.t('frontend.shiki_editor.undo'),
-          command: () => {
-            undo(this.editor.state, this.editor.view.dispatch);
-            this.editor.focus();
-          },
-          isActive: false,
-          isEnabled: this.isEnabled && undo(this.editor.state)
-        }, {
-          type: 'redo',
-          title: I18n.t('frontend.shiki_editor.redo'),
-          command: () => {
-            redo(this.editor.state, this.editor.view.dispatch);
-            this.editor.focus();
-          },
-          isActive: false,
-          isEnabled: this.isEnabled && redo(this.editor.state)
-        }],
-        ['image'],
-        ['blockquote', 'spoiler_block', 'code_block', 'bullet_list']
-      ];
+    isEnabledMappings() {
+      return {
+        undo: this.undoIsEnabled,
+        redo: this.redoIsEnabled
+      };
+    },
+    menuItems() {
+      return MENU_ITEMS.map(items => items.map(item => ({
+        type: item,
+        title: I18n.t(`frontend.shiki_editor.${item}`),
+        isEnabled: this.isEnabledMappings[item]
+      })));
     },
     menuSourceItem() {
       return {
         type: 'source',
-        title: I18n.t('frontend.shiki_editor.undo'),
-        command: this.toggleSource,
-        isActive: this.isSource,
-        isEnabled: true
+        title: I18n.t('frontend.shiki_editor.undo')
       };
+    },
+    isActive() {
+      const memo = {};
+
+      MENU_ITEMS.forEach(items => items.forEach(item => (
+        memo[item] = this.editor.activeChecks[item] ?
+          this.editor.activeChecks[item]() :
+          false
+      )));
+
+      // this.editor.activeChecks.link_block() ? 'link_block' : 'link_inline'
+
+      return memo;
     }
   },
   // watch: {
@@ -130,16 +146,30 @@ export default {
     this.editor.destroy();
   },
   methods: {
-    buildMenuItem(type, activeChecks, commands) {
-      return {
-        type: type,
-        title: I18n.t(`frontend.shiki_editor.${type}`),
-        command: commands[type],
-        isActive: activeChecks[type](),
-        isEnabled: this.isEnabled
-      };
+    command(type) {
+      const method = `${type}Command`;
+
+      if (this[method] && this[method].constructor === Function) {
+        this[method]();
+      } else {
+        this.editor.commands[type]();
+      }
     },
-    toggleSource() {
+    undoCommand() {
+      undo(this.editor.state, this.editor.view.dispatch);
+      this.editor.focus();
+    },
+    redoCommand() {
+      redo(this.editor.state, this.editor.view.dispatch);
+      this.editor.focus();
+    },
+    undoIsEnabled() {
+      return this.isEnabled && undo(this.editor.state);
+    },
+    redoIsEnabled() {
+      return this.isEnabled && redo(this.editor.state);
+    },
+    toggleSourceCommand() {
       const scrollY = scrollTop();
 
       if (this.isSource) {

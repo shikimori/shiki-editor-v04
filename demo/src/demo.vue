@@ -40,7 +40,8 @@ export default {
     isColumn1: false,
     isColumn2: true,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
-    text2: `[url=//ya.ru]
+    text2: `[b]test[/b]
+[url=//ya.ru]
 [quote]
 z
 [/quote]
