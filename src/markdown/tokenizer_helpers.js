@@ -24,10 +24,12 @@ export function extractBbCode(text, startIndex, maxIndex) {
   return null;
 }
 
-export function extractUntil(text, sequence, startIndex, maxIndex) {
+export function extractUntil(text, sequence, startIndex, maxIndex, isIgnoreNewLine) {
   for (let i = startIndex + 1; i <= (maxIndex || text.length); i++) {
     const char = text[i];
-    const isEnd = char === '\n' || char === undefined;
+    const isEnd = isIgnoreNewLine ?
+      (char === undefined) :
+      (char === '\n' || char === undefined);
 
     if (char === sequence[0] && (
       sequence.length === 1 || text.slice(i, i + sequence.length) === sequence
@@ -67,4 +69,44 @@ export function extractMarkdownLanguage(text, startIndex) {
   }
 
   return null;
+}
+
+export function isMatchedToken(token, type, direction) {
+  return !!token && token.type === type && token.direction === direction;
+}
+
+export function rollbackUnbalancedTokens(tokens) {
+  const cache = {};
+
+  tokens.forEach((token, index) => {
+    if (!token.direction) { return; }
+    if (!cache[token.type]) { cache[token.type] = false; }
+
+    if (token.direction === 'open') {
+      if (cache[token.type]) {
+        tokens[index] = { type: 'text', content: token.bbcode };
+      } else {
+        cache[token.type] = true;
+      }
+    } else {
+      if (cache[token.type]) {
+        cache[token.type] = false;
+      } else {
+        tokens[index] = { type: 'text', content: token.bbcode };
+      }
+    }
+  });
+
+  Object.entries(cache).forEach(([type, isUnbalanced]) => {
+    if (!isUnbalanced) { return; }
+
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      if (tokens[i].type === type && tokens[i].direction === 'open') {
+        tokens[i] = { type: 'text', content: tokens[i].bbcode };
+        return;
+      }
+    }
+  });
+
+  return tokens;
 }

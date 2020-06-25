@@ -778,7 +778,7 @@
     },
     {
       "uid": "42e8060ea6f7a0c77e6a9642ea661acd",
-      "css": "link",
+      "css": "link_inline",
       "code": 128279,
       "src": "custom_icons",
       "selected": true,
@@ -787,7 +787,7 @@
         "width": 1000
       },
       "search": [
-        "link"
+        "link_inline"
       ]
     },
     {
@@ -7376,7 +7376,7 @@
     },
     {
       "uid": "b75a893f43f2aefe8b9b07c4fa3e3198",
-      "css": "link",
+      "css": "link_inline",
       "code": 108,
       "src": "custom_icons",
       "selected": false,
@@ -7385,7 +7385,7 @@
         "width": 1000
       },
       "search": [
-        "link"
+        "link_inline"
       ]
     },
     {

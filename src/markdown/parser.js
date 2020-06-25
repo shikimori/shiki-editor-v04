@@ -1,6 +1,6 @@
 // based on https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
 import MarkdownParseState from './parse_state';
-import tokenHandlers from './token_handlers';
+import tokenHandlers from './parser_token_handlers';
 
 // ::- A configuration of a Markdown parser. Such a parser uses
 // [markdown-it](https://github.com/markdown-it/markdown-it) to

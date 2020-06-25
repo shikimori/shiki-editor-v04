@@ -1,30 +1,34 @@
 import Token from './token';
-import flatten from 'lodash/flatten';
 
-import { fixUrl } from '../utils';
 import {
   extractBbCode,
+  extractMarkdownLanguage,
   extractUntil,
   hasInlineSequence,
-  extractMarkdownLanguage
+  isMatchedToken,
+  rollbackUnbalancedTokens
 } from './tokenizer_helpers';
 import {
   parseCodeMeta,
   parseDivMeta,
   parseImageMeta,
+  parseLinkMeta,
   parseQuoteMeta,
+  parseSizeMeta,
   parseSpoilerMeta
 } from './bbcode_helpers';
 
 export default class MarkdownTokenizer {
-  MAX_BBCODE_SIZE = 250 // [quote=...] can be so long... spoiler too...
-  MAX_URL_SIZE = 512
+  MAX_BBCODE_SIZE = 512
 
   BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=(.+?))?\]$/
   DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
   COLOR_REGEXP = /^\[color=(#[\da-f]+|\w+)\]$/
   SIZE_REGEXP = /^\[size=(\d+)\]$/
+  LINK_REGEXP = /^\[url=(.+?)\]$/
   EMPTY_SPACES_REGEXP = /^ +$/
+
+  PSEUDO_BLOCK_TEST_REGEXP = /\[(?:quote|div|spoiler|right|center)/
 
   MARK_STACK_MAPPINGS = {
     color: '[color]',
@@ -57,7 +61,293 @@ export default class MarkdownTokenizer {
       if (this.isExitSequence) { break; }
     }
 
-    return flatten(this.tokens);
+    if (this.exitSequence && !this.isExitSequence) {
+      return null;
+    } else {
+      return this.tokens;
+    }
+  }
+
+  parseLine(skippableSequence = '') {
+    if (this.isSkippableSequence(skippableSequence || this.nestedSequence)) {
+      this.next((skippableSequence || this.nestedSequence).length);
+    }
+
+    const startIndex = this.index;
+    let match;
+
+    outer: while (this.index <= this.text.length) { // eslint-disable-line no-restricted-syntax
+      const { char1, seq2, seq3, seq4, seq5, bbcode } = this;
+
+      const isStart = startIndex === this.index;
+      const isEnd = char1 === '\n' || char1 === undefined;
+
+      let meta;
+      let isProcessed = false;
+      const isOnlySpacingsBefore = this.isOnlyInlineSpacingsBefore();
+
+      if (this.isExitSequence) {
+        this.finalizeParagraph();
+        return;
+      }
+
+      if (isEnd) {
+        this.finalizeParagraph();
+        this.next();
+        // add aditional parahraph when meet \n before exitSequesnce
+        // if (this.isExitSequence) { this.finalizeParagraph(); }
+        return;
+      }
+
+      if (isStart) {
+        switch (seq2) {
+          case '> ':
+            this.processBlockQuote(seq2);
+            break outer;
+
+          case '- ':
+          case '+ ':
+          case '* ':
+            this.processBulletList(seq2);
+            break outer;
+        }
+
+        switch (seq3) {
+          case '```':
+            if (this.processCodeBlock(seq3, '\n```', null, true)) {
+              break outer;
+            } else {
+              break;
+            }
+        }
+
+        switch (bbcode) {
+          case '[*]':
+            this.processBulletList(
+              this.text[this.index + bbcode.length] === ' ' ?
+                bbcode + ' ' :
+                bbcode
+            );
+            break outer;
+
+          case '[list]':
+            meta = { data: [['data-list', 'remove-it']] };
+            isProcessed = this.processBlock(
+              'div', bbcode, '[/list]', meta,
+              isStart, isOnlySpacingsBefore
+            );
+            if (isProcessed) { return; }
+            break;
+        }
+      }
+
+      if (bbcode && (isStart || isOnlySpacingsBefore)) {
+        if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
+          meta = parseDivMeta(match[1]);
+          isProcessed = this.processBlock(
+            'div', bbcode, '[/div]', meta,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+        if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
+          isProcessed = this.processBlock(
+            'spoiler_block', bbcode, '[/spoiler]', parseSpoilerMeta(match[1]),
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+
+        if (seq4 === '[url' && (match = bbcode.match(this.LINK_REGEXP))) {
+          isProcessed = this.processPseudoBlock(
+            'link_block', bbcode, '[/url]', parseLinkMeta(match[1]),
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+
+        if (seq5 === '[size' && (match = bbcode.match(this.SIZE_REGEXP))) {
+          isProcessed = this.processPseudoBlock(
+            'size_block', bbcode, '[/size]', parseSizeMeta(match[1]),
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+      }
+
+      if (bbcode) {
+        if (bbcode === '[center]') {
+          isProcessed = this.processBlock(
+            'center', bbcode, '[/center]', null,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+
+        if (bbcode === '[right]') {
+          isProcessed = this.processBlock(
+            'right', bbcode, '[/right]', null,
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+
+        if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
+          const meta = parseCodeMeta(match[1]);
+          if (isStart || meta) {
+            isProcessed = this.processCodeBlock(
+              bbcode, '[/code]', meta,
+              isStart, isOnlySpacingsBefore
+            );
+            if (isProcessed) { return; }
+          }
+        }
+
+        if (seq5 === '[quot' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
+          isProcessed = this.processBlock(
+            'quote', bbcode, '[/quote]', parseQuoteMeta(match[1]),
+            isStart, isOnlySpacingsBefore
+          );
+          if (isProcessed) { return; }
+        }
+      }
+
+      if(this.processInline(char1, bbcode, seq2, seq3, seq4, seq5)) {
+        break;
+      }
+    }
+  }
+
+  processInline(char1, bbcode, seq2, seq3, seq4, seq5) {
+    switch (bbcode) {
+      case '[b]':
+        if (this.processMarkOpen('bold', '[b]', '[/b]')) { return; }
+        break;
+
+      case '[/b]':
+        if (this.processMarkClose('bold', '[b]', '[/b]')) { return; }
+        break;
+
+      case '[i]':
+        if (this.processMarkOpen('italic', '[i]', '[/i]')) { return; }
+        break;
+
+      case '[/i]':
+        if (this.processMarkClose('italic', '[i]', '[/i]')) { return; }
+        break;
+
+      case '[u]':
+        if (this.processMarkOpen('underline', '[u]', '[/u]')) { return; }
+        break;
+
+      case '[/u]':
+        if (this.processMarkClose('underline', '[u]', '[/u]')) { return; }
+        break;
+
+      case '[s]':
+        if (this.processMarkOpen('strike', '[s]', '[/s]')) { return; }
+        break;
+
+      case '[/s]':
+        if (this.processMarkClose('strike', '[s]', '[/s]')) { return; }
+        break;
+
+      case '[/url]':
+        if (this.processMarkClose('link_inline', '[url]', '[/url]')) { return; }
+        break;
+
+      case '[/color]':
+        if (this.processMarkClose('color', '[color]', '[/color]')) { return; }
+        break;
+
+      case '[/size]':
+        if (this.processMarkClose('size', '[size]', '[/size]')) { return; }
+        break;
+
+      case '[poster]':
+        if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
+        break;
+
+      case '[code]':
+        if (this.processInlineCode(bbcode, '[/code]')) { return; }
+        break;
+
+      case '[hr]':
+        this.processHr(bbcode);
+        return true;
+
+      case '[br]':
+        this.next(bbcode.length);
+        this.finalizeParagraph();
+        return true;
+
+      default:
+        break;
+    }
+
+    if (seq2 === '||' && seq3 !== '|||') {
+      if (this.lastMark !== seq2) {
+        if (this.processMarkOpen('spoiler_inline', '||', '||')) { return; }
+      } else {
+        if (this.processMarkClose('spoiler_inline', '||', '||')) { return; }
+      }
+    }
+
+    if (char1 === '`') {
+      if (this.processInlineCode(char1)) { return; }
+    }
+
+    let match;
+    let meta;
+
+    if (bbcode) {
+      switch (seq4) {
+        case '[div':
+          if (this.processInlineBlock(bbcode, '[/div]')) {
+            return;
+          }
+          break;
+
+        case '[img':
+          meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
+          if (this.processInlineImage(bbcode, '[/img]', false, meta)) {
+            return;
+          }
+          break;
+      }
+
+      switch (seq5) {
+        case '[url=':
+          match = bbcode.match(this.LINK_REGEXP);
+          if (!match) { break; }
+          meta = parseLinkMeta(match[1]);
+
+          if (this.processLinkInline(bbcode, meta)) { return; }
+          break;
+
+        case '[colo':
+          match = bbcode.match(this.COLOR_REGEXP);
+          if (!match) { break; }
+
+          meta = { color: match[1] };
+          if (this.processMarkOpen('color', bbcode, '[/color]', meta)) {
+            return;
+          }
+          break;
+
+        case '[size':
+          match = bbcode.match(this.SIZE_REGEXP);
+          if (!match) { break; }
+
+          meta = parseSizeMeta(match[1]);
+          if (this.processMarkOpen('size', bbcode, '[/size]', meta)) {
+            return;
+          }
+          break;
+      }
+    }
+
+    this.appendInlineContent(char1);
   }
 
   next(steps = 1, isSkipNewLine = false) {
@@ -111,247 +401,13 @@ export default class MarkdownTokenizer {
       this.text[this.index + 4];
   }
 
-  parseLine(skippableSequence = '') {
-    if (this.isSkippableSequence(skippableSequence || this.nestedSequence)) {
-      this.next((skippableSequence || this.nestedSequence).length);
-    }
-
-    const startIndex = this.index;
-    let match;
-
-    outer: while (this.index <= this.text.length) { // eslint-disable-line no-restricted-syntax
-      const { char1, seq2, seq3, seq4, seq5, bbcode } = this;
-
-      const isStart = startIndex === this.index;
-      const isEnd = char1 === '\n' || char1 === undefined;
-
-      if (this.isExitSequence) {
-        this.finalizeParagraph();
-        return;
-      }
-
-      if (isEnd) {
-        this.finalizeParagraph();
-        this.next();
-        // add aditional parahraph when meet \n before exitSequesnce
-        // if (this.isExitSequence) { this.finalizeParagraph(); }
-        return;
-      }
-
-      if (isStart) {
-        switch (seq2) {
-          case '> ':
-            this.processBlockQuote(seq2);
-            break outer;
-
-          case '- ':
-          case '+ ':
-          case '* ':
-            this.processBulletList(seq2);
-            break outer;
-        }
-
-        switch (seq3) {
-          case '```':
-            this.processCodeBlock(seq3, '\n```');
-            break outer;
-        }
-
-        switch (bbcode) {
-          case '[*]':
-            this.processBulletList(
-              this.text[this.index + bbcode.length] === ' ' ?
-                bbcode + ' ' :
-                bbcode
-            );
-            break outer;
-        }
-      }
-
-      const isOnlySpacingsBefore = this.isOnlyInlineSpacingsBefore();
-
-      if (bbcode && (isStart || isOnlySpacingsBefore)) {
-        if (bbcode === '[center]') {
-          if (this.processBlock('center', bbcode, '[/center]')) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-          }
-          return;
-        }
-
-        if (bbcode === '[right]') {
-          if (this.processBlock('right', bbcode, '[/right]')) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-          }
-          return;
-        }
-
-        if (seq4 === '[div' && (match = bbcode.match(this.DIV_REGEXP))) {
-          const meta = parseDivMeta(match[1]);
-          if (this.processBlock('div', bbcode, '[/div]', meta)) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-          }
-          return;
-        }
-        if (seq5 === '[spoi' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          const meta = parseSpoilerMeta(match[1]);
-          if (this.processBlock('spoiler_block', bbcode, '[/spoiler]', meta)) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-          }
-          return;
-        }
-
-        if (seq5 === '[code' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          const meta = parseCodeMeta(match[1]);
-          if (this.processCodeBlock(bbcode, '[/code]', meta)) {
-            if (isOnlySpacingsBefore) { this.inlineTokens = []; }
-          }
-          return;
-        }
-      }
-
-      if (bbcode) {
-        if (seq5 === '[quot' && (match = bbcode.match(this.BLOCK_BBCODE_REGEXP))) {
-          if (!isStart) { this.finalizeParagraph(); }
-          const meta = parseQuoteMeta(match[1]);
-          this.processBlock('quote', bbcode, '[/quote]', meta);
-          return;
-        }
-      }
-
-      this.processInline(char1, bbcode, seq2, seq3, seq4, seq5);
-    }
-  }
-
-  processInline(char1, bbcode, seq2, seq3, seq4, seq5) {
-    switch (bbcode) {
-      case '[b]':
-        if (this.processMarkOpen('strong', '[b]', '[/b]')) { return; }
-        break;
-
-      case '[/b]':
-        if (this.processMarkClose('strong', '[b]', '[/b]')) { return; }
-        break;
-
-      case '[i]':
-        if (this.processMarkOpen('em', '[i]', '[/i]')) { return; }
-        break;
-
-      case '[/i]':
-        if (this.processMarkClose('em', '[i]', '[/i]')) { return; }
-        break;
-
-      case '[u]':
-        if (this.processMarkOpen('underline', '[u]', '[/u]')) { return; }
-        break;
-
-      case '[/u]':
-        if (this.processMarkClose('underline', '[u]', '[/u]')) { return; }
-        break;
-
-      case '[s]':
-        if (this.processMarkOpen('deleted', '[s]', '[/s]')) { return; }
-        break;
-
-      case '[/s]':
-        if (this.processMarkClose('deleted', '[s]', '[/s]')) { return; }
-        break;
-
-      case '[/url]':
-        if (this.processMarkClose('link', '[url]', '[/url]')) { return; }
-        break;
-
-      case '[/color]':
-        if (this.processMarkClose('color', '[color]', '[/color]')) { return; }
-        break;
-
-      case '[/size]':
-        if (this.processMarkClose('size', '[size]', '[/size]')) { return; }
-        break;
-
-      case '[poster]':
-        if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
-        break;
-
-      case '[code]':
-        if (this.processInlineCode(bbcode, '[/code]')) { return; }
-        break;
-
-      case '[hr]':
-        this.processHr(bbcode);
-        return;
-
-      case '[br]':
-        this.next(bbcode.length);
-        this.finalizeParagraph();
-        return;
-
-      default:
-        break;
-    }
-
-    if (seq2 === '||' && seq3 !== '|||') {
-      if (this.lastMark !== seq2) {
-        if (this.processMarkOpen('spoiler_inline', '||', '||')) { return; }
-      } else {
-        if (this.processMarkClose('spoiler_inline', '||', '||')) { return; }
-      }
-    }
-
-    if (char1 === '`') {
-      if (this.processInlineCode(char1)) { return; }
-    }
-
-    let meta;
-    let attrs;
-
-    if (bbcode) {
-      switch (seq4) {
-        case '[div':
-          this.processInlineBlock(bbcode, '[/div]');
-          return;
-
-        case '[img':
-          meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
-          if (this.processInlineImage(bbcode, '[/img]', false, meta)) {
-            return;
-          }
-          break;
-      }
-
-      switch (seq5) {
-        case '[url=':
-          if (this.processInlineLink(seq5)) { return; }
-          break;
-
-        case '[colo':
-          meta = bbcode.match(this.COLOR_REGEXP);
-          attrs = meta ? { color: meta[1] } : null;
-          if (attrs &&
-             this.processMarkOpen('color', bbcode, '[/color]', attrs)) {
-            return;
-          }
-          break;
-
-        case '[size':
-          meta = bbcode.match(this.SIZE_REGEXP);
-          attrs = meta ? { size: meta[1] } : null;
-          if (attrs &&
-             this.processMarkOpen('size', bbcode, '[/size]', attrs)) {
-            return;
-          }
-          break;
-      }
-    }
-
-    this.appendInlineContent(char1);
-  }
-
   processMarkOpen(type, openBbcode, closeBbcode, attributes) {
     if (!hasInlineSequence(this.text, closeBbcode, this.index)) { return false; }
 
     this.marksStack.push(this.MARK_STACK_MAPPINGS[type] || openBbcode);
-    this.inlineTokens.push(this.tagOpen(type, attributes));
+    this.inlineTokens.push(this.tagOpen(type, attributes, openBbcode));
     this.next(openBbcode.length);
+
     return true;
   }
 
@@ -359,8 +415,9 @@ export default class MarkdownTokenizer {
     if (this.lastMark !== openBbcode) { return false; }
 
     this.marksStack.pop();
-    this.inlineTokens.push(this.tagClose(type));
+    this.inlineTokens.push(this.tagClose(type, closeBbcode));
     this.next(closeBbcode.length);
+
     return true;
   }
 
@@ -406,18 +463,39 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processInlineLink(seq) {
-    const url = extractUntil(this.text, ']', this.index + seq.length);
-    if (url) {
-      this.marksStack.push('[url]');
-      this.inlineTokens.push(
-        this.tagOpen('link', [['href', fixUrl(url)]])
-      );
-      this.next(seq.length + url.length + ']'.length);
-      return true;
-    }
+  processLinkInline(bbcode, attrs) {
+    if (!hasInlineSequence(this.text, '[/url]', this.index)) { return false; }
 
-    return false;
+    this.marksStack.push('[url]');
+    this.inlineTokens.push(
+      this.tagOpen('link_inline', attrs, bbcode)
+    );
+    this.next(bbcode.length);
+    return true;
+  }
+
+  processPseudoBlock(
+    type,
+    startSequence,
+    endSequence,
+    meta,
+    isStart,
+    isOnlySpacingsBefore
+  ) {
+    const index = this.index + startSequence.length;
+    const isNewLineAhead = this.text[index] === '\n';
+    const content = extractUntil(
+      this.text,
+      endSequence,
+      index,
+      null,
+      isNewLineAhead
+    );
+    if (!this.PSEUDO_BLOCK_TEST_REGEXP.test(content)) { return false; }
+
+    return this.processBlock(
+      type, startSequence, endSequence, meta, isStart, isOnlySpacingsBefore
+    );
   }
 
   processInlineImage(tagStart, tagEnd, isPoster, metaAttributes) {
@@ -445,7 +523,14 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processBlock(type, startSequence, exitSequence, metaAttributes) {
+  processBlock(
+    type,
+    startSequence,
+    exitSequence,
+    metaAttributes,
+    isStart = true,
+    isOnlySpacingsBefore = false
+  ) {
     let index = this.index + startSequence.length;
     if (this.text[index] === '\n') { index += 1; }
 
@@ -457,12 +542,16 @@ export default class MarkdownTokenizer {
     );
     const tokens = tokenizer.parse();
 
-    const endSequence =
-      this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    if (!tokens) { return false; }
 
-    if (endSequence !== exitSequence) {
-      this.appendInlineContent(startSequence);
-      return false;
+    // const endSequence =
+    //   this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    // if (endSequence !== exitSequence) { return false; }
+
+    if (isOnlySpacingsBefore) {
+      this.inlineTokens = [];
+    } else if (!isStart) {
+      this.finalizeParagraph();
     }
 
     this.next(startSequence.length);
@@ -478,26 +567,26 @@ export default class MarkdownTokenizer {
   }
 
   processInlineBlock(startSequence, exitSequence) {
-    this.appendInlineContent(startSequence);
-
     const tokenizer = new MarkdownTokenizer(
       this.text,
-      this.index,
+      this.index + startSequence.length,
       '',
       exitSequence
     );
     const tokens = tokenizer.parse();
 
-    const endSequence =
-      this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    if (!tokens) { return false; }
+    // const endSequence =
+    //   this.text.slice(tokenizer.index, tokenizer.index + exitSequence.length);
+    // if (endSequence !== exitSequence) { return false; }
 
-    if (endSequence !== exitSequence) { return false; }
+    this.appendInlineContent(startSequence);
 
     let slicedTokens;
     let isNewLineAtEnd = false;
 
     // append first paragraph to current inlineTokens
-    if (tokens[0].type === 'paragraph_open') {
+    if (isMatchedToken(tokens[0], 'paragraph', 'open')) {
       tokens[1].children.forEach(token => {
         if (token.type === 'text') {
           this.appendInlineContent(token.content, false);
@@ -517,7 +606,7 @@ export default class MarkdownTokenizer {
     this.index = tokenizer.index;
 
     // insert new line at the end to maintain original formatting
-    if (tokens[tokens.length - 1].type === 'paragraph_close') {
+    if (isMatchedToken(tokens[tokens.length - 1], 'paragraph', 'close')) {
       if (this.text[this.index - 1] === '\n') {
         isNewLineAtEnd = true;
         this.finalizeParagraph();
@@ -526,7 +615,7 @@ export default class MarkdownTokenizer {
 
     // unwrap final paragraph
     if (!isNewLineAtEnd && slicedTokens.length &&
-      slicedTokens[slicedTokens.length - 1].type === 'paragraph_close'
+      isMatchedToken(slicedTokens[slicedTokens.length - 1], 'paragraph', 'close')
     ) {
       this.inlineTokens = slicedTokens[slicedTokens.length - 2].children;
       slicedTokens = slicedTokens.slice(0, slicedTokens.length - 3);
@@ -537,17 +626,6 @@ export default class MarkdownTokenizer {
     this.appendInlineContent(exitSequence);
 
     return true;
-  }
-
-  finalizeParagraph() {
-    if (this.nestedSequence && !this.inlineTokens.length) { return; }
-
-    this.push(this.tagOpen('paragraph'));
-    this.push(new Token('inline', null, this.inlineTokens));
-    this.push(this.tagClose('paragraph'));
-
-    this.inlineTokens = [];
-    this.marksStack = [];
   }
 
   processBlockQuote(tagSequence) {
@@ -601,7 +679,13 @@ export default class MarkdownTokenizer {
     this.nestedSequence = nestedSequenceBackup;
   }
 
-  processCodeBlock(startSequence, endSequence, meta) {
+  processCodeBlock(
+    startSequence,
+    endSequence,
+    meta,
+    isStart,
+    isOnlySpacingsBefore
+  ) {
     const isMarkdown = startSequence === '```';
     let index = this.index + startSequence.length;
     let language;
@@ -631,7 +715,6 @@ export default class MarkdownTokenizer {
       index += 1;
     }
     if (!isEnded) {
-      this.appendInlineContent(startSequence + language);
       return false;
     }
 
@@ -642,8 +725,16 @@ export default class MarkdownTokenizer {
     const languageAttr = language ? [['language', language]] : null;
     index += endSequence.length;
 
+    if (isOnlySpacingsBefore) {
+      this.inlineTokens = [];
+    } else if (!isStart) {
+      this.finalizeParagraph();
+    }
+
     this.push(new Token('code_block', text, null, languageAttr));
     this.next(index - this.index, true);
+
+    return true;
   }
 
   processHr(bbcode) {
@@ -652,12 +743,12 @@ export default class MarkdownTokenizer {
     this.push(new Token('hr', null, null, null));
   }
 
-  tagOpen(type, attributes = null) {
-    return new Token(`${type}_open`, null, null, attributes);
+  tagOpen(type, attributes = null, bbcode) {
+    return new Token(type, null, null, attributes, 'open', bbcode);
   }
 
-  tagClose(type) {
-    return new Token(`${type}_close`);
+  tagClose(type, bbcode) {
+    return new Token(type, null, null, null, 'close', bbcode);
   }
 
   push(token) {
@@ -681,6 +772,19 @@ export default class MarkdownTokenizer {
     if (this.inlineTokens.length) {
       this.finalizeParagraph();
     }
+  }
+
+  finalizeParagraph() {
+    if (this.nestedSequence && !this.inlineTokens.length) { return; }
+
+    this.push(this.tagOpen('paragraph'));
+    this.push(
+      new Token('inline', null, rollbackUnbalancedTokens(this.inlineTokens))
+    );
+    this.push(this.tagClose('paragraph'));
+
+    this.inlineTokens = [];
+    this.marksStack = [];
   }
 
   isSequenceContinued() {

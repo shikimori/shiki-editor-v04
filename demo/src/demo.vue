@@ -1,5 +1,10 @@
 <template>
   <div class='container'>
+    <div class='samples'>
+      <label><input v-model='isColumn1' type='checkbox'>Sample 1</label>
+      <label><input v-model='isColumn2' type='checkbox'>Sample 2</label>
+    </div>
+
     <div class='fc-2'>
       <div v-if='isColumn1' class='f-column'>
         <Editor
@@ -34,6 +39,26 @@ export default {
     baseUrl: 'https://shikimori.one',
     isColumn1: false,
     isColumn2: true,
+    // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
+    text2: `[b]test[/b]
+[url=//ya.ru]
+[quote]
+z
+[/quote]
+[/url]
+
+[url=//ya.ru]tets[/url]
+
+[list]
+zxc
+[/list]
+
+`,
+//     text2: `[div=c-column b-catalog_entry][div=cover][div=image-decor][anime=1292][div=image-cutter]
+// [poster]https://kawai.shikimori.one/system/animes/original/1292.jpg?1578039620[/poster][/div][/anime][div=text]
+// 1
+// [/div][/div][/div][/div]
+// `,
     text1: `B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -100,31 +125,6 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote]Old style quote support[/quote]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`,
-    text2: `> [quote]\n> a\n> [/quote]
-`
-//     text2: `- [quote]
-//   a
-//   [/quote]
-//   b
-// `
-
-//
-//
-    // text2: `[url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/83-gotovye-stili][div=b-link_button dark]Готовые стили[/div][/url]
-// `
-///    text2: `[code]
-///q
-///[/code]
-//     text2: ` [div]z\nx\nc[/div]
-// `
-//     text2: `[div] [div]z[/div][/div]
-// `
-  // text2: `\`[div]div [div=b-link_button]inside[/div] another div[/div]\`
-  // [div]div [div=b-link_button]inside[/div] another div[/div]
-  // `
-  // text2: `\`[div]div [div=b-link_button]inside[/div] another div[/div]\`
-  // [url=https://shikimori.org/clubs/811-css-club-nastroyka-vneshnego-vida-sayta/pages/84-kratko-o-tom-kak-voobsche-stroitsya-css][div=b-link_button dark data-test]Вкратце о CSS[/div][/url]
-  // `
   }),
   mounted() {
     window.markdownTokenizer = markdownit('commonmark', { html: false });
@@ -137,4 +137,15 @@ div [div=b-link_button]inside line is not parsed[/div]
 <style scoped lang='sass'>
 .f-column:first-child:last-child
   width: 100%
+
+.samples
+  margin-bottom: 16px
+
+  label
+    display: inline-flex
+    margin-right: 16px
+    align-items: center
+
+    input
+      margin-right: 5px
 </style>

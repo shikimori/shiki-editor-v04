@@ -241,7 +241,7 @@ export const defaultMarkdownParser = new MarkdownParser(schema, markdownit('comm
 
   em: { mark: 'em' },
   strong: { mark: 'strong' },
-  link: { mark: 'link',
+  link: { mark: 'link_inline',
     getAttrs: tok => ({
       href: tok.attrGet('href'),
       title: tok.attrGet('title') || null

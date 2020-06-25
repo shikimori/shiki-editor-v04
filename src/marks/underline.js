@@ -7,7 +7,13 @@ export default class Underline extends Mark {
 
   get schema() {
     return {
-      parseDOM: [{ tag: 'u' }],
+      parseDOM: [{
+        tag: 'u'
+      },
+      {
+        style: 'text-decoration',
+        getAttrs: value => value === 'underline'
+      }],
       toDOM: () => ['u', 0]
     };
   }

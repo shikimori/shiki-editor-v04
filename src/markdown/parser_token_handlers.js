@@ -3,6 +3,7 @@
 
 export default function tokenHandlers(schema, tokens) {
   const handlers = Object.create(null);
+
   for (const type in tokens) {
     const spec = tokens[type];
     if (spec.block) {

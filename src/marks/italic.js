@@ -1,14 +1,18 @@
 import { Mark } from '../base';
 import { markInputRule, markPasteRule } from '../commands';
 
-export default class Em extends Mark {
+export default class Italic extends Mark {
   get name() {
-    return 'em';
+    return 'italic';
   }
 
   get schema() {
     return {
-      parseDOM: [{ tag: 'em' }],
+      parseDOM: [
+        { tag: 'i' },
+        { tag: 'em' },
+        { style: 'font-style=italic' }
+      ],
       toDOM: () => ['em', 0]
     };
   }

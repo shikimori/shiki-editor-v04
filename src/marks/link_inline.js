@@ -1,12 +1,12 @@
-// based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/marks/Link.js
+// based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/marks/LinkInline.js
 import { Plugin } from 'prosemirror-state';
 import { Mark } from '../base';
 import { updateMark, removeMark, pasteRule } from '../commands';
 import { getMarkAttrs, fixUrl } from '../utils';
 
-export default class Link extends Mark {
+export default class LinkInline extends Mark {
   get name() {
-    return 'link';
+    return 'link_inline';
   }
 
   get defaultOptions() {
@@ -18,12 +18,12 @@ export default class Link extends Mark {
   get schema() {
     return {
       attrs: {
-        href: { default: '' }
+        href: {}
       },
       inclusive: false,
       parseDOM: [
         {
-          tag: 'a[href]',
+          tag: 'a[href]:not(.prosemirror-block)',
           getAttrs: node => ({
             href: node.getAttribute('href')
           })
@@ -47,7 +47,7 @@ export default class Link extends Mark {
         marks = [...marks, ...node.marks];
       });
 
-      const mark = marks.find((markItem) => markItem.type.name === 'link');
+      const mark = marks.find((markItem) => markItem.type.name === 'link_inline');
 
       if (mark && mark.attrs.href) {
         return removeMark(type);
@@ -80,7 +80,7 @@ export default class Link extends Mark {
         props: {
           handleClick: (view, pos, event) => {
             const { schema } = view.state;
-            const attrs = getMarkAttrs(schema.marks.link, view.state);
+            const attrs = getMarkAttrs(schema.marks.link_inline, view.state);
 
             if (attrs.href && event.target instanceof HTMLAnchorElement) {
               event.stopPropagation();
@@ -94,10 +94,8 @@ export default class Link extends Mark {
 
   get markdownParserToken() {
     return {
-      mark: 'link',
-      getAttrs: token => ({
-        href: token.attrGet('href')
-      })
+      mark: 'link_inline',
+      getAttrs: token => token.serializeAttributes()
     };
   }
 

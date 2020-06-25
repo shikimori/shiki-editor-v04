@@ -3,7 +3,9 @@ import {
   extractBbCode,
   extractUntil,
   hasInlineSequence,
-  extractMarkdownLanguage
+  extractMarkdownLanguage,
+  isMatchedToken,
+  rollbackUnbalancedTokens
 } from '../../src/markdown/tokenizer_helpers';
 
 describe('tokenizer_helpers', () => {
@@ -25,6 +27,7 @@ describe('tokenizer_helpers', () => {
     expect(extractUntil('te1st', 'st', 0)).to.eq('te1');
 
     expect(extractUntil('te1\nst', 'st', 0)).to.eq(null);
+    expect(extractUntil('te1\nst2', '2', 0, null, true)).to.eq('te1\nst');
 
     expect(extractUntil('te1st', '1', 0, 99)).to.eq('te');
     expect(extractUntil('te1st', '1', 0, 1)).to.eq(null);
@@ -48,5 +51,63 @@ describe('tokenizer_helpers', () => {
     expect(extractMarkdownLanguage('```\n', 3)).to.eq('');
     expect(extractMarkdownLanguage('```test', 3)).to.eq('test');
     expect(extractMarkdownLanguage('```test\n', 3)).to.eq('test');
+  });
+
+  it('isMatchedToken', () => {
+    expect(isMatchedToken({ type: 'bold', direction: 'open' }, 'bold', 'open'))
+      .to.eq(true);
+
+    expect(isMatchedToken(null, 'bold', 'open'))
+      .to.eq(false);
+
+    expect(isMatchedToken({ type: 'bold', direction: 'open' }, 'size', 'open'))
+      .to.eq(false);
+    expect(isMatchedToken({ type: 'bold', direction: 'open' }, 'bold', 'close'))
+      .to.eq(false);
+
+    expect(isMatchedToken({ type: 'size', direction: 'open' }, 'bold', 'open'))
+      .to.eq(false);
+    expect(isMatchedToken({ type: 'bold', direction: 'close' }, 'bold', 'open'))
+      .to.eq(false);
+  });
+
+  it('rollbackUnbalancedTokens', () => {
+    expect(rollbackUnbalancedTokens([
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', direction: 'close' }
+    ])).to.eql([
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', direction: 'close' }
+    ]);
+
+    expect(rollbackUnbalancedTokens([
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' }
+    ])).to.eql([
+      { type: 'text', content: '[b]' },
+      { type: 'text', content: 'zxc' }
+    ]);
+
+    expect(rollbackUnbalancedTokens([
+      { type: 'bold', direction: 'close', bbcode: '[/b]' },
+      { type: 'text', content: 'zxc' }
+    ])).to.eql([
+      { type: 'text', content: '[/b]' },
+      { type: 'text', content: 'zxc' }
+    ]);
+
+    expect(rollbackUnbalancedTokens([
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', direction: 'close' }
+    ])).to.eql([
+      { type: 'bold', direction: 'open', bbcode: '[b]' },
+      { type: 'text', content: '[b]' },
+      { type: 'text', content: 'zxc' },
+      { type: 'bold', direction: 'close' }
+    ]);
   });
 });

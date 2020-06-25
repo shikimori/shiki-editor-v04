@@ -52,7 +52,9 @@ export default class MarkdownParseState {
   parseTokens(tokens) {
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
-      const handler = this.tokenHandlers[token.type];
+      const handler = this.tokenHandlers[
+        token.direction ? `${token.type}_${token.direction}` : token.type
+      ];
       if (!handler) throw new Error('Token type `' + token.type + '` not supported by Markdown parser');
       handler(this, token);
     }

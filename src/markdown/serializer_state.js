@@ -180,7 +180,7 @@ export default class MarkdownSerializerState {
       const noEsc = inner && this.marks[inner.type.name].escape === false;
       const len = marks.length - (noEsc ? 1 : 0);
 
-      // Try to reorder 'mixable' marks, such as em and strong, which
+      // Try to reorder 'mixable' marks, such as italic and bold, which
       // in Markdown may be opened and closed in different order, so
       // that order of the marks for the token matches the order in
       // active.

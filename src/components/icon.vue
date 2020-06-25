@@ -19,7 +19,6 @@ export default {
   props: {
     type: { type: String, required: true },
     title: { type: String, required: true },
-    command: { type: Function, required: true },
     isActive: { type: Boolean, required: true },
     isEnabled: { type: Boolean, required: false, default: true }
   },
@@ -27,7 +26,7 @@ export default {
     execute() {
       if (!this.isEnabled) { return; }
       this.$refs.icon.blur();
-      this.command();
+      this.$emit('command');
     }
   }
 };
@@ -75,7 +74,7 @@ export default {
     text-transform: none
     letter-spacing: normal
 
-  $icons: ("strong": "\e802", "em": "\e804", "underline": "\e807", "deleted": "\e805", "link": "\1f517", "spoiler_inline": "\f31a", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac", "spoiler_block": "\f31b")
+  $icons: ("bold": "\e802", "italic": "\e804", "underline": "\e807", "strike": "\e805", "link_inline": "\1f517", "link_block": "\1f517", "spoiler_inline": "\f31a", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac", "spoiler_block": "\f31b")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph

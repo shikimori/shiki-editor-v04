@@ -3,7 +3,9 @@ import {
   parseCodeMeta,
   parseDivMeta,
   parseImageMeta,
+  parseLinkMeta,
   parseQuoteMeta,
+  parseSizeMeta,
   parseSpoilerMeta
 } from '../../src/markdown/bbcode_helpers';
 
@@ -49,6 +51,11 @@ describe('tokenizer_helpers', () => {
     });
   });
 
+  it('parseLinkMeta', () => {
+    expect(parseLinkMeta('qwe')).to.eql({ href: '//qwe' });
+    expect(parseLinkMeta('https://ya.ru')).to.eql({ href: 'https://ya.ru' });
+  });
+
   it('parseQuoteMeta', () => {
     expect(parseQuoteMeta('')).to.eq(null);
 
@@ -80,10 +87,12 @@ describe('tokenizer_helpers', () => {
     });
   });
 
+  it('parseSizeMeta', () => {
+    expect(parseSizeMeta('qwe')).to.eql({ size: 'qwe' });
+  });
+
   it('parseSpoilerMeta', () => {
     expect(parseSpoilerMeta('')).to.eq(null);
-    expect(parseSpoilerMeta('qwe')).to.eql({
-      label: 'qwe'
-    });
+    expect(parseSpoilerMeta('qwe')).to.eql({ label: 'qwe' });
   });
 });
