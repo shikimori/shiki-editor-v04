@@ -127,6 +127,7 @@ export default class ShikiEditor extends Emitter {
       keymap({
         'Mod-z': undo,
         'Shift-Mod-z': redo,
+        'Mod-y': redo,
         Backspace: joinBackward
       }),
       keymap(baseKeymap),
