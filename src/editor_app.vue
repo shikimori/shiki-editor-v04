@@ -62,7 +62,7 @@ const MENU_ITEMS = [
     'strike',
     'spoiler_inline',
     'code_inline',
-    'link_inline'
+    'link'
   ],
   ['undo', 'redo'],
   ['image'],
@@ -80,18 +80,13 @@ export default {
     baseUrl: { type: String, required: true },
     content: { type: String, required: true }
   },
-  data() {
-    return {
-      editor: new Editor({
-        extensions: [],
-        content: this.content,
-        baseUrl: this.baseUrl
-      }, Vue),
-      editorContent: this.content,
-      isSource: false,
-      editorPosition: null
-    };
-  },
+  data: () => ({
+    editor: null,
+    editorContent: null,
+    isSource: false,
+    editorPosition: null,
+    isLinkBlock: false
+  }),
   computed: {
     isEnabled() {
       return !this.isSource;
@@ -124,23 +119,19 @@ export default {
           false
       )));
 
-      // this.editor.activeChecks.link_block() ? 'link_block' : 'link_inline'
+      this.isLinkBlock = this.editor.activeChecks.link_block(); // eslint-disable-line
+      memo.link = this.isLinkBlock || this.editor.activeChecks.link_inline();
 
       return memo;
     }
   },
-  // watch: {
-  //   content() {
-  //     if (this.content !== this.editorContent) {
-  //       this.editor.setContent(this.content);
-  //     }
-  //   }
-  // },
   created() {
-    // this.editor.on('update', () => {
-    //   this.editorContent = this.editor.exportMarkdown();
-    //   this.$emit('update', this.editorContent);
-    // });
+    this.editor = new Editor({
+      extensions: [],
+      content: this.content,
+      baseUrl: this.baseUrl
+    }, Vue);
+    this.editorContent = this.content;
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -151,6 +142,10 @@ export default {
 
       if (this[method] && this[method].constructor === Function) {
         this[method]();
+      } else if (type == 'link') {
+        this.isLinkBlock ?
+          this.editor.commands.link_block() :
+          this.editor.commands.link_inline();
       } else {
         this.editor.commands[type]();
       }
