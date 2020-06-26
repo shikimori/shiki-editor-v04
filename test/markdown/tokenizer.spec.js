@@ -1040,6 +1040,15 @@ describe('MarkdownTokenizer', () => {
           { type: 'quote', direction: 'close' },
           { type: 'link_block', direction: 'close' }]);
       });
+
+      it('[url=//ya.ru]\\nz\\n[/url]', () => {
+        expect(MarkdownTokenizer.parse(
+          '[url=//ya.ru]\nz\n[/url]'
+        )).to.eql([
+          { type: 'link_block', direction: 'open', attrs: [['href', '//ya.ru']] },
+          ...text('z'),
+          { type: 'link_block', direction: 'close' }]);
+      });
     });
 
     describe('size_block', () => {

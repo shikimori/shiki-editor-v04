@@ -484,14 +484,17 @@ export default class MarkdownTokenizer {
   ) {
     const index = this.index + startSequence.length;
     const isNewLineAhead = this.text[index] === '\n';
-    const content = extractUntil(
-      this.text,
-      endSequence,
-      index,
-      null,
-      isNewLineAhead
-    );
-    if (!this.PSEUDO_BLOCK_TEST_REGEXP.test(content)) { return false; }
+
+    if (!isNewLineAhead) {
+      const content = extractUntil(
+        this.text,
+        endSequence,
+        index,
+        null,
+        isNewLineAhead
+      );
+      if (!this.PSEUDO_BLOCK_TEST_REGEXP.test(content)) { return false; }
+    }
 
     return this.processBlock(
       type, startSequence, endSequence, meta, isStart, isOnlySpacingsBefore
