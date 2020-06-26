@@ -37,20 +37,23 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn1: false,
-    isColumn2: true,
+    isColumn1: true,
+    isColumn2: false,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
-    text2: `[b]test[/b]
-[url=//ya.ru]
+    text2: `[url=//ya.ru]
 [quote]
-z
+test [b]z[/b] test
 [/quote]
 [/url]
+
+[b]test[/b]
 
 [url=//ya.ru]tets[/url]
 
 [list]
-zxc
+> [quote]
+> zxc
+> [/quote]
 [/list]
 
 `,
