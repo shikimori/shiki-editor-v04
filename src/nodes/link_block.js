@@ -1,6 +1,7 @@
 import { Node } from '../base';
 import { fixUrl } from '../utils';
 import { nodeIsActive } from '../checks';
+import { toggleWrap } from '../commands';
 
 // NOTE: this node cannot be generated in WYSIWYG mode
 export default class LinkBlock extends Node {
@@ -35,6 +36,10 @@ export default class LinkBlock extends Node {
         0
       ]
     };
+  }
+
+  commands({ type, schema }) {
+    return () => toggleWrap(type, schema.nodes.paragraph);
   }
 
   activeCheck(type, state) {
