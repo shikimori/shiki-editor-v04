@@ -235,6 +235,7 @@ textarea.ProseMirror
 /deep/
   [data-image]:hover,
   [data-image].is-prosemirror-selected,
+  [data-link]:hover,
   [data-div]:hover,
   [data-div].is-prosemirror-selected
     position: relative
@@ -258,13 +259,19 @@ textarea.ProseMirror
       top: 0
       z-index: 999
 
+  [data-image]
+    &.is-prosemirror-selected:before,
+    &:hover:before
+      content: attr(data-image)
+
+  [data-link]
+    &:hover:before
+      content: attr(data-link)
+
   [data-div]
     &.is-prosemirror-selected:before,
     &:hover:before
       content: attr(data-div)
 
-  [data-image]
-    &.is-prosemirror-selected:before,
-    &:hover:before
-      content: attr(data-image)
+
 </style>

@@ -31,7 +31,8 @@ export default class LinkBlock extends Node {
           href: fixUrl(node.attrs.href),
           class: 'b-link prosemirror-block',
           rel: 'noopener noreferrer nofollow',
-          target: '_blank'
+          target: '_blank',
+          'data-link': `[url=${node.attrs.href}]`
         },
         0
       ]
