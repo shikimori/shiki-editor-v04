@@ -40,10 +40,10 @@ export default {
     isColumn1: false,
     isColumn2: true,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
-    text2: `# \`# headline 1\`
-## \`## headline 2\`
-### \`### headline 3\`
-#### \`#### headline 4\`
+    text2: `# Headline 1 code: \`# headline 1\`
+## Headline 2 code: \`## headline 2\`
+### Headline 3 code: \`### headline 3\`
+#### Headline 4 code: \`#### headline 4\`
 
 
 [url=//ya.ru]
@@ -72,7 +72,12 @@ test [b]z[/b] test
 // 1
 // [/div][/div][/div][/div]
 // `,
-    text1: `B[b]old tex[/b]t
+    text1: `# Headline 1 code: \`# headline 1\`
+## Headline 2 code: \`## headline 2\`
+### Headline 3 code: \`### headline 3\`
+#### Headline 4 code: \`#### headline 4\`
+
+B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
 S[s]triked tex[/s]t
