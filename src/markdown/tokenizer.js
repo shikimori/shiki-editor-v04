@@ -105,9 +105,12 @@ export default class MarkdownTokenizer {
           case '```':
             if (this.processCodeBlock(seq3, '\n```', null, true)) {
               break outer;
-            } else {
-              break;
             }
+            break;
+
+          case '## ':
+            this.processHeading(seq3, 2);
+            break outer;
         }
 
         switch (seq2) {
@@ -752,7 +755,7 @@ export default class MarkdownTokenizer {
   }
 
   processHeading(sequence, level) {
-    this.paragraphToken = this.tagOpen('heading', { level })
+    this.paragraphToken = this.tagOpen('heading', { level });
     this.next(sequence.length);
   }
 

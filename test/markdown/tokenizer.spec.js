@@ -432,6 +432,16 @@ describe('MarkdownTokenizer', () => {
           ]);
         });
       });
+
+      describe('level 2', () => {
+        it('## a', () => {
+          expect(MarkdownTokenizer.parse('## a')).to.eql([
+            { type: 'heading', direction: 'open', attrs: [['level', 2]] },
+            { type: 'inline', children: [ { type: 'text', content: 'a' } ] },
+            { type: 'heading', direction: 'close' }
+          ]);
+        });
+      });
     });
 
     describe('blockquote', () => {
