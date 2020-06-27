@@ -4,12 +4,7 @@ import { MarkdownTokenizer } from '../../src/markdown';
 function text(content) {
   return [
     { type: 'paragraph', direction: 'open' },
-    {
-      type: 'inline',
-      children: [
-        { type: 'text', content }
-      ]
-    },
+    { type: 'inline', children: [ { type: 'text', content } ] },
     { type: 'paragraph', direction: 'close' }
   ];
 }
@@ -427,6 +422,18 @@ describe('MarkdownTokenizer', () => {
   });
 
   describe('nodes', () => {
+    describe('heading', () => {
+      describe('level 1', () => {
+        it('# a', () => {
+          expect(MarkdownTokenizer.parse('# a')).to.eql([
+            { type: 'heading', direction: 'open', attrs: [['level', 1]] },
+            { type: 'inline', children: [ { type: 'text', content: 'a' } ] },
+            { type: 'heading', direction: 'close' }
+          ]);
+        });
+      });
+    });
+
     describe('blockquote', () => {
       it('> a', () => {
         expect(MarkdownTokenizer.parse('> a')).to.eql([

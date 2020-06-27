@@ -46,6 +46,7 @@ export default class MarkdownTokenizer {
     this.tokens = [];
     this.inlineTokens = [];
     this.marksStack = [];
+    this.paragraphToken = null;
   }
 
   static parse(text) {
@@ -100,6 +101,15 @@ export default class MarkdownTokenizer {
       }
 
       if (isStart) {
+        switch (seq3) {
+          case '```':
+            if (this.processCodeBlock(seq3, '\n```', null, true)) {
+              break outer;
+            } else {
+              break;
+            }
+        }
+
         switch (seq2) {
           case '> ':
             this.processBlockQuote(seq2);
@@ -110,15 +120,10 @@ export default class MarkdownTokenizer {
           case '* ':
             this.processBulletList(seq2);
             break outer;
-        }
 
-        switch (seq3) {
-          case '```':
-            if (this.processCodeBlock(seq3, '\n```', null, true)) {
-              break outer;
-            } else {
-              break;
-            }
+          case '# ':
+            this.processHeading(seq2, 1);
+            break outer;
         }
 
         switch (bbcode) {
@@ -746,6 +751,11 @@ export default class MarkdownTokenizer {
     this.push(new Token('hr', null, null, null));
   }
 
+  processHeading(sequence, level) {
+    this.paragraphToken = this.tagOpen('heading', { level })
+    this.next(sequence.length);
+  }
+
   tagOpen(type, attributes = null, bbcode) {
     return new Token(type, null, null, attributes, 'open', bbcode);
   }
@@ -778,16 +788,21 @@ export default class MarkdownTokenizer {
   }
 
   finalizeParagraph() {
-    if (this.nestedSequence && !this.inlineTokens.length) { return; }
+    if (!this.nestedSequence || this.inlineTokens.length) {
+      if (!this.paragraphToken) {
+        this.paragraphToken = this.tagOpen('paragraph');
+      }
 
-    this.push(this.tagOpen('paragraph'));
-    this.push(
-      new Token('inline', null, rollbackUnbalancedTokens(this.inlineTokens))
-    );
-    this.push(this.tagClose('paragraph'));
+      this.push(this.paragraphToken);
+      this.push(
+        new Token('inline', null, rollbackUnbalancedTokens(this.inlineTokens))
+      );
+      this.push(this.tagClose(this.paragraphToken.type));
+    }
 
     this.inlineTokens = [];
     this.marksStack = [];
+    this.paragraphToken= null; 
   }
 
   isSequenceContinued() {
