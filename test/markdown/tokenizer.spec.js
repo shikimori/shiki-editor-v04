@@ -442,6 +442,16 @@ describe('MarkdownTokenizer', () => {
           ]);
         });
       });
+
+      describe('level 3', () => {
+        it('### a', () => {
+          expect(MarkdownTokenizer.parse('### a')).to.eql([
+            { type: 'heading', direction: 'open', attrs: [['level', 3]] },
+            { type: 'inline', children: [ { type: 'text', content: 'a' } ] },
+            { type: 'heading', direction: 'close' }
+          ]);
+        });
+      });
     });
 
     describe('blockquote', () => {

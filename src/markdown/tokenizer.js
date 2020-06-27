@@ -101,6 +101,12 @@ export default class MarkdownTokenizer {
       }
 
       if (isStart) {
+        switch (seq4) {
+          case '### ':
+            this.processHeading(seq4, 3);
+            break outer;
+        }
+
         switch (seq3) {
           case '```':
             if (this.processCodeBlock(seq3, '\n```', null, true)) {
@@ -220,7 +226,7 @@ export default class MarkdownTokenizer {
         }
       }
 
-      if(this.processInline(char1, bbcode, seq2, seq3, seq4, seq5)) {
+      if (this.processInline(char1, bbcode, seq2, seq3, seq4, seq5)) {
         break;
       }
     }
@@ -805,7 +811,7 @@ export default class MarkdownTokenizer {
 
     this.inlineTokens = [];
     this.marksStack = [];
-    this.paragraphToken= null; 
+    this.paragraphToken= null;
   }
 
   isSequenceContinued() {
