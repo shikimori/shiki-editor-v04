@@ -40,10 +40,11 @@ export default {
     isColumn1: false,
     isColumn2: true,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
-    text2: `# Headline 1 code: \`# headline 1\`
-## Headline 2 code: \`## headline 2\`
-### Headline 3 code: \`### headline 3\`
-#### Headline 4 code: \`#### headline 4\`
+    text2: `# Headline level 1: \`# Headline level 1\`
+## Headline level 2: \`## Headline level 2\`
+### Headline level 3: \`### Headline level 3\`
+#### Headline level 4: \`#### Headline level 4\`
+##### Headline level 5: \`#### Headline level 5\`
 
 
 [url=//ya.ru]
@@ -60,6 +61,10 @@ test [b]z[/b] test
 
 [url=//ya.ru]tets[/url]
 
+[size=40]
+[b]test[/b]
+[/size]
+
 [list]
 > [quote]
 > zxc
@@ -72,10 +77,11 @@ test [b]z[/b] test
 // 1
 // [/div][/div][/div][/div]
 // `,
-    text1: `# Headline 1 code: \`# headline 1\`
-## Headline 2 code: \`## headline 2\`
-### Headline 3 code: \`### headline 3\`
-#### Headline 4 code: \`#### headline 4\`
+    text1: `# Headline level 1: \`# Headline level 1\`
+## Headline level 2: \`## Headline level 2\`
+### Headline level 3: \`### Headline level 3\`
+#### Headline level 4: \`#### Headline level 4\`
+##### Headline level 5: \`#### Headline level 5\`
 
 B[b]old tex[/b]t
 I[i]talic tex[/i]t
