@@ -101,6 +101,12 @@ export default class MarkdownTokenizer {
       }
 
       if (isStart) {
+        switch (seq5) {
+          case '#### ':
+            this.processHeading(seq5, 4);
+            break outer;
+        }
+
         switch (seq4) {
           case '### ':
             this.processHeading(seq4, 3);
