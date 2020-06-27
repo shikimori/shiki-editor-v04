@@ -5,7 +5,7 @@
       v-slot='{ activeChecks, commands }'
       :editor="editor"
     -->
-    <div class='menu-bar'>
+    <div ref='menubar' class='menu-bar'>
       <div
         v-for='(items, index) in menuItems'
         :key='index'
@@ -181,7 +181,7 @@ export default {
           autosize(this.$refs.textarea);
           this.$refs.textarea.focus();
           window.scrollTo(0, scrollY);
-          if (!withinviewport(this.$refs.menubar.$el, 'top')) {
+          if (!withinviewport(this.$refs.menubar, 'top')) {
             this.$refs.textarea.blur();
             this.$refs.textarea.focus();
           }
@@ -272,6 +272,4 @@ textarea.ProseMirror
     &.is-prosemirror-selected:before,
     &:hover:before
       content: attr(data-div)
-
-
 </style>
