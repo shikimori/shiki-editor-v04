@@ -156,14 +156,14 @@ export default class MarkdownTokenizer {
             );
             break outer;
 
-          case '[list]':
-            meta = { data: [['data-list', 'remove-it']] };
-            isProcessed = this.processBlock(
-              'div', bbcode, '[/list]', meta,
-              isStart, isOnlySpacingsBefore
-            );
-            if (isProcessed) { return; }
-            break;
+          // case '[list]':
+          //   meta = { data: [['data-list', 'remove-it']] };
+          //   isProcessed = this.processBlock(
+          //     'div', bbcode, '[/list]', meta,
+          //     isStart, isOnlySpacingsBefore
+          //   );
+          //   if (isProcessed) { return; }
+          //   break;
         }
       }
 
