@@ -40,7 +40,13 @@ export default {
     isColumn1: false,
     isColumn2: true,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
-    text2: `[url=//ya.ru]
+    text2: `# \`# headline 1\`
+## \`## headline 2\`
+### \`### headline 3\`
+#### \`#### headline 4\`
+
+
+[url=//ya.ru]
 link block
 [/url]
 
