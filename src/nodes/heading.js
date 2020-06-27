@@ -1,3 +1,4 @@
+import { textblockTypeInputRule } from 'prosemirror-inputrules';
 import { Node } from '../base';
 
 export default class Heading extends Node {
@@ -39,6 +40,14 @@ export default class Heading extends Node {
         }
       }
     };
+  }
+
+  inputRules({ type }) {
+    return [1,2,3,4,5].map(level => textblockTypeInputRule(
+      new RegExp(`^(#{1,${level}})\\s$`),
+      type,
+      () => ({ level })
+    ));
   }
 
   get markdownParserToken() {
