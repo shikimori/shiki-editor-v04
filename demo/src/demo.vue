@@ -40,11 +40,11 @@ export default {
     isColumn1: true,
     isColumn2: false,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
-    text2: `# Headline level 1: \`# Headline level 1\`
-## Headline level 2: \`## Headline level 2\`
-### Headline level 3: \`### Headline level 3\`
-#### Headline level 4: \`#### Headline level 4\`
-##### Headline level 5: \`#### Headline level 5\`
+    text2: `# Heading level 1: \`# Heading level 1\`
+## Heading level 2: \`## Heading level 2\`
+### Heading level 3: \`### Heading level 3\`
+#### Heading level 4: \`#### Heading level 4\`
+##### Heading level 5: \`##### Heading level 5\`
 
 
 [url=//ya.ru]
@@ -77,11 +77,11 @@ test [b]z[/b] test
 // 1
 // [/div][/div][/div][/div]
 // `,
-    text1: `# Headline level 1: \`# Headline level 1\`
-## Headline level 2: \`## Headline level 2\`
-### Headline level 3: \`### Headline level 3\`
-#### Headline level 4: \`#### Headline level 4\`
-##### Headline level 5: \`#### Headline level 5\`
+    text1: `# Heading level 1: \`# Heading level 1\`
+## Heading level 2: \`## Heading level 2\`
+### Heading level 3: \`### Heading level 3\`
+#### Heading level 4: \`#### Heading level 4\`
+##### Heading level 5: \`##### Heading level 5\`
 
 B[b]old tex[/b]t
 I[i]talic tex[/i]t
