@@ -4,6 +4,7 @@ export { default as Center } from './center';
 export { default as CodeBlock } from './code_block';
 export { default as Div } from './div';
 export { default as Doc } from './doc';
+export { default as Heading } from './heading';
 export { default as Hr } from './hr';
 export { Image } from './image';
 export { default as ListItem } from './list_item';

@@ -5,6 +5,7 @@ import {
   CodeBlock,
   Div,
   Doc,
+  Heading,
   Hr,
   Image,
   LinkBlock,
@@ -12,8 +13,8 @@ import {
   Paragraph,
   Quote,
   Right,
-  SpoilerBlock,
   SizeBlock,
+  SpoilerBlock,
   Text
 } from '../nodes';
 
@@ -34,6 +35,7 @@ export default function(editor) {
     new Doc(),
     new Text(),
     new Paragraph(),
+    new Heading(),
     new SpoilerInline(), // must be above other marks in order to obtain greater priorirty
     new LinkInline(),
     new Bold(),
