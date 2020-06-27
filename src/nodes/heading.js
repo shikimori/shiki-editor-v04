@@ -21,17 +21,20 @@ export default class Heading extends Node {
         tag: 'h3',
         attrs: { level: 2 }
       }, {
-        tag: 'div.headline',
+        tag: 'h4',
         attrs: { level: 3 }
       }, {
-        tag: 'div.midheadline',
+        tag: 'div.headline',
         attrs: { level: 4 }
+      }, {
+        tag: 'div.midheadline',
+        attrs: { level: 5 }
       }],
       toDOM: node => {
-        if (node.attrs.level <= 2) {
+        if (node.attrs.level <= 3) {
           return [`h${node.attrs.level + 1}`, 0];
         } else {
-          const css_class = node.attrs.level === 3 ? 'headline' : 'midheadline';
+          const css_class = node.attrs.level === 4 ? 'headline' : 'midheadline';
           return ['div', { class: css_class }, 0];
         }
       }
