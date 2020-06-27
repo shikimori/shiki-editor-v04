@@ -289,11 +289,11 @@ export default class MarkdownSerializerState {
 
   // :: (string, number) → string
   // Repeat the given string `n` times.
-  // repeat(str, n) {
-  //   let out = '';
-  //   for (let i = 0; i < n; i++) out += str;
-  //   return out;
-  // }
+  repeat(str, n) {
+    let out = '';
+    for (let i = 0; i < n; i++) out += str;
+    return out;
+  }
 
   // : (Mark, bool, string?) → string
   // Get the markdown string for a given opening or closing mark.
