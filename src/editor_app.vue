@@ -65,7 +65,7 @@ const MENU_ITEMS = [
     'link'
   ],
   ['undo', 'redo'],
-  ['image'],
+  ['image', 'smiley'],
   ['blockquote', 'spoiler_block', 'code_block', 'bullet_list']
 ];
 
@@ -157,6 +157,9 @@ export default {
     redoCommand() {
       redo(this.editor.state, this.editor.view.dispatch);
       this.editor.focus();
+    },
+    smileyCommand() {
+      alert('smiley!');
     },
     undoIsEnabled() {
       return this.isEnabled && undo(this.editor.state);

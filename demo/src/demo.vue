@@ -46,13 +46,6 @@ export default {
 #### Heading level 4: \`#### Heading level 4\`
 ##### Heading level 5: \`##### Heading level 5\`
 
-# [url=//sfsdfdsf]Heading level 1: \`# Heading level 1\`[/url]
-## [url=//sfsdfdsf]Heading level 2: \`## Heading level 2\`[/url]
-### [url=//sfsdfdsf]Heading level 3: \`### Heading level 3\`[/url]
-#### [url=//sfsdfdsf]Heading level 4: \`#### Heading level 4\`[/url]
-##### [url=//sfsdfdsf]Heading level 5: \`##### Heading level 5\`[/url]
-
-
 [url=//ya.ru]
 link block
 [/url]
