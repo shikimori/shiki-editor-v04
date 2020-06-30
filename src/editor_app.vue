@@ -14,6 +14,7 @@
         <Icon
           v-for='item in items'
           :key='item.constructor === Object ? item.type : item'
+          :ref='item.type'
           v-bind='item'
           :is-active='isActive[item.type]'
           :is-enabled='item.isEnabled ? item.isEnabled() : isEnabled'
@@ -28,6 +29,14 @@
           @command='() => toggleSourceCommand()'
         />
       </div>
+      <Smileys
+        v-show='isSmiley'
+        ref='smileys'
+        :is-enabled='isSmiley'
+        target-ref='smiley'
+        :base-url='baseUrl'
+        @toggle='smileyCommand'
+      />
     </div>
     <!--/EditorMenuBar-->
 
@@ -50,9 +59,11 @@ import withinviewport from 'withinviewport';
 
 import Editor from './editor';
 import EditorContent from './components/editor_content';
-// import EditorMenuBar from './components/editor_menu_bar';
-import Icon from './components/icon';
 import { scrollTop } from './utils';
+// import EditorMenuBar from './components/editor_menu_bar';
+
+import Icon from './components/icon';
+import Smileys from './components/smileys';
 
 const MENU_ITEMS = [
   [
@@ -74,7 +85,8 @@ export default {
   components: {
     EditorContent,
     // EditorMenuBar,
-    Icon
+    Icon,
+    Smileys
   },
   props: {
     baseUrl: { type: String, required: true },
@@ -83,9 +95,10 @@ export default {
   data: () => ({
     editor: null,
     editorContent: null,
-    isSource: false,
     editorPosition: null,
-    isLinkBlock: false
+    isSource: false,
+    isLinkBlock: false,
+    isSmiley: false
   }),
   computed: {
     isEnabled() {
@@ -121,6 +134,7 @@ export default {
 
       this.isLinkBlock = this.editor.activeChecks.link_block(); // eslint-disable-line
       memo.link = this.isLinkBlock || this.editor.activeChecks.link_inline();
+      memo.smiley = this.isSmiley;
 
       return memo;
     }
@@ -159,7 +173,7 @@ export default {
       this.editor.focus();
     },
     smileyCommand() {
-      alert('smiley!');
+      this.isSmiley = !this.isSmiley;
     },
     undoIsEnabled() {
       return this.isEnabled && undo(this.editor.state);

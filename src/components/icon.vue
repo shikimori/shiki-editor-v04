@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'MenuItem',
+  name: 'Icon',
   props: {
     type: { type: String, required: true },
     title: { type: String, required: true },
