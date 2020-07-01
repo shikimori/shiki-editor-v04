@@ -1,6 +1,11 @@
 <template>
-  <div ref='container' class='smileys'>
-    smileys
+  <div>
+    <div ref='container' class='smileys'>
+      <div ref='arrow' class='arrow' />
+      <div v-if='smileysHTML' class='inner' v-html='smileysHTML' />
+      <div v-else class='loader'>loading</div>
+    </div>
+    <div class='shade' @click='close' />
   </div>
 </template>
 
@@ -8,7 +13,13 @@
 // import { createPopper } from '@popperjs/core';
 import { createPopper } from '@popperjs/core/lib/popper-lite';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+import offset from '@popperjs/core/lib/modifiers/offset';
+import arrow from '@popperjs/core/lib/modifiers/arrow';
+
+import axios from 'axios';
 // import flip from '@popperjs/core/lib/modifiers/flip';
+
+const SMILEYS_PATH = 'comments/smileys';
 
 export default {
   name: 'Smileys',
@@ -18,7 +29,8 @@ export default {
     targetRef: { type: String, required: true }
   },
   data: () => ({
-    popper: null
+    popper: null,
+    smileysHTML: null
   }),
   watch: {
     isEnabled() {
@@ -41,21 +53,32 @@ export default {
         this.$refs.container,
         {
           placement: 'bottom',
-          modifiers: [
-            preventOverflow,
-            {
-              name: 'preventOverflow',
-              options: {
-                padding: 10
-              }
-            }
-          ]
+          modifiers: [preventOverflow, offset, arrow, {
+            name: 'preventOverflow',
+            options: { padding: 10 }
+          }, {
+            name: 'offset',
+            options: { offset: [0, 8] }
+          }, {
+            name: 'arrow',
+            options: { element: this.$refs.arrow }
+          }]
         }
       );
+      if (!this.smileysHTML) {
+        this.fetch();
+      }
     },
     hide() {
       this.popper.destroy();
       this.popper = null;
+    },
+    async fetch() {
+      const { data } = await axios.get(`${this.baseUrl}/${SMILEYS_PATH}`);
+      this.smileysHTML = data.replace(/src="\//g, `src="${this.baseUrl}/`);
+    },
+    close() {
+      this.$emit('toggle');
     }
   }
 };
@@ -65,11 +88,55 @@ export default {
 @import ../stylesheets/responsive.sass
 
 .smileys
-  background: red
+  background: #fff
+  padding: 6px
+  font-size: 13px
+  /* border: 1px solid #ddd */
+  position: relative
+  z-index: 20
 
   +lte_ipad
     width: 280px
 
   +gte_laptop
     width: 732px
+
+  /deep/ .smiley
+    cursor: pointer
+    margin-right: 4px
+    margin-bottom: 6px
+
+  &[data-popper-placement^='top'] > .arrow
+    bottom: -4px
+  &[data-popper-placement^='bottom'] > .arrow
+    top: -4px
+  &[data-popper-placement^='left'] > .arrow
+    right: -4px
+  &[data-popper-placement^='right'] > .arrow
+    left: -4px
+
+.arrow
+  height: 8px
+  width: 8px
+
+  &::before
+    /* border: 1px solid #ddd */
+    /* border-bottom: none    */
+    /* border-right: none     */
+    background: #fff
+    content: ''
+    height: 100%
+    transform: rotate(45deg)
+    width: 100%
+    position: absolute
+    z-index: -1
+
+.shade
+  background: rgba(#061b42, 0.35)
+  height: 100%
+  left: 0
+  position: fixed
+  top: 0
+  width: 100%
+  z-index: 19
 </style>
