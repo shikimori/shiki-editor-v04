@@ -7,6 +7,8 @@
 <script>
 // import { createPopper } from '@popperjs/core';
 import { createPopper } from '@popperjs/core/lib/popper-lite';
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
+// import flip from '@popperjs/core/lib/modifiers/flip';
 
 export default {
   name: 'Smileys',
@@ -39,12 +41,15 @@ export default {
         this.$refs.container,
         {
           placement: 'bottom',
-          modifiers: [{
-            name: 'preventOverflow',
-            options: {
-              padding: 10
+          modifiers: [
+            preventOverflow,
+            {
+              name: 'preventOverflow',
+              options: {
+                padding: 10
+              }
             }
-          }]
+          ]
         }
       );
     },
