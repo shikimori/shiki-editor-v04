@@ -3,7 +3,7 @@
     <div ref='container' class='smileys'>
       <div ref='arrow' class='arrow' />
       <div v-if='smileysHTML' class='inner' v-html='smileysHTML' />
-      <div v-else class='loader'>loading</div>
+      <div v-else class='b-ajax' />
     </div>
     <div class='shade' @click='close' />
   </div>
@@ -87,9 +87,12 @@ export default {
 <style scoped lang='sass'>
 @import ../stylesheets/responsive.sass
 
+$padding-horizontal: 10px
+$padding-vertical: 8px
+
 .smileys
   background: #fff
-  padding: 6px
+  padding: $padding-vertical $padding-horizontal
   font-size: 13px
   /* border: 1px solid #ddd */
   position: relative
@@ -99,7 +102,8 @@ export default {
     width: 280px
 
   +gte_laptop
-    width: 732px
+    width: 492px
+    min-height: 472px
 
   /deep/ .smiley
     cursor: pointer
@@ -114,6 +118,11 @@ export default {
     right: -4px
   &[data-popper-placement^='right'] > .arrow
     left: -4px
+
+.b-ajax
+  width: calc(100% - #{$padding-horizontal * 2})
+  height: calc(100% - #{$padding-horizontal * 2})
+  position: absolute
 
 .arrow
   height: 8px
