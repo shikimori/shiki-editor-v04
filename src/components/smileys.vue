@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Keypress key-event='keyup' :key-code='27' @success="close" />
+    <Keypress key-event='keyup' :key-code='27' @success='close' />
     <div ref='container' class='smileys'>
       <div ref='arrow' class='arrow' />
       <div
@@ -104,21 +104,26 @@ $padding-vertical: 8px
   background: #fff
   padding: $padding-vertical $padding-horizontal
   font-size: 13px
-  /* border: 1px solid #ddd */
+  max-width: 492px
   position: relative
   z-index: 20
 
   +lte_ipad
-    width: 280px
+    width: calc(100vw - #{$padding-horizontal * 2})
+    max-height: calc(100vh - #{64 + $padding-vertical})
+    min-height: 320px
 
   +gte_laptop
-    width: 492px
     min-height: 472px
 
   /deep/ .smiley
     cursor: pointer
     margin-right: 4px
     margin-bottom: 6px
+
+  .inner
+    overflow-y: auto
+    overscroll-behavior: none
 
   &[data-popper-placement^='top'] > .arrow
     bottom: -4px
@@ -139,9 +144,6 @@ $padding-vertical: 8px
   width: 8px
 
   &::before
-    /* border: 1px solid #ddd */
-    /* border-bottom: none    */
-    /* border-right: none     */
     background: #fff
     content: ''
     height: 100%
