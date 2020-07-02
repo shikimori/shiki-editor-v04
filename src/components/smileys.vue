@@ -1,8 +1,13 @@
 <template>
   <div>
+    <Keypress key-event='keyup' :key-code='27' @success="close" />
     <div ref='container' class='smileys'>
       <div ref='arrow' class='arrow' />
-      <div v-if='smileysHTML' class='inner' v-html='smileysHTML' />
+      <div
+        v-if='smileysHTML'
+        class='inner'
+        v-html='smileysHTML'
+      />
       <div v-else class='b-ajax' />
     </div>
     <div class='shade' @click='close' />
@@ -10,6 +15,7 @@
 </template>
 
 <script>
+import Keypress from 'vue-keypress';
 // import { createPopper } from '@popperjs/core';
 import { createPopper } from '@popperjs/core/lib/popper-lite';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
@@ -23,6 +29,7 @@ const SMILEYS_PATH = 'comments/smileys';
 
 export default {
   name: 'Smileys',
+  components: { Keypress },
   props: {
     baseUrl: { type: String, required: true },
     isEnabled: { type: Boolean, required: true },
@@ -40,6 +47,9 @@ export default {
         this.hide();
       }
     }
+  },
+  created() {
+    window.addEventListener('keyup', this.handler);
   },
   mounted() {
     if (this.isEnabled) {
