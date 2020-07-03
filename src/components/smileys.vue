@@ -86,6 +86,8 @@ export default {
     async fetch() {
       const { data } = await axios.get(`${this.baseUrl}/${SMILEYS_PATH}`);
       this.smileysHTML = data.replace(/src="\//g, `src="${this.baseUrl}/`);
+      await this.$nextTick();
+      this.popper.update();
     },
     close() {
       this.$emit('toggle');
@@ -104,17 +106,17 @@ $padding-vertical: 8px
   background: #fff
   padding: $padding-vertical $padding-horizontal
   font-size: 13px
-  max-width: 492px
   position: relative
   z-index: 20
 
   +lte_ipad
     width: calc(100vw - #{$padding-horizontal * 2})
-    max-height: calc(100vh - #{64 + $padding-vertical})
-    min-height: 320px
+    max-width: 492px
+    min-height: 238px
 
   +gte_laptop
     min-height: 472px
+    width: 492px
 
   /deep/ .smiley
     cursor: pointer
@@ -124,6 +126,9 @@ $padding-vertical: 8px
   .inner
     overflow-y: auto
     overscroll-behavior: none
+
+    +lte_ipad
+      max-height: calc(100vh - 98px)
 
   &[data-popper-placement^='top'] > .arrow
     bottom: -4px
