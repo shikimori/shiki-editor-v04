@@ -4,7 +4,7 @@ import { Node } from '../base';
 //
 // const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
-export class Smiley extends Node {
+export default class Smiley extends Node {
   get name() {
     return 'image';
   }
