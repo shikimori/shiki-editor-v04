@@ -4,6 +4,7 @@ import {
   extractBbCode,
   extractMarkdownLanguage,
   extractUntil,
+  extractUntilWith,
   hasInlineSequence,
   isMatchedToken,
   rollbackUnbalancedTokens
@@ -20,6 +21,7 @@ import {
 
 export default class MarkdownTokenizer {
   MAX_BBCODE_SIZE = 512
+  MAX_SMILEY_SIZE = 18
 
   BLOCK_BBCODE_REGEXP = /^\[(?:quote|spoiler|code)(?:=(.+?))?\]$/
   DIV_REGEXP = /^\[div(?:(?:=| )([^\]]+))?\]$/
@@ -29,6 +31,8 @@ export default class MarkdownTokenizer {
   EMPTY_SPACES_REGEXP = /^ +$/
 
   PSEUDO_BLOCK_TEST_REGEXP = /\[(?:quote|div|spoiler|right|center)/
+
+  SMILEY_BBCODE_REGEXP = /^:(?:!|8\)|Ban|Bath2|Cry2|Cry3|Cry4|Happy Birthday|Im dead|V2|V3|V|Warning|advise|angry2|angry3|angry4|angry5|angry6|angry|animal|ball|bath|bdl2|bdl|bored|bow|bullied|bunch|bye|caterpillar|cold2|cold|cool2|cool|cry5|cry6|cry|dance|depressed2|depressed|diplom|disappointment|dont listen|dont want|dunno|evil2|evil3|evil|flute|frozen2|frozen3|frozen|gamer|gaze|happy3|happy|happy_cry|hi|hope2|hope3|hope|hopeless|hot2|hot3|hot|hunf|hurray|hypno|ill|interested|kia|kiss|kya|liar|lol|love2|love|noooo|oh2|oh|ololo|ooph|perveted|play|prcl|relax|revenge|roll|s1|s2|s3|s4|s|sad2|sarcasm|scared|scream|shock2|shock|shocked2|shocked3|shocked4|shocked|shy2|shy|sick|sleep|sleepy|smoker2|smoker|star|strange1|strange2|strange3|strange4|strange|stress|study2|study3|study|tea shock|tea2|thumbup|twisted|very sad2|very sad|watching|water|whip|wink|yahoo):$/
 
   MARK_STACK_MAPPINGS = {
     color: '[color]',
@@ -291,7 +295,7 @@ export default class MarkdownTokenizer {
         break;
 
       case '[poster]':
-        if (this.processInlineImage(bbcode, '[/poster]', true)) { return; }
+        if (this.processImage(bbcode, '[/poster]', true)) { return; }
         break;
 
       case '[code]':
@@ -323,6 +327,10 @@ export default class MarkdownTokenizer {
       if (this.processInlineCode(char1)) { return; }
     }
 
+    if (char1 === ':') {
+      if (this.processSmiley()) { return; }
+    }
+
     let match;
     let meta;
 
@@ -336,7 +344,7 @@ export default class MarkdownTokenizer {
 
         case '[img':
           meta = parseImageMeta(bbcode.slice(4, bbcode.length - 1).trim());
-          if (this.processInlineImage(bbcode, '[/img]', false, meta)) {
+          if (this.processImage(bbcode, '[/img]', false, meta)) {
             return;
           }
           break;
@@ -431,7 +439,9 @@ export default class MarkdownTokenizer {
     if (!hasInlineSequence(this.text, closeBbcode, this.index)) { return false; }
 
     this.marksStack.push(this.MARK_STACK_MAPPINGS[type] || openBbcode);
-    this.inlineTokens.push(this.tagOpen(type, attributes, openBbcode));
+    this.inlineTokens.push(
+      this.tagOpen(type, attributes, openBbcode)
+    );
     this.next(openBbcode.length);
 
     return true;
@@ -441,7 +451,9 @@ export default class MarkdownTokenizer {
     if (this.lastMark !== openBbcode) { return false; }
 
     this.marksStack.pop();
-    this.inlineTokens.push(this.tagClose(type, closeBbcode));
+    this.inlineTokens.push(
+      this.tagClose(type, closeBbcode)
+    );
     this.next(closeBbcode.length);
 
     return true;
@@ -527,7 +539,7 @@ export default class MarkdownTokenizer {
     );
   }
 
-  processInlineImage(tagStart, tagEnd, isPoster, metaAttributes) {
+  processImage(tagStart, tagEnd, isPoster, metaAttributes) {
     let index = this.index + tagStart.length;
 
     const src = extractUntil(this.text, tagEnd, index, index + 255);
@@ -550,6 +562,18 @@ export default class MarkdownTokenizer {
     }
 
     return false;
+  }
+
+  processSmiley() {
+    const kind = extractUntilWith(this.text, ':', this.index, 18);
+
+    if (kind && kind.match(this.SMILEY_BBCODE)) {
+      this.inlineTokens.push(
+        new Token('smiley', null, null, { kind })
+      );
+      this.next(kind.length);
+      return true;
+    }
   }
 
   processBlock(

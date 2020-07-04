@@ -711,6 +711,23 @@ describe('MarkdownTokenizer', () => {
       });
     });
 
+    describe('smiley', () => {
+      it(':V:', () => {
+        expect(MarkdownTokenizer.parse(
+          ':V:'
+        )).to.eql([
+          { type: 'paragraph', direction: 'open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'smiley', attrs: [['kind', ':V:']] }
+            ]
+          },
+          { type: 'paragraph', direction: 'close' }
+        ]);
+      });
+    });
+
     describe('spoiler', () => {
       it('[spoiler]z[/spoiler]', () => {
         expect(MarkdownTokenizer.parse('[spoiler]z[/spoiler]')).to.eql([
