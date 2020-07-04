@@ -22,6 +22,10 @@
 
 @import ./prosemirror
 
+\:root
+  @each $variable, $value in $variables
+    #{$variable}: $value
+
 @font-face
   font-family: 'shikimori'
   src: url(https://raw.githubusercontent.com/shikimori/shikimori/prosemirror/app/assets/fonts/shikimori.woff2) format('woff2')
