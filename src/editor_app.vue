@@ -172,8 +172,12 @@ export default {
       redo(this.editor.state, this.editor.view.dispatch);
       this.editor.focus();
     },
-    smileyCommand() {
+    smileyCommand(kind) {
       this.isSmiley = !this.isSmiley;
+
+      if (kind) {
+        this.editor.commands.smiley(kind);
+      }
     },
     undoIsEnabled() {
       return this.isEnabled && undo(this.editor.state);

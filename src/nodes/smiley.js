@@ -46,19 +46,21 @@ export default class Smiley extends Node {
   //   ];
   // }
   //
-  // commands({ type }) {
-  //   return () => (state, dispatch) => {
-  //     const src = prompt(I18n.t('frontend.shiki_editor.prompt.image_url'));
-  //
-  //     if (src !== null) {
-  //       const { selection } = state;
-  //       const position = selection.$cursor ? selection.$cursor.pos : selection.$to.pos;
-  //       const node = type.create({ src });
-  //       const transaction = state.tr.insert(position, node);
-  //       dispatch(transaction);
-  //     }
-  //   };
-  // }
+  commands({ type }) {
+    return (kind) => (state, dispatch) => {
+      if (kind == null) { return; }
+
+      const { selection } = state;
+      const position = selection.$cursor ?
+        selection.$cursor.pos :
+        selection.$to.pos;
+
+      const node = type.create({ kind });
+      const transaction = state.tr.insert(position, node);
+
+      dispatch(transaction);
+    };
+  }
 
   get markdownParserToken() {
     return {

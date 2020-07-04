@@ -7,6 +7,7 @@
         v-if='smileysHTML'
         class='inner'
         v-html='smileysHTML'
+        @click='select'
       />
       <div v-else class='b-ajax' />
     </div>
@@ -91,6 +92,11 @@ export default {
     },
     close() {
       this.$emit('toggle');
+    },
+    select({ target }) {
+      if (target.classList.contains('smiley')) {
+        this.$emit('toggle', target.getAttribute('alt'));
+      }
     }
   }
 };
@@ -121,6 +127,8 @@ $padding-vertical: 8px
     cursor: pointer
     margin-right: 7px
     margin-bottom: 10px
+    outline: 2px solid transparent
+    transition: outline .15s
 
     +gte_laptop
       &:hover
