@@ -37,8 +37,8 @@ export default {
   },
   data: () => ({
     baseUrl: 'https://shikimori.one',
-    isColumn1: false,
-    isColumn2: true,
+    isColumn1: true,
+    isColumn2: false,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
     text2: `:)
 :shock2: :scream:
@@ -48,12 +48,16 @@ export default {
 // 1
 // [/div][/div][/div][/div]
 // `,
-    text1: `# Heading level 1: \`# Heading level 1\`
+    text1: `# Headings
+[hr]
+# Heading level 1: \`# Heading level 1\`
 ## Heading level 2: \`## Heading level 2\`
 ### Heading level 3: \`### Heading level 3\`
 #### Heading level 4: \`#### Heading level 4\`
 ##### Heading level 5: \`##### Heading level 5\`
 
+# Basic styles
+[hr]
 B[b]old tex[/b]t
 I[i]talic tex[/i]t
 U[u]nderlined tex[/u]t
@@ -63,6 +67,10 @@ Inline s||poiler tex||t    \`||spoiler content||\`
 C[color=red]olored tex[/color]t   \`[color=red]...[/color]\`
 s[size=18]ized tex[/size]t   \`[size=18]...[/size]\`
 L[url=https://github.com/shikimori/shiki-editor]ink tex[/url]t
+
+# Spoilers
+[hr]
+
 [spoiler=spoiler block with label]
 spoiler \`content\`
 [/spoiler]
@@ -71,6 +79,8 @@ spoiler content
 [/spoiler]
 
 [hr]
+
+:) :shock:
 
 Custom DIV
 \`[div=fc-2][div=f-column][/div][div=f-column][/div][/div]\`
