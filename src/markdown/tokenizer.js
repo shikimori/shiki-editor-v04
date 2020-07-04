@@ -327,7 +327,9 @@ export default class MarkdownTokenizer {
       if (this.processInlineCode(char1)) { return; }
     }
 
-    if (this.processSmiley(char1, seq2, seq3)) { return; }
+    if (char1 === ':' || char1 === '+') {
+      if (this.processSmiley(char1, seq2, seq3)) { return; }
+    }
 
     let match;
     let meta;
@@ -564,7 +566,9 @@ export default class MarkdownTokenizer {
 
   processSmiley(char1, seq2, seq3) {
     if (char1 === ':') {
-      const kind = extractUntilWith(this.text, ':', this.index, 18);
+      const maxIndex = this.index + this.MAX_SMILEY_SIZE;
+      const kind = extractUntilWith(this.text, ':', this.index, maxIndex);
+
       if (kind && kind.match(this.SMILEY_REGEXP)) {
         return this.addSmiley(kind);
       }

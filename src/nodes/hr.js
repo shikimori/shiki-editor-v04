@@ -22,12 +22,12 @@ export default class Hr extends Node {
     ];
   }
 
+  get markdownParserToken() {
+    return { node: this.name };
+  }
+
   markdownSerialize(state, node) {
     state.write('[hr]');
     state.closeBlock(node);
-  }
-
-  get markdownParserToken() {
-    return { node: this.name };
   }
 }

@@ -742,6 +742,47 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
 
+      it(':):)', () => {
+        expect(MarkdownTokenizer.parse(
+          ':):)'
+        )).to.eql([
+          { type: 'paragraph', direction: 'open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'smiley', attrs: [['kind', ':)']] },
+              { type: 'smiley', attrs: [['kind', ':)']] }
+            ]
+          },
+          { type: 'paragraph', direction: 'close' }
+        ]);
+      });
+
+      it(':)\\n:shock2: :scream:', () => {
+        expect(MarkdownTokenizer.parse(
+          ':)\n:shock2: :scream:'
+        )).to.eql([
+          { type: 'paragraph', direction: 'open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'smiley', attrs: [['kind', ':)']] }
+            ]
+          },
+          { type: 'paragraph', direction: 'close' },
+          { type: 'paragraph', direction: 'open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'smiley', attrs: [['kind', ':shock2:']] },
+              { type: 'text', content: ' ' },
+              { type: 'smiley', attrs: [['kind', ':scream:']] }
+            ]
+          },
+          { type: 'paragraph', direction: 'close' }
+        ]);
+      });
+
       it(':zxc:', () => {
         expect(MarkdownTokenizer.parse(':zxc:')).to.eql([
           ...text(':zxc:')
