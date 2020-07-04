@@ -1,9 +1,9 @@
-import { NodeWithAttrs } from '../base';
+import { Node } from '../base';
 import { nodeIsActive } from '../checks';
 import { toggleWrap } from '../commands';
 import { SpoilerBlockView } from '../node_views';
 
-export default class SpoilerBlock extends NodeWithAttrs {
+export default class SpoilerBlock extends Node {
   get name() {
     return 'spoiler_block';
   }
@@ -49,6 +49,13 @@ export default class SpoilerBlock extends NodeWithAttrs {
 
   activeCheck(type, state) {
     return nodeIsActive(type, state);
+  }
+
+  get markdownParserToken() {
+    return {
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
+    };
   }
 
   markdownSerialize(state, node) {

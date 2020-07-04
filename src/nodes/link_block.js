@@ -1,10 +1,10 @@
-import { NodeWithAttrs } from '../base';
+import { Node } from '../base';
 import { fixUrl } from '../utils';
 import { nodeIsActive } from '../checks';
 import { toggleWrap } from '../commands';
 
 // NOTE: this node cannot be generated in WYSIWYG mode
-export default class LinkBlock extends NodeWithAttrs {
+export default class LinkBlock extends Node {
   get name() {
     return 'link_block';
   }
@@ -45,6 +45,13 @@ export default class LinkBlock extends NodeWithAttrs {
 
   activeCheck(type, state) {
     return nodeIsActive(type, state);
+  }
+
+  get markdownParserToken() {
+    return {
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
+    };
   }
 
   markdownSerialize(state, node) {

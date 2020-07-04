@@ -1,7 +1,7 @@
 import { textblockTypeInputRule } from 'prosemirror-inputrules';
-import { NodeWithAttrs } from '../base';
+import { Node } from '../base';
 
-export default class Heading extends NodeWithAttrs {
+export default class Heading extends Node {
   get name() {
     return 'heading';
   }
@@ -48,6 +48,13 @@ export default class Heading extends NodeWithAttrs {
       type,
       () => ({ level })
     ));
+  }
+
+  get markdownParserToken() {
+    return {
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
+    };
   }
 
   markdownSerialize(state, node) {

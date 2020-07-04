@@ -1,11 +1,11 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap-extensions/src/nodes/Image.js
-import { NodeWithAttrs } from '../base';
+import { Node } from '../base';
 import { nodeInputRule } from '../commands';
 import { ImageView } from '../node_views';
 
 const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
-export class Image extends NodeWithAttrs {
+export class Image extends Node {
   get name() {
     return 'image';
   }
@@ -94,6 +94,13 @@ export class Image extends NodeWithAttrs {
         const transaction = state.tr.insert(position, node);
         dispatch(transaction);
       }
+    };
+  }
+
+  get markdownParserToken() {
+    return {
+      node: this.name,
+      getAttrs: token => token.serializeAttributes()
     };
   }
 

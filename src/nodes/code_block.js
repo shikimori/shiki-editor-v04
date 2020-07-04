@@ -1,10 +1,10 @@
 import { textblockTypeInputRule } from 'prosemirror-inputrules';
 
-import { NodeWithAttrs } from '../base';
+import { Node } from '../base';
 import { nodeIsActive } from '../checks';
 import { toggleBlockType } from '../commands';
 
-export default class CodeBlock extends NodeWithAttrs {
+export default class CodeBlock extends Node {
   get name() {
     return 'code_block';
   }
@@ -51,6 +51,13 @@ export default class CodeBlock extends NodeWithAttrs {
         language: match[0].match(/`+(\w*)/)[1] || ''
       }))
     ];
+  }
+
+  get markdownParserToken() {
+    return {
+      block: this.name,
+      getAttrs: token => token.serializeAttributes()
+    };
   }
 
   markdownSerialize(state, node) {
