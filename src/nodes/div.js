@@ -1,6 +1,6 @@
-import { Node } from '../base';
+import { NodeWithAttrs } from '../base';
 
-export default class Div extends Node {
+export default class Div extends NodeWithAttrs {
   get name() {
     return 'div';
   }
@@ -46,13 +46,6 @@ export default class Div extends Node {
           0
         ];
       }
-    };
-  }
-
-  get markdownParserToken() {
-    return {
-      block: this.name,
-      getAttrs: token => token.serializeAttributes()
     };
   }
 

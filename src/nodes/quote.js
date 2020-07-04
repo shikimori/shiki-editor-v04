@@ -1,6 +1,6 @@
-import { Node } from '../base';
+import { NodeWithAttrs } from '../base';
 
-export default class Quote extends Node {
+export default class Quote extends NodeWithAttrs {
   get name() {
     return 'quote';
   }
@@ -95,13 +95,6 @@ export default class Quote extends Node {
           ['div', { class: 'quote-content' }, 0]
         ];
       }
-    };
-  }
-
-  get markdownParserToken() {
-    return {
-      block: this.name,
-      getAttrs: token => token.serializeAttributes()
     };
   }
 

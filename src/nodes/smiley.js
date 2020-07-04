@@ -1,10 +1,10 @@
-import { Node } from '../base';
+import { NodeWithAttrs } from '../base';
 // import { nodeInputRule } from '../commands';
 // import { ImageView } from '../node_views';
 //
 // const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
-export default class Smiley extends Node {
+export default class Smiley extends NodeWithAttrs {
   get name() {
     return 'image';
   }
@@ -50,13 +50,6 @@ export default class Smiley extends Node {
   //       const transaction = state.tr.insert(position, node);
   //       dispatch(transaction);
   //     }
-  //   };
-  // }
-  //
-  // get markdownParserToken() {
-  //   return {
-  //     node: this.name,
-  //     getAttrs: token => token.serializeAttributes()
   //   };
   // }
   //

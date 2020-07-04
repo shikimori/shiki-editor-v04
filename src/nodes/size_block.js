@@ -1,8 +1,8 @@
-import { Node } from '../base';
+import { NodeWithAttrs } from '../base';
 import { ensureDimension } from '../utils';
 
 // NOTE: this node cannot be generated in WYSIWYG mode
-export default class SizeBlock extends Node {
+export default class SizeBlock extends NodeWithAttrs {
   SIZE_REGEXP = /^(\d+)/
 
   get name() {
@@ -32,13 +32,6 @@ export default class SizeBlock extends Node {
         },
         0
       ]
-    };
-  }
-
-  get markdownParserToken() {
-    return {
-      block: this.name,
-      getAttrs: token => token.serializeAttributes()
     };
   }
 
