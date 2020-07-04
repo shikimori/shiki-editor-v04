@@ -52,23 +52,15 @@ export default class Smiley extends Node {
   //     }
   //   };
   // }
-  //
-  // get markdownParserToken() {
-  //   return {
-  //     node: this.name,
-  //     getAttrs: token => token.serializeAttributes()
-  //   };
-  // }
-  //
-  // markdownSerialize(state, node) {
-  //   const seq = serializeImageAttributes(node);
-  //
-  //   if (node.attrs.isPoster) {
-  //     state.write(`[poster${seq}]${state.esc(node.attrs.src)}[/poster]`);
-  //     return;
-  //   }
-  //
-  //
-  //   state.write(`[img${seq}]${state.esc(node.attrs.src)}[/img]`);
-  // }
+
+  get markdownParserToken() {
+    return {
+      node: this.name,
+      getAttrs: token => token.serializeAttributes()
+    };
+  }
+
+  markdownSerialize(state, node) {
+    state.write(node.attrs.kind);
+  }
 }
