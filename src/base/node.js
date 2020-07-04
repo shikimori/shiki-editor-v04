@@ -26,6 +26,11 @@ export default class Node extends Extension {
   }
 
   get markdownParserToken() {
+    // "node" means that parser will expect
+    // `${node.name} tokens
+
+    // "block" means that parser will expect
+    // `${node.name}_open` and `${node.name}_open` tokens
     return { block: this.name };
   }
 
