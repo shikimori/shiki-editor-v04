@@ -104,7 +104,6 @@ $padding-vertical: 8px
 
 .smileys
   background: #fff
-  padding: $padding-vertical $padding-horizontal
   font-size: 13px
   position: relative
   z-index: 20
@@ -120,12 +119,20 @@ $padding-vertical: 8px
 
   /deep/ .smiley
     cursor: pointer
-    margin-right: 4px
-    margin-bottom: 6px
+    margin-right: 7px
+    margin-bottom: 10px
+
+    +gte_laptop
+      &:hover
+        outline: 2px solid var(--link-hover-color)
+
+    &:active
+      outline: 2px solid var(--link-active-color)
 
   .inner
     overflow-y: auto
     overscroll-behavior: none
+    padding: $padding-vertical $padding-horizontal
 
     +lte_ipad
       max-height: calc(100vh - 98px)
