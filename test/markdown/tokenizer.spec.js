@@ -726,6 +726,12 @@ describe('MarkdownTokenizer', () => {
           { type: 'paragraph', direction: 'close' }
         ]);
       });
+
+      it(':zxc:', () => {
+        expect(MarkdownTokenizer.parse(':zxc:')).to.eql([
+          ...text(':zxc:')
+        ]);
+      });
     });
 
     describe('spoiler', () => {
