@@ -727,6 +727,21 @@ describe('MarkdownTokenizer', () => {
         ]);
       });
 
+      it(':)', () => {
+        expect(MarkdownTokenizer.parse(
+          ':)'
+        )).to.eql([
+          { type: 'paragraph', direction: 'open' },
+          {
+            type: 'inline',
+            children: [
+              { type: 'smiley', attrs: [['kind', ':)']] }
+            ]
+          },
+          { type: 'paragraph', direction: 'close' }
+        ]);
+      });
+
       it(':zxc:', () => {
         expect(MarkdownTokenizer.parse(':zxc:')).to.eql([
           ...text(':zxc:')

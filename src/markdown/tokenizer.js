@@ -327,9 +327,7 @@ export default class MarkdownTokenizer {
       if (this.processInlineCode(char1)) { return; }
     }
 
-    if (char1 === ':') {
-      if (this.processSmiley()) { return; }
-    }
+    if (this.processSmiley(char1, seq2, seq3)) { return; }
 
     let match;
     let meta;
@@ -564,17 +562,39 @@ export default class MarkdownTokenizer {
     return false;
   }
 
-  processSmiley() {
-    const kind = extractUntilWith(this.text, ':', this.index, 18);
-
-    if (kind && kind.match(this.SMILEY_REGEXP)) {
-      this.inlineTokens.push(
-        new Token('smiley', null, null, { kind })
-      );
-      this.next(kind.length);
-      return true;
+  processSmiley(char1, seq2, seq3) {
+    if (char1 === ':') {
+      const kind = extractUntilWith(this.text, ':', this.index, 18);
+      if (kind && kind.match(this.SMILEY_REGEXP)) {
+        return this.addSmiley(kind);
+      }
     }
+
+    switch (seq2) {
+      case ':)':
+      case ':D':
+      case ':(':
+        return this.addSmiley(seq2);
+
+      default:
+        break;
+    }
+
+    switch (seq3) {
+      case ':-D':
+      case '+_+':
+      case ':-(':
+      case ':-o':
+      case ':-P':
+        return this.addSmiley(seq3);
+
+      default:
+        break;
+    }
+
+    return false;
   }
+
 
   processBlock(
     type,
@@ -848,6 +868,14 @@ export default class MarkdownTokenizer {
     this.inlineTokens = [];
     this.marksStack = [];
     this.paragraphToken= null;
+  }
+
+  addSmiley(kind) {
+    this.inlineTokens.push(
+      new Token('smiley', null, null, { kind })
+    );
+    this.next(kind.length);
+    return true;
   }
 
   isSequenceContinued() {
