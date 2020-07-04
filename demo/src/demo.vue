@@ -40,36 +40,8 @@ export default {
     isColumn1: false,
     isColumn2: true,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
-    text2: `# Heading level 1: \`# Heading level 1\`
-## Heading level 2: \`## Heading level 2\`
-### Heading level 3: \`### Heading level 3\`
-#### Heading level 4: \`#### Heading level 4\`
-##### Heading level 5: \`##### Heading level 5\`
-
-[url=//ya.ru]
-link block
-[/url]
-
-[url=//ya.ru]
-[quote]
-test [b]z[/b] test
-[/quote]
-[/url]
-
-[b]test[/b]
-
-[url=//ya.ru]tets[/url]
-
-[size=40]
-[b]test[/b]
-[/size]
-
-[list]
-> [quote]
-> zxc
-> [/quote]
-[/list]
-
+    text2: `:)
+:shock2: :scream:
 `,
 //     text2: `[div=c-column b-catalog_entry][div=cover][div=image-decor][anime=1292][div=image-cutter]
 // [poster]https://kawai.shikimori.one/system/animes/original/1292.jpg?1578039620[/poster][/div][/anime][div=text]
