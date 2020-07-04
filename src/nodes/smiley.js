@@ -6,10 +6,12 @@ import { Node } from '../base';
 
 export default class Smiley extends Node {
   get name() {
-    return 'image';
+    return 'smiley';
   }
 
   get schema() {
+    const prependBaseUrl = this.prependBaseUrl.bind(this);
+
     return {
       inline: true,
       attrs: {
@@ -25,7 +27,12 @@ export default class Smiley extends Node {
       }],
       toDOM: node => ([
         'img',
-        { class: 'smiley', alt: node.attrs.kind, title: node.attrs.kind }
+        {
+          class: 'smiley',
+          alt: node.attrs.kind,
+          title: node.attrs.kind,
+          src: prependBaseUrl(`/images/smileys/${node.attrs.kind}.gif`)
+        }
       ])
     };
   }

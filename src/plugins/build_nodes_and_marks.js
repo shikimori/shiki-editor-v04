@@ -55,7 +55,7 @@ export default function(editor) {
     new CodeBlock(),
     new Div(),
     new Hr(),
-    new Smiley(),
+    new Smiley({ baseUrl: editor.options.baseUrl }),
     new Image(),
     new ListItem(),
     new Quote({ baseUrl: editor.options.baseUrl }),
