@@ -315,7 +315,11 @@ describe('MarkdownTokenizer', () => {
           {
             type: 'inline',
             children: [
-              { type: 'color', direction: 'open', attrs: [['color', 'red']], bbcode: '[color=red]' },
+              {
+                type: 'color',
+                direction: 'open',
+                attrs: [['color', 'red']], bbcode: '[color=red]'
+              },
               { type: 'text', content: 'zxc' },
               { type: 'color', direction: 'close', bbcode: '[/color]' }
             ]
