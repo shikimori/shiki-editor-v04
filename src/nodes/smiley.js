@@ -10,8 +10,6 @@ export default class Smiley extends Node {
   }
 
   get schema() {
-    const prependBaseUrl = this.prependBaseUrl.bind(this);
-
     return {
       inline: true,
       attrs: {
@@ -31,7 +29,7 @@ export default class Smiley extends Node {
           class: 'smiley',
           alt: node.attrs.kind,
           title: node.attrs.kind,
-          src: prependBaseUrl(`/images/smileys/${node.attrs.kind}.gif`)
+          src: this.prependBaseUrl(`/images/smileys/${node.attrs.kind}.gif`)
         }
       ])
     };

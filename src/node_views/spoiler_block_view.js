@@ -1,3 +1,4 @@
+import { bind } from 'decko';
 import DOMView from './dom_view';
 
 export default class SpoilerBlockView extends DOMView {
@@ -14,11 +15,11 @@ export default class SpoilerBlockView extends DOMView {
 
     const button = document.createElement('button');
     button.innerText = this.node.attrs.label;
-    button.addEventListener('click', this.toggle.bind(this));
+    button.addEventListener('click', this.toggle);
 
     const edit = document.createElement('span');
     edit.classList.add('edit');
-    edit.addEventListener('click', this.changeLabel.bind(this));
+    edit.addEventListener('click', this.changeLabel);
 
     this.dom.appendChild(button);
     this.dom.appendChild(edit);
@@ -31,6 +32,7 @@ export default class SpoilerBlockView extends DOMView {
     return false;
   }
 
+  @bind
   toggle() {
     const { getPos, node, view, dispatch, tr } = this;
     const attrs = this.mergeAttrs({ isOpened: !node.attrs.isOpened });
@@ -41,6 +43,7 @@ export default class SpoilerBlockView extends DOMView {
     view.focus();
   }
 
+  @bind
   changeLabel() {
     const { getPos, node, view, dispatch, tr } = this;
 

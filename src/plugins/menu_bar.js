@@ -1,4 +1,5 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Plugins/MenuBar.js
+import { bind } from 'decko';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
 class Menu {
@@ -7,7 +8,7 @@ class Menu {
     this.preventHide = false;
 
     // the mousedown event is fired before blur so we can prevent it
-    this.mousedownHandler = this.handleClick.bind(this);
+    this.mousedownHandler = this.handleClick;
     this.options.element
       .addEventListener('mousedown', this.mousedownHandler, { capture: true });
 
@@ -22,6 +23,7 @@ class Menu {
     this.options.editor.on('blur', this.blurHandler);
   }
 
+  @bind
   handleClick() {
     this.preventHide = true;
   }

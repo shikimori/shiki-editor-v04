@@ -6,8 +6,6 @@ export default class Quote extends Node {
   }
 
   get schema() {
-    const prependBaseUrl = this.prependBaseUrl.bind(this);
-
     return {
       content: 'block*',
       group: 'block',
@@ -52,16 +50,16 @@ export default class Quote extends Node {
               'a',
               {
                 class: 'b-link b-user16',
-                href: prependBaseUrl(href),
+                href: this.prependBaseUrl(href),
                 target: '_blank'
               },
               [
                 'img',
                 {
-                  src: prependBaseUrl(
+                  src: this.prependBaseUrl(
                     `/system/users/x16/${node.attrs.user_id}.png`
                   ),
-                  srcset: prependBaseUrl(
+                  srcset: this.prependBaseUrl(
                     `/system/users/x32/${node.attrs.user_id}.png 2x`
                   )
                 }

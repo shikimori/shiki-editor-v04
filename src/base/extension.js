@@ -1,3 +1,5 @@
+import { bind } from 'decko';
+
 // based on
 // https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Utils/Extension.js
 export default class Extension {
@@ -34,6 +36,7 @@ export default class Extension {
     return [];
   }
 
+  @bind
   prependBaseUrl(url) {
     return `${this.options.baseUrl}${url}`;
   }
