@@ -28,7 +28,6 @@
 
 <script>
 import Editor from '../../src/editor_app';
-import markdownit from 'markdown-it';
 
 export default {
   name: 'App',
@@ -132,7 +131,6 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`
   }),
   mounted() {
-    window.markdownTokenizer = markdownit('commonmark', { html: false });
     window.shikiTokenizer = (this.$refs.editor1 || this.$refs.editor2)
       .editor.markdownParser.tokenizer;
   }

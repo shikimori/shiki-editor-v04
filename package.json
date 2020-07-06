@@ -2,7 +2,7 @@
   "name": "shiki-editor",
   "title": "Shikimori text editor",
   "description": "Shikimori text editor",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "main": "src/index.js",
   "author": "morr",
   "license": "OSL-3.0",
@@ -45,7 +45,6 @@
     "html-webpack-plugin": "^3.0.0",
     "http-server": "^0.12.1",
     "imagesloaded": "^4.1.4",
-    "markdown-it": "^11.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "mocha": "^7.2.0",
     "mocha-webpack": "^2.0.0-beta.0",
@@ -66,8 +65,8 @@
   },
   "peerDependencies": {
     "@popperjs/core": "^2.4.2",
-    "decko": "^1.2.0",
     "axios": "^0.19.2",
+    "decko": "^1.2.0",
     "imagesloaded": "^4.1.4",
     "uevent": "^2.0.0"
   },

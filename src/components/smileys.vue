@@ -6,8 +6,8 @@
       <div
         v-if='smileysHTML'
         class='inner'
-        v-html='smileysHTML'
         @click='select'
+        v-html='smileysHTML'
       />
       <div v-else class='b-ajax' />
     </div>
