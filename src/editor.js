@@ -1,5 +1,6 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Editor.js
 
+import uEvent from 'uevent';
 import { history, undo, redo } from 'prosemirror-history';
 import { EditorState, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
@@ -12,7 +13,6 @@ import { gapCursor } from 'prosemirror-gapcursor';
 
 import {
   ExtensionManager,
-  Emitter,
   getMarkAttrs,
   getNodeAttrs,
   minMax
@@ -22,7 +22,7 @@ import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
 import { VueView } from './node_views';
 import { trackFocus, buildNodesAndMarks } from './plugins';
 
-export default class ShikiEditor extends Emitter {
+export default class ShikiEditor {
   options = {
     autofocus: null,
     baseUrl: '',
@@ -34,9 +34,7 @@ export default class ShikiEditor extends Emitter {
   selection = { from: 0, to: 0 }
 
   constructor(options, Vue) {
-    super(options);
-
-    // setInterval(() => console.log(this.focused), 250)
+    uEvent.mixin(this);
 
     this.options = {
       ...this.options,
@@ -284,7 +282,7 @@ export default class ShikiEditor extends Emitter {
 
     this.setActiveNodesAndMarks();
 
-    this.emit('update', { transaction });
+    this.trigger('update', { transaction });
   }
 
   resolveSelection(position = null) {

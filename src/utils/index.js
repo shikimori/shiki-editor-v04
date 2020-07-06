@@ -1,4 +1,3 @@
-export { default as Emitter } from './emitter';
 export { default as ExtensionManager } from './extension_manager';
 export { default as minMax } from './min_max';
 export { default as fixUrl } from './fix_url';

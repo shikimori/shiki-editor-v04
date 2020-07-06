@@ -52,6 +52,7 @@
     "raw-loader": "^4.0.1",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.0.1",
+    "uevent": "^2.0.0",
     "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.41.2",
@@ -63,7 +64,8 @@
   "peerDependencies": {
     "@popperjs/core": "^2.4.2",
     "axios": "^0.19.2",
-    "imagesloaded": "^4.1.4"
+    "imagesloaded": "^4.1.4",
+    "uevent": "^2.0.0"
   },
   "dependencies": {
     "prosemirror-commands": "^1.1.4",

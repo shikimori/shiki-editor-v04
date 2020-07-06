@@ -10,7 +10,7 @@ export default function(editor) {
       handleDOMEvents: {
         focus: (view, event) => {
           editor.focused = true;
-          editor.emit('focus', {
+          editor.trigger('focus', {
             event,
             state: view.state,
             view
@@ -21,7 +21,7 @@ export default function(editor) {
         },
         blur: (view, event) => {
           editor.focused = false;
-          editor.emit('blur', {
+          editor.trigger('blur', {
             event,
             state: view.state,
             view
