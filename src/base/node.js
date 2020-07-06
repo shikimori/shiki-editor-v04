@@ -37,4 +37,8 @@ export default class Node extends Extension {
   markdownSerialize(_state, _node) {
     return null;
   }
+
+  prependBaseUrl(url) {
+    return `${this.options.baseUrl}${url}`;
+  }
 }

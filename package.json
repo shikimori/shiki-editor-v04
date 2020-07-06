@@ -2,7 +2,7 @@
   "name": "shiki-editor",
   "title": "Shikimori text editor",
   "description": "Shikimori text editor",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "main": "src/index.js",
   "author": "morr",
   "license": "OSL-3.0",
@@ -66,6 +66,7 @@
   },
   "peerDependencies": {
     "@popperjs/core": "^2.4.2",
+    "decko": "^1.2.0",
     "axios": "^0.19.2",
     "imagesloaded": "^4.1.4",
     "uevent": "^2.0.0"

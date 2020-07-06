@@ -9,6 +9,10 @@ export default class Smiley extends Node {
     return 'smiley';
   }
 
+  get defaultOptions() {
+    return { baseUrl: undefined };
+  }
+
   get schema() {
     return {
       inline: true,

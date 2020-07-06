@@ -5,6 +5,10 @@ export default class Quote extends Node {
     return 'quote';
   }
 
+  get defaultOptions() {
+    return { baseUrl: undefined };
+  }
+
   get schema() {
     return {
       content: 'block*',
@@ -29,7 +33,7 @@ export default class Quote extends Node {
         }),
         contentElement: 'div.quote-content'
       }],
-      toDOM(node) {
+      toDOM: (node) => {
         if (node.attrs.nickname) {
           let innerQuoteable;
 
