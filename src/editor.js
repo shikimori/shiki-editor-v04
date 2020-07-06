@@ -1,7 +1,8 @@
 // based on https://github.com/scrumpy/tiptap/blob/master/packages/tiptap/src/Editor.js
 
-import uEvent from 'uevent';
 import { bind } from 'decko';
+
+import uEvent from 'uevent';
 import { history, undo, redo } from 'prosemirror-history';
 import { EditorState, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
