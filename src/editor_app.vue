@@ -40,13 +40,15 @@
     </div>
     <!--/EditorMenuBar-->
 
-    <textarea
-      v-if='isSource'
-      ref='textarea'
-      v-model='editorContent'
-      class='ProseMirror'
-    />
-    <EditorContent v-else :editor='editor' />
+    <div class='editor-container'>
+      <textarea
+        v-if='isSource'
+        ref='textarea'
+        v-model='editorContent'
+        class='ProseMirror'
+      />
+      <EditorContent v-else :editor='editor' />
+    </div>
   </div>
 </template>
 
