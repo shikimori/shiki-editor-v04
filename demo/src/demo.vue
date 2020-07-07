@@ -135,6 +135,9 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`
   }),
   computed: {
+    locale() {
+      return I18n.locale;
+    },
     uploadEndpoint() {
       return `${this.baseUrl}/api/user_images?linked_type=Comment`;
     }

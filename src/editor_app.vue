@@ -94,6 +94,7 @@ export default {
   props: {
     baseUrl: { type: String, required: true },
     uploadEndpoint: { type: String, required: true },
+    locale: { type: String, required: true },
     content: { type: String, required: true }
   },
   data: () => ({
@@ -155,7 +156,7 @@ export default {
   mounted() {
     this.fileUploader = new ShikiFileUploader({
       node: this.$refs.editor_container,
-      locale: I18n.locale,
+      locale: this.locale,
       endpoint: this.uploadEndpoint,
       xhrHeaders: () => ({})
     });
