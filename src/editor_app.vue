@@ -40,7 +40,7 @@
     </div>
     <!--/EditorMenuBar-->
 
-    <div class='editor-container'>
+    <div ref='editor_container' class='editor-container'>
       <textarea
         v-if='isSource'
         ref='textarea'
@@ -58,6 +58,7 @@ import Vue from 'vue';
 import { undo, redo } from 'prosemirror-history';
 import autosize from 'autosize';
 import withinviewport from 'withinviewport';
+import ShikiFileUploader from 'shiki-utils/src/file_uploader';
 
 import Editor from './editor';
 import EditorContent from './components/editor_content';
@@ -92,6 +93,7 @@ export default {
   },
   props: {
     baseUrl: { type: String, required: true },
+    uploadEndpoint: { type: String, required: true },
     content: { type: String, required: true }
   },
   data: () => ({
@@ -100,7 +102,8 @@ export default {
     editorPosition: null,
     isSource: false,
     isLinkBlock: false,
-    isSmiley: false
+    isSmiley: false,
+    fileUploader: null
   }),
   computed: {
     isEnabled() {
@@ -149,8 +152,17 @@ export default {
     }, Vue);
     this.editorContent = this.content;
   },
+  mounted() {
+    this.fileUploader = new ShikiFileUploader({
+      node: this.$refs.editor_container,
+      locale: I18n.locale,
+      endpoint: this.uploadEndpoint,
+      xhrHeaders: () => ({})
+    });
+  },
   beforeDestroy() {
     this.editor.destroy();
+    this.fileUploader.destroy();
   },
   methods: {
     command(type) {

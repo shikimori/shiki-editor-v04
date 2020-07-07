@@ -10,7 +10,9 @@
         <Editor
           ref='editor1'
           :content='text1'
+          :locale='locale'
           :base-url='baseUrl'
+          :upload-endpoint='uploadEndpoint'
           @update='(value) => text1 = value'
         />
       </div>
@@ -18,7 +20,9 @@
         <Editor
           ref='editor2'
           :content='text2'
+          :locale='locale'
           :base-url='baseUrl'
+          :upload-endpoint='uploadEndpoint'
           @update='(value) => text2 = value'
         />
       </div>
@@ -130,6 +134,11 @@ div [div=b-link_button]inside line is not parsed[/div]
 [quote=zxc]Old style quote with nickname[/quote]
 [quote=c1246;1945;Silentium°]Old style quote with user[/quote]`
   }),
+  computed: {
+    uploadEndpoint() {
+      return `${this.baseUrl}/api/user_images?linked_type=Comment`;
+    }
+  },
   mounted() {
     window.shikiTokenizer = (this.$refs.editor1 || this.$refs.editor2)
       .editor.markdownParser.tokenizer;

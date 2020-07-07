@@ -22,6 +22,7 @@ const TRANSLATIONS = {
 };
 
 window.I18n = {
+  locale: 'ru',
   t: key => TRANSLATIONS[key] || `:${key}`
 };
 
