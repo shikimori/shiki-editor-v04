@@ -129,6 +129,7 @@ export default {
       bottom: 0
       content: ''
       left: 0
+      pointer-events: none
       position: absolute
       right: 0
       top: 0
