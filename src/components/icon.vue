@@ -11,7 +11,7 @@
       "is-disabled": !isEnabled
     }'
   >
-    <input type='file' @change='upload'>
+    <input type='file' multiple @change='upload'>
   </label>
   <button
     v-else
