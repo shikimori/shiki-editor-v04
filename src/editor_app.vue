@@ -6,28 +6,30 @@
       :editor="editor"
     -->
     <div ref='menubar' class='menu-bar'>
-      <div
-        v-for='(items, index) in menuItems'
-        :key='index'
-        class='menu-group'
-      >
-        <Icon
-          v-for='item in items'
-          :key='item.constructor === Object ? item.type : item'
-          :ref='item.type'
-          v-bind='item'
-          :is-active='isActive[item.type]'
-          :is-enabled='item.isEnabled ? item.isEnabled() : isEnabled'
-          @command='args => command(item.type, args)'
-        />
-      </div>
-      <div class='menu-group source'>
-        <Icon
-          v-bind='menuSourceItem'
-          :is-active='isSource'
-          is-enabled
-          @command='() => toggleSourceCommand()'
-        />
+      <div class='icons'>
+        <div
+          v-for='(items, index) in menuItems'
+          :key='index'
+          class='menu-group'
+        >
+          <Icon
+            v-for='item in items'
+            :key='item.constructor === Object ? item.type : item'
+            :ref='item.type'
+            v-bind='item'
+            :is-active='isActive[item.type]'
+            :is-enabled='item.isEnabled ? item.isEnabled() : isEnabled'
+            @command='args => command(item.type, args)'
+          />
+        </div>
+        <div class='menu-group source'>
+          <Icon
+            v-bind='menuSourceItem'
+            :is-active='isSource'
+            is-enabled
+            @command='() => toggleSourceCommand()'
+          />
+        </div>
       </div>
       <Smileys
         v-show='isSmiley'
@@ -161,11 +163,13 @@ export default {
 
     this.fileUploader = new ShikiFileUploader({
       node: this.$refs.editor_container,
+      progressContainerNode: this.$refs.menubar,
       locale: this.locale,
       xhrEndpoint: this.uploadEndpoint,
       xhrHeaders: () => ({}),
       maxNumberOfFiles: 6
     });
+    // window.z = this.fileUploader;
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -243,18 +247,24 @@ export default {
 <style scoped lang='sass'>
 .menu-bar
   background: #fff
-  color: #456
-  display: flex
-  flex-wrap: wrap
-  font-size: 16px
   left: 0
-  min-height: 1em
-  overflow: visible
   padding: 3px 0
   position: sticky
   right: 0
   top: 0
   z-index: 10
+
+  .icons
+    color: #456
+    display: flex
+    flex-wrap: wrap
+    font-size: 16px
+    min-height: 1em
+    overflow: visible
+
+  /deep/ .shiki-file_uploader-upload_progress
+    margin-top: 1px
+    margin-bottom: 3px
 
 .menu-group
   display: flex
