@@ -58,7 +58,6 @@ import Vue from 'vue';
 import { undo, redo } from 'prosemirror-history';
 import autosize from 'autosize';
 import withinviewport from 'withinviewport';
-import ShikiFileUploader from 'shiki-utils/src/file_uploader';
 
 import Editor from './editor';
 import EditorContent from './components/editor_content';
@@ -153,12 +152,19 @@ export default {
     }, Vue);
     this.editorContent = this.content;
   },
-  mounted() {
+  async mounted() {
+    const { default: ShikiFileUploader } = await import(
+      process.env.VUE_APP_USER === 'morr' ?
+        '../../shiki-utils/src/file_uploader' :
+        'shiki-utils/src/file_uploader'
+    );
+
     this.fileUploader = new ShikiFileUploader({
       node: this.$refs.editor_container,
       locale: this.locale,
-      endpoint: this.uploadEndpoint,
-      xhrHeaders: () => ({})
+      xhrEndpoint: this.uploadEndpoint,
+      xhrHeaders: () => ({}),
+      maxNumberOfFiles: 6
     });
   },
   beforeDestroy() {
