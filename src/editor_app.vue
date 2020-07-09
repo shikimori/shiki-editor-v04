@@ -5,7 +5,7 @@
       v-slot='{ activeChecks, commands }'
       :editor="editor"
     -->
-    <div ref='menubar' class='menu-bar'>
+    <div ref='menubar' class='menubar'>
       <div class='icons'>
         <div
           v-for='(items, index) in menuItems'
@@ -245,7 +245,7 @@ export default {
 </script>
 
 <style scoped lang='sass'>
-.menu-bar
+.menubar
   background: #fff
   left: 0
   padding: 3px 0
