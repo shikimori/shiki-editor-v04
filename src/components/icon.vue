@@ -1,5 +1,20 @@
 <template>
+  <label
+    v-if='isUpload'
+    ref='icon'
+    :tabindex='isEnabled ? undefined : -1'
+    class='icon'
+    :title='title'
+    :class='{
+      [type]: true,
+      "is-active": isEnabled && isActive,
+      "is-disabled": !isEnabled
+    }'
+  >
+    <input type='file' @change='upload'>
+  </label>
   <button
+    v-else
     ref='icon'
     class='icon'
     :tabindex='isEnabled ? undefined : -1'
@@ -22,11 +37,20 @@ export default {
     isActive: { type: Boolean, required: true },
     isEnabled: { type: Boolean, required: false, default: true }
   },
+  computed: {
+    isUpload() {
+      return this.type === 'upload';
+    }
+  },
   methods: {
     execute() {
       if (!this.isEnabled) { return; }
       this.$refs.icon.blur();
       this.$emit('command');
+    },
+    upload({ currentTarget }) {
+      this.$refs.icon.blur();
+      this.$emit('command', currentTarget.files);
     }
   }
 };
@@ -61,6 +85,7 @@ export default {
   &.is-disabled
     color: rgba(#123, 0.3)
     outline: none
+    pointer-events: none
 
   &.is-active
     background: rgba(#acb1b4, 0.25)
@@ -74,7 +99,7 @@ export default {
     text-transform: none
     letter-spacing: normal
 
-  $icons: ("bold": "\e802", "italic": "\e804", "underline": "\e807", "strike": "\e805", "link": "\1f517", "link_block": "\1f517", "spoiler_inline": "\f31a", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "smiley": "\e800", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac", "spoiler_block": "\f31b")
+  $icons: ("bold": "\e802", "italic": "\e804", "underline": "\e807", "strike": "\e805", "link": "\1f517", "link_block": "\1f517", "spoiler_inline": "\f31a", "code_inline": "\ef53", "undo": "\ebb0", "redo": "\ebaf", "image": "\e81d", "smiley": "\e800", "upload": "\e80c", "bullet_list": "\ebab", "blockquote": "\e80b", "code_block": "\ebac", "spoiler_block": "\f31b")
   @each $name, $glyph in $icons
     &.#{$name}:before
       content: $glyph
@@ -91,4 +116,7 @@ export default {
 
       body[data-locale=en] &
         content: '<source>'
+
+input
+  display: none
 </style>

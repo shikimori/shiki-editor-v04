@@ -18,7 +18,7 @@
           v-bind='item'
           :is-active='isActive[item.type]'
           :is-enabled='item.isEnabled ? item.isEnabled() : isEnabled'
-          @command='() => command(item.type)'
+          @command='args => command(item.type, args)'
         />
       </div>
       <div class='menu-group source'>
@@ -79,7 +79,7 @@ const MENU_ITEMS = [
     'link'
   ],
   ['undo', 'redo'],
-  ['image', 'smiley'],
+  ['smiley', 'image', 'upload'],
   ['blockquote', 'spoiler_block', 'code_block', 'bullet_list']
 ];
 
@@ -166,11 +166,11 @@ export default {
     this.fileUploader.destroy();
   },
   methods: {
-    command(type) {
+    command(type, args) {
       const method = `${type}Command`;
 
       if (this[method] && this[method].constructor === Function) {
-        this[method]();
+        this[method](args);
       } else if (type == 'link') {
         this.isLinkBlock ?
           this.editor.commands.link_block() :
@@ -193,6 +193,9 @@ export default {
       if (kind) {
         this.editor.commands.smiley(kind);
       }
+    },
+    uploadCommand(files) {
+      this.fileUploader.addFiles(files);
     },
     undoIsEnabled() {
       return this.isEnabled && undo(this.editor.state);
