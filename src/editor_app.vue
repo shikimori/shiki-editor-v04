@@ -146,6 +146,15 @@ export default {
       return memo;
     }
   },
+  watch: {
+    isSource() {
+      if (this.isSource) {
+        this.fileUploader?.disable();
+      } else {
+        this.fileUploader?.enable();
+      }
+    }
+  },
   created() {
     this.editor = new Editor({
       extensions: [],
