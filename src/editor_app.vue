@@ -26,7 +26,7 @@
           <Icon
             v-bind='menuSourceItem'
             :is-active='isSource'
-            is-enabled
+            :is-enabled='isSourceEnabled'
             @command='() => toggleSourceCommand()'
           />
         </div>
@@ -144,6 +144,9 @@ export default {
       memo.smiley = this.isSmiley;
 
       return memo;
+    },
+    isSourceEnabled() {
+      return !this.fileUploader || !this.fileUploader.isUploading;
     }
   },
   watch: {
