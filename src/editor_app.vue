@@ -174,6 +174,8 @@ export default {
     );
 
     this.fileUploader = this.buildFileUploader(ShikiFileUploader);
+    window.fileUploader = this.fileUploader;
+    window.uppy = this.fileUploader.uppy;
   },
   beforeDestroy() {
     this.editor.destroy();
