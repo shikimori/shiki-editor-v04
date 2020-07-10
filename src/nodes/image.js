@@ -84,8 +84,9 @@ export class Image extends Node {
   }
 
   commands({ type }) {
-    return () => (state, dispatch) => {
-      const src = prompt(I18n.t('frontend.shiki_editor.prompt.image_url'));
+    return (imageUrl) => (state, dispatch) => {
+      const src = imageUrl ||
+        prompt(I18n.t('frontend.shiki_editor.prompt.image_url'));
       if (src == null) { return; }
 
       const { selection } = state;
@@ -114,7 +115,6 @@ export class Image extends Node {
       state.write(`[poster${seq}]${state.esc(node.attrs.src)}[/poster]`);
       return;
     }
-
 
     state.write(`[img${seq}]${state.esc(node.attrs.src)}[/img]`);
   }

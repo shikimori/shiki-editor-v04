@@ -161,15 +161,7 @@ export default {
         'shiki-utils/src/file_uploader'
     );
 
-    this.fileUploader = new ShikiFileUploader({
-      node: this.$refs.editor_container,
-      progressContainerNode: this.$refs.menubar,
-      locale: this.locale,
-      xhrEndpoint: this.uploadEndpoint,
-      xhrHeaders: () => ({}),
-      maxNumberOfFiles: 6
-    });
-    // window.z = this.fileUploader;
+    this.fileUploader = this.buildFileUploader(ShikiFileUploader);
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -239,6 +231,16 @@ export default {
           window.scrollTo(0, scrollY);
         }
       });
+    },
+    buildFileUploader(ShikiFileUploader) {
+      return new ShikiFileUploader({
+        node: this.$refs.editor_container,
+        progressContainerNode: this.$refs.menubar,
+        locale: this.locale,
+        xhrEndpoint: this.uploadEndpoint,
+        xhrHeaders: () => ({}),
+        maxNumberOfFiles: 6
+      })
     }
   }
 };
