@@ -39,7 +39,6 @@ export default {
     Editor
   },
   data: () => ({
-    baseUrl: 'https://shikimori.one',
     isColumn1: false,
     isColumn2: true,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]
@@ -138,8 +137,16 @@ div [div=b-link_button]inside line is not parsed[/div]
     locale() {
       return I18n.locale;
     },
+
+    baseUrl() {
+      return process.env.VUE_APP_USER === 'morr' ?
+        'http://shikimori.local' :
+        'https://shikimori.one';
+    },
     uploadEndpoint() {
-      return `${this.baseUrl}/api/user_images?linked_type=Comment`;
+      return `${this.baseUrl}/api/user_images?linked_type=Comment` + (
+        process.env.NODE_ENV === 'development' ? '&test=1' : ''
+      );
     }
   },
   mounted() {
