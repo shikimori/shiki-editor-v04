@@ -64,6 +64,7 @@ import withinviewport from 'withinviewport';
 import Editor from './editor';
 import EditorContent from './components/editor_content';
 import { scrollTop } from './utils';
+import { insertUploadPlaceholder } from './commands';
 // import EditorMenuBar from './components/editor_menu_bar';
 
 import Icon from './components/icon';
@@ -255,9 +256,18 @@ export default {
         xhrHeaders: () => ({}),
         maxNumberOfFiles: 6
       })
+        .on('upload:file:added', (_e, file) => {
+          insertUploadPlaceholder(
+            this.editor.state,
+            this.editor.view.dispatch,
+            file
+          );
+          console.log(file, file.id);
+        })
         .on('upload:file:success', (_e, response) => {
           this.editor.commands.image(this.baseUrl + response.url);
         });
+
     }
   }
 };

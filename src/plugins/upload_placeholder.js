@@ -4,7 +4,7 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 
 export default function(_editor) {
   return new Plugin({
-    key: new PluginKey('image_upload_placeholder'),
+    key: new PluginKey('upload_placeholder'),
     state: {
       init() { return DecorationSet.empty; },
       apply(tr, set) {
