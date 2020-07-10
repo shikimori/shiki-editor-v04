@@ -22,7 +22,8 @@ import {
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
 import { VueView } from './node_views';
-import { trackFocus, buildNodesAndMarks } from './plugins';
+import { trackFocus, buildNodesAndMarks, imageUploadPlaceholder }
+  from './plugins';
 
 export default class ShikiEditor {
   options = {
@@ -133,7 +134,8 @@ export default class ShikiEditor {
       keymap(baseKeymap),
       dropCursor(this.options.dropCursor),
       gapCursor(),
-      trackFocus(this)
+      trackFocus(this),
+      imageUploadPlaceholder(this)
     ];
   }
 
