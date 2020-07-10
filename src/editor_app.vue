@@ -241,6 +241,9 @@ export default {
         xhrHeaders: () => ({}),
         maxNumberOfFiles: 6
       })
+        .on('upload:file:success', (_e, response) => {
+          this.editor.commands.image(this.baseUrl + response.url);
+        });
     }
   }
 };
