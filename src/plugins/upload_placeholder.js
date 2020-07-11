@@ -8,16 +8,17 @@ export default function(_editor) {
     state: {
       init() { return DecorationSet.empty; },
       apply(tr, set) {
-      // Adjust decoration positions to changes made by the transaction
+        // Adjust decoration positions to changes made by the transaction
         set = set.map(tr.mapping, tr.doc);
-      // See if the transaction adds or removes any placeholders
+        // See if the transaction adds or removes any placeholders
         let action = tr.getMeta(this);
         if (action && action.add) {
-          let widget = document.createElement('placeholder');
+          let widget = createPlaceholder(action.add.file);
+
           let deco = Decoration.widget(
             action.add.pos,
             widget,
-            { id: action.add.id }
+            { id: action.add.uploadId }
           );
           set = set.add(tr.doc, [deco]);
         } else if (action && action.remove) {
@@ -32,4 +33,26 @@ export default function(_editor) {
       decorations(state) { return this.getState(state); }
     }
   });
+}
+
+function createPlaceholder(file) {
+  const node = document.createElement('div');
+
+  node.classList.add('b-image');
+  node.classList.add('b-ajax');
+  node.classList.add('is-uploading');
+  node.classList.add('no-zoom');
+
+  const reader = new FileReader();
+  reader.addEventListener('load', () => {
+    const img = document.createElement('img');
+    img.src = reader.result;
+    node.append(img);
+
+    node.classList.remove('is-uploading');
+    node.classList.add('unprocessed');
+  });
+  reader.readAsDataURL(file);
+
+  return node;
 }

@@ -256,13 +256,12 @@ export default {
         xhrHeaders: () => ({}),
         maxNumberOfFiles: 6
       })
-        .on('upload:file:added', (_e, file) => {
+        .on('upload:file:added', (_e, uppyFile) => {
           insertUploadPlaceholder(
             this.editor.state,
             this.editor.view.dispatch,
-            file
+            { uploadId: uppyFile.id, file: uppyFile.data }
           );
-          console.log(file, file.id);
         })
         .on('upload:file:success', (_e, response) => {
           this.editor.commands.image(this.baseUrl + response.url);

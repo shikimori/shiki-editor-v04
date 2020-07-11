@@ -1,4 +1,4 @@
-export default function(state, dispatch, file) {
+export default function(state, dispatch, { uploadId, file }) {
   // Replace the selection with a placeholder
   const placeholderPlugin = state
     .plugins
@@ -8,7 +8,8 @@ export default function(state, dispatch, file) {
   if (!tr.selection.empty) tr.deleteSelection();
   tr.setMeta(placeholderPlugin, {
     add: {
-      id: file.id,
+      uploadId,
+      file,
       pos: tr.selection.from
     }
   });
