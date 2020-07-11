@@ -1,4 +1,5 @@
 import { uploadPlaceholder } from '../plugins';
+import { findPlaceholder } from '../utils';
 
 export default function(editor, { uploadId, response }) {
   const { state } = editor;
@@ -15,12 +16,4 @@ export default function(editor, { uploadId, response }) {
   } else {
     editor.commands.image(url);
   }
-}
-
-
-function findPlaceholder(state, id) {
-  const decos = uploadPlaceholder.getState(state);
-  const found = decos.find(null, null, spec => spec.id == id);
-
-  return found.length ? found[0].from : null;
 }

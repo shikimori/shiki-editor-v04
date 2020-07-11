@@ -6,3 +6,4 @@ export { default as getMarkRange } from './get_mark_range';
 export { default as getNodeAttrs } from './get_node_attrs';
 export { default as scrollTop } from './scroll_top';
 export { default as ensureDimension } from './ensure_dimension';
+export { default as findPlaceholder } from './find_placeholder';

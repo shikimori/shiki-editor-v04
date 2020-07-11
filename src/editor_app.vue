@@ -64,7 +64,11 @@ import withinviewport from 'withinviewport';
 import Editor from './editor';
 import EditorContent from './components/editor_content';
 import { scrollTop } from './utils';
-import { insertUploadPlaceholder, replaceUploadPlaceholder } from './commands';
+import {
+  insertUploadPlaceholder,
+  replaceUploadPlaceholder,
+  removeUploadPlaceholder
+} from './commands';
 // import EditorMenuBar from './components/editor_menu_bar';
 
 import Icon from './components/icon';
@@ -266,6 +270,12 @@ export default {
           replaceUploadPlaceholder(
             this.editor,
             { uploadId: uppyFile.id, response }
+          )
+        )
+        .on('upload:file:error', (_e, { uppyFile }) =>
+          removeUploadPlaceholder(
+            this.editor,
+            { uploadId: uppyFile.id }
           )
         );
     }
