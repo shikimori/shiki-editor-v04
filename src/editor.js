@@ -22,7 +22,12 @@ import {
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
 import { VueView } from './node_views';
-import { trackFocus, buildNodesAndMarks, uploadPlaceholder } from './plugins';
+import {
+  trackFocus,
+  buildNodesAndMarks,
+  uploadPlaceholder,
+  TrailingNode
+} from './plugins';
 
 export default class ShikiEditor {
   options = {
@@ -44,7 +49,7 @@ export default class ShikiEditor {
     };
     this.Vue = Vue;
 
-    this.extensions = this.createExtensions();
+    this.extensions = this.createExtensionManager();
     this.element = this.options.element || document.createElement('div');
 
     this.nodes = this.createNodes();
@@ -79,11 +84,19 @@ export default class ShikiEditor {
     return this.view ? this.view.state : undefined;
   }
 
+  createExtensionManager() {
+    return new ExtensionManager(this.createExtensions(), this);
+  }
+
   createExtensions() {
-    return new ExtensionManager([
+    return [
       ...buildNodesAndMarks(this),
-      ...this.options.extensions
-    ], this);
+      ...this.options.extensions,
+      new TrailingNode({
+        node: 'paragraph',
+        notAfter: ['paragraph']
+      })
+    ];
   }
 
   createNodes() {
@@ -261,10 +274,7 @@ export default class ShikiEditor {
     this.view.setProps({
       nodeViews: this.initNodeViews({
         parent: component,
-        extensions: [
-          ...buildNodesAndMarks(this),
-          ...this.options.extensions
-        ],
+        extensions: this.createExtensions(),
         editable: this.options.editable
       })
     });
