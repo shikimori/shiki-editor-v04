@@ -49,7 +49,7 @@ export default class ShikiEditor {
     };
     this.Vue = Vue;
 
-    this.extensions = this.createExtensionManager();
+    this.extensionsManager = this.createExtensionManager();
     this.element = this.options.element || document.createElement('div');
 
     this.nodes = this.createNodes();
@@ -77,7 +77,7 @@ export default class ShikiEditor {
     }
 
     // give extension manager access to our view
-    this.extensions.view = this.view;
+    this.extensionsManager.view = this.view;
   }
 
   get state() {
@@ -96,11 +96,11 @@ export default class ShikiEditor {
   }
 
   createNodes() {
-    return this.extensions.nodes;
+    return this.extensionsManager.nodes;
   }
 
   createMarks() {
-    return this.extensions.marks;
+    return this.extensionsManager.marks;
   }
 
   createSchema() {
@@ -115,18 +115,18 @@ export default class ShikiEditor {
     return new MarkdownParser(
       this.schema,
       MarkdownTokenizer,
-      this.extensions.markdownParserTokens()
+      this.extensionsManager.markdownParserTokens()
     );
   }
 
   createMarkdownSerializer() {
-    const { nodes, marks } = this.extensions.markdownSerializerTokens();
+    const { nodes, marks } = this.extensionsManager.markdownSerializerTokens();
     return new MarkdownSerializer(nodes, marks);
   }
 
   createPlugins() {
     return [
-      ...this.extensions.plugins,
+      ...this.extensionsManager.plugins,
       history(),
       inputRules({
         rules: this.inputRules
@@ -148,20 +148,20 @@ export default class ShikiEditor {
   }
 
   createKeymaps() {
-    return this.extensions.keymaps({
+    return this.extensionsManager.keymaps({
       schema: this.schema
     });
   }
 
   createInputRules() {
-    return this.extensions.inputRules({
+    return this.extensionsManager.inputRules({
       schema: this.schema,
       excludedExtensions: this.options.disableInputRules
     });
   }
 
   createPasteRules() {
-    return this.extensions.pasteRules({
+    return this.extensionsManager.pasteRules({
       schema: this.schema,
       excludedExtensions: this.options.disablePasteRules
     });
@@ -189,14 +189,14 @@ export default class ShikiEditor {
   }
 
   createCommands() {
-    return this.extensions.commands({
+    return this.extensionsManager.commands({
       schema: this.schema,
       view: this.view
     });
   }
 
   createActiveChecks() {
-    return this.extensions.activeChecks({
+    return this.extensionsManager.activeChecks({
       schema: this.schema,
       view: this.view
     });
@@ -268,7 +268,7 @@ export default class ShikiEditor {
     this.view.setProps({
       nodeViews: this.initNodeViews({
         parent: component,
-        extensions: this.extensions.extensions,
+        extensions: this.extensionsManager.extensions,
         editable: this.options.editable
       })
     });
