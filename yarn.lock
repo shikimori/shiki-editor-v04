@@ -7339,10 +7339,10 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shiki-utils@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/shiki-utils/-/shiki-utils-0.1.4.tgz#dd98604f79b24982716fa61adf059721c4cf483c"
-  integrity sha512-ppZU1aqC7y0uJvEPOS2gc50Y3Tf8pnLaU26k/4oINnAiQkGSxkGE98e/1y1PRZkZwSdC5Bt4QEK5s6wbckE5wQ==
+shiki-utils@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/shiki-utils/-/shiki-utils-0.1.6.tgz#b0ee44bc68516b489fc12a8894905f6618f0e44b"
+  integrity sha512-3Jx6OiD9EXr7GKoOx3jhmQ9wM7M6Il3axefTISpQNK6EeRXxVXCL0lzhbYzmEjNxVTTrpJbkCor4Kq54u8gk0Q==
   dependencies:
     "@uppy/core" "^1.11.0"
     "@uppy/xhr-upload" "^1.6.0"

@@ -1,14 +1,15 @@
-export default function(state, dispatch, { uploadId, file }) {
-  // Replace the selection with a placeholder
-  const placeholderPlugin = state
-    .plugins
-    .find(v => v.key.includes('upload_placeholder'));
+import { uploadPlaceholder } from '../plugins';
 
-  let tr = state.tr;
+export default function(editor, { uploadId, file }) {
+  const { state } = editor;
+  const { dispatch } = editor.view;
+  const tr = state.tr;
+
   if (!tr.selection.empty) tr.deleteSelection();
-  tr.setMeta(placeholderPlugin, {
+
+  tr.setMeta(uploadPlaceholder, {
     add: {
-      uploadId,
+      id: uploadId,
       file,
       pos: tr.selection.from
     }

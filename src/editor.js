@@ -134,7 +134,7 @@ export default class ShikiEditor {
       dropCursor(this.options.dropCursor),
       gapCursor(),
       trackFocus(this),
-      uploadPlaceholder(this)
+      uploadPlaceholder
     ];
   }
 
