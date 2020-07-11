@@ -85,18 +85,14 @@ export default class ShikiEditor {
   }
 
   createExtensionManager() {
-    return new ExtensionManager(this.createExtensions(), this);
-  }
-
-  createExtensions() {
-    return [
+    return new ExtensionManager([
       ...buildNodesAndMarks(this),
       ...this.options.extensions,
       new TrailingNode({
         node: 'paragraph',
         notAfter: ['paragraph']
       })
-    ];
+    ], this);
   }
 
   createNodes() {
@@ -267,14 +263,12 @@ export default class ShikiEditor {
   }
 
   setParentComponent(component = null) {
-    if (!component) {
-      return;
-    }
+    if (!component) { return; }
 
     this.view.setProps({
       nodeViews: this.initNodeViews({
         parent: component,
-        extensions: this.createExtensions(),
+        extensions: this.extensions.extensions,
         editable: this.options.editable
       })
     });
