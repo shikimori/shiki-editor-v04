@@ -18,8 +18,8 @@ export default class FileUploader extends Extension {
     return {
       progressContainerNode: null,
       locale: null,
-      xhrEndpoint: null,
-      xhrHeaders: null
+      uploadEndpoint: null,
+      uploadHeaders: null
     };
   }
 
@@ -52,13 +52,29 @@ export default class FileUploader extends Extension {
       );
   }
 
+  get isUploading() {
+    return !!(this.fileUploader?.isUploading);
+  }
+
+  addFiles(files) {
+    this.fileUploader.addFiles(files);
+  }
+
+  enable() {
+    this.fileUploader.enable();
+  }
+
+  disable() {
+    this.fileUploader.disable();
+  }
+
   buildFileUploader(ShikiFileUploader) {
     return new ShikiFileUploader({
       node: this.editor.view.dom,
       progressContainerNode: this.options.progressContainerNode,
       locale: this.options.locale,
       xhrEndpoint: this.options.uploadEndpoint,
-      xhrHeaders: this.options.xhrHeaders,
+      xhrHeaders: this.options.uploadHeaders,
       maxNumberOfFiles: 10
     });
   }

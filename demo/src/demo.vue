@@ -13,6 +13,7 @@
           :locale='locale'
           :base-url='baseUrl'
           :upload-endpoint='uploadEndpoint'
+          :upload-headers='uploadHeaders'
           @update='(value) => text1 = value'
         />
       </div>
@@ -23,6 +24,7 @@
           :locale='locale'
           :base-url='baseUrl'
           :upload-endpoint='uploadEndpoint'
+          :upload-headers='uploadHeaders'
           @update='(value) => text2 = value'
         />
       </div>
@@ -39,6 +41,7 @@ export default {
     Editor
   },
   data: () => ({
+    uploadHeaders: () => ({}),
     isColumn1: false,
     isColumn2: true,
     // text2: `[center] [url=ya.ru][quote][b]www[/b][/quote]

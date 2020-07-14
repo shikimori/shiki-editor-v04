@@ -97,6 +97,7 @@ export default {
   props: {
     baseUrl: { type: String, required: true },
     uploadEndpoint: { type: String, required: true },
+    uploadHeaders: { type: Function, required: true },
     locale: { type: String, required: true },
     content: { type: String, required: true }
   },
@@ -107,7 +108,7 @@ export default {
     isSource: false,
     isLinkBlock: false,
     isSmiley: false,
-    fileUploader: null
+    fileUploaderExtension: null
   }),
   computed: {
     isEnabled() {
@@ -148,15 +149,15 @@ export default {
       return memo;
     },
     isSourceEnabled() {
-      return !this.fileUploader || !this.fileUploader.isUploading;
+      return this.fileUploaderExtension.isUploading;
     }
   },
   watch: {
     isSource() {
       if (this.isSource) {
-        this.fileUploader?.disable();
+        this.fileUploaderExtension.disable();
       } else {
-        this.fileUploader?.enable();
+        this.fileUploaderExtension.enable();
       }
     }
   },
@@ -164,12 +165,12 @@ export default {
     this.fileUploaderExtension = new FileUploader({
       progressContainerNode: this.$refs.menubar,
       locale: this.locale,
-      xhrEndpoint: this.uploadEndpoint,
-      xhrHeaders: this.uploadHeaders
+      uploadEndpoint: this.uploadEndpoint,
+      uploadHeaders: this.uploadHeaders
     });
 
     this.editor = new Editor({
-      extensions: [this.fileUploader],
+      extensions: [this.fileUploaderExtension],
       content: this.content,
       baseUrl: this.baseUrl
     }, this, Vue);
@@ -209,7 +210,7 @@ export default {
       }
     },
     uploadCommand(files) {
-      this.fileUploader.addFiles(files);
+      this.fileUploaderExtension.addFiles(files);
     },
     undoIsEnabled() {
       return this.isEnabled && undo(this.editor.state);
