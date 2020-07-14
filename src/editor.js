@@ -124,29 +124,6 @@ export default class ShikiEditor {
     return new MarkdownSerializer(nodes, marks);
   }
 
-  createPlugins() {
-    return [
-      ...this.extensionsManager.plugins,
-      history(),
-      inputRules({
-        rules: this.inputRules
-      }),
-      ...this.pasteRules,
-      ...this.keymaps,
-      keymap({
-        'Mod-z': undo,
-        'Shift-Mod-z': redo,
-        'Mod-y': redo,
-        Backspace: joinBackward
-      }),
-      keymap(baseKeymap),
-      dropCursor(this.options.dropCursor),
-      gapCursor(),
-      trackFocus(this),
-      uploadPlaceholder
-    ];
-  }
-
   createKeymaps() {
     return this.extensionsManager.keymaps({
       schema: this.schema
@@ -180,6 +157,29 @@ export default class ShikiEditor {
       doc: this.markdownParser.parse(this.options.content),
       plugins: []
     });
+  }
+
+  createPlugins() {
+    return [
+      ...this.extensionsManager.plugins,
+      history(),
+      inputRules({
+        rules: this.inputRules
+      }),
+      ...this.pasteRules,
+      ...this.keymaps,
+      keymap({
+        'Mod-z': undo,
+        'Shift-Mod-z': redo,
+        'Mod-y': redo,
+        Backspace: joinBackward
+      }),
+      keymap(baseKeymap),
+      dropCursor(this.options.dropCursor),
+      gapCursor(),
+      trackFocus(this),
+      uploadPlaceholder
+    ];
   }
 
   attachPlugins() {
