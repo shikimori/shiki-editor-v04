@@ -88,7 +88,7 @@ export default class FileUploader extends Extension {
         key: new PluginKey(this.name),
         props: {
           @bind
-          async handlePaste(_view, event, _slice) {
+          handlePaste(_view, event, _slice) {
             if (event.clipboardData.files.length) {
               event.preventDefault();
               event.stopImmediatePropagation();
