@@ -366,7 +366,7 @@ export default class ShikiEditor {
   }
 
   destroy() {
-    if (!this.view) { return; }
-    this.view.destroy();
+    this.view?.destroy();
+    this.extensionsManager.destroy();
   }
 }

@@ -221,4 +221,10 @@ export default class ExtensionManager {
         };
       }, {});
   }
+
+  destroy() {
+    return this.extensions
+      .filter(extension => extension.destroy)
+      .forEach(extension => extension.destroy());
+  }
 }

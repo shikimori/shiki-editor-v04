@@ -86,4 +86,8 @@ export default class FileUploader extends Extension {
       })
     ];
   }
+
+  destroy() {
+    this.fileUploader.destroy();
+  }
 }
