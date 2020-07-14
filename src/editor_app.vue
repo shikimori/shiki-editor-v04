@@ -140,7 +140,7 @@ export default {
       return memo;
     },
     isSourceEnabled() {
-      return this.fileUploaderExtension.isUploading;
+      return !this.fileUploaderExtension.isUploading;
     }
   },
   watch: {
