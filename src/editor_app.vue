@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!--EditorMenuBar
-      ref='menubar'
-      v-slot='{ activeChecks, commands }'
-      :editor="editor"
-    -->
     <div ref='menubar' class='menubar'>
       <div v-if='editor' class='icons'>
         <div
@@ -40,7 +35,6 @@
         @toggle='smileyCommand'
       />
     </div>
-    <!--/EditorMenuBar-->
 
     <div v-if='editor' ref='editor_container' class='editor-container'>
       <textarea
@@ -66,8 +60,6 @@ import EditorContent from './components/editor_content';
 import { scrollTop } from './utils';
 import { FileUploader } from './extensions';
 
-// import EditorMenuBar from './components/editor_menu_bar';
-
 import Icon from './components/icon';
 import Smileys from './components/smileys';
 
@@ -90,7 +82,6 @@ export default {
   name: 'EditorApp',
   components: {
     EditorContent,
-    // EditorMenuBar,
     Icon,
     Smileys
   },
