@@ -6,7 +6,7 @@
       :editor="editor"
     -->
     <div ref='menubar' class='menubar'>
-      <div class='icons'>
+      <div v-if='editor' class='icons'>
         <div
           v-for='(items, index) in menuItems'
           :key='index'
@@ -42,7 +42,7 @@
     </div>
     <!--/EditorMenuBar-->
 
-    <div ref='editor_container' class='editor-container'>
+    <div v-if='editor' ref='editor_container' class='editor-container'>
       <textarea
         v-if='isSource'
         ref='textarea'
@@ -161,7 +161,7 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     this.fileUploaderExtension = new FileUploader({
       progressContainerNode: this.$refs.menubar,
       locale: this.locale,
