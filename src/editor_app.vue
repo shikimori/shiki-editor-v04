@@ -172,7 +172,6 @@ export default {
     this.editorContent = this.content;
   },
   async mounted() {
-    console.log(process.env.VUE_APP_USER)
     const { default: ShikiFileUploader } = await import(
       process.env.VUE_APP_USER === 'morr' ?
         '../../shiki-utils/src/file_uploader' :

@@ -89,10 +89,7 @@ export default class ShikiEditor {
     return new ExtensionManager([
       ...buildNodesAndMarks(this),
       ...this.options.extensions,
-      new TrailingNode({
-        node: 'paragraph',
-        notAfter: ['paragraph']
-      })
+      new TrailingNode()
     ], this);
   }
 

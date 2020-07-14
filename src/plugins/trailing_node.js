@@ -58,5 +58,4 @@ export default class TrailingNode extends Extension {
       })
     ];
   }
-
 }
