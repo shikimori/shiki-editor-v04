@@ -4,7 +4,7 @@ import { bind } from 'decko';
 
 import uEvent from 'uevent';
 import { history, undo, redo } from 'prosemirror-history';
-import { EditorState, TextSelection } from 'prosemirror-state';
+import { EditorState, TextSelection, Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Schema } from 'prosemirror-model';
 import { keymap } from 'prosemirror-keymap';
@@ -35,7 +35,8 @@ export default class ShikiEditor {
     baseUrl: '',
     content: '',
     dropCursor: {},
-    extensions: []
+    extensions: [],
+    editorProps: {}
   }
   focused = false
   selection = { from: 0, to: 0 }
@@ -122,6 +123,30 @@ export default class ShikiEditor {
   createMarkdownSerializer() {
     const { nodes, marks } = this.extensionsManager.markdownSerializerTokens();
     return new MarkdownSerializer(nodes, marks);
+  }
+
+  createPlugins() {
+    return [
+      ...this.extensionsManager.plugins,
+      history(),
+      inputRules({ rules: this.inputRules }),
+      ...this.pasteRules,
+      ...this.keymaps,
+      keymap({
+        'Mod-z': undo,
+        'Shift-Mod-z': redo,
+        'Mod-y': redo,
+        Backspace: joinBackward
+      }),
+      keymap(baseKeymap),
+      dropCursor(this.options.dropCursor),
+      gapCursor(),
+      trackFocus(this),
+      uploadPlaceholder,
+      new Plugin({
+        props: this.options.editorProps
+      })
+    ];
   }
 
   createKeymaps() {
