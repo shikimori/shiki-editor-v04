@@ -88,12 +88,33 @@ export default class FileUploader extends Extension {
         key: new PluginKey(this.name),
         props: {
           @bind
-          handlePaste(_view, event, _slice) {
+          async handlePaste(_view, event, _slice) {
             if (event.clipboardData.files.length) {
               event.preventDefault();
               event.stopImmediatePropagation();
 
               extension.addFiles(event.clipboardData.files);
+              return true;
+            }
+
+            const atLeastOneFileTransfered = Array
+              .from(event.clipboardData.items)
+              .some(item => item.kind === 'file');
+
+            if (atLeastOneFileTransfered) {
+              const files = [];
+
+              event.clipboardData.items.forEach(item => {
+                if (item.kind !== 'file') { return; }
+                const file = item.getAsFile();
+                if (file) {
+                  files.push(file);
+                }
+              });
+
+              if (files.length) {
+                extension.addFiles(files);
+              }
               return true;
             }
           }
