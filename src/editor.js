@@ -22,12 +22,8 @@ import {
 import { MarkdownParser, MarkdownSerializer, MarkdownTokenizer }
   from './markdown';
 import { VueView } from './node_views';
-import {
-  trackFocus,
-  buildNodesAndMarks,
-  uploadPlaceholder,
-  TrailingNode
-} from './plugins';
+import { trackFocus, buildNodesAndMarks, uploadPlaceholder } from './plugins';
+import { TrailingNode } from './extensions';
 
 export default class ShikiEditor {
   options = {
