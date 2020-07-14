@@ -3,7 +3,6 @@ export default {
   props: {
     editor: { type: Object, required: true }
   },
-
   watch: {
     editor: {
       immediate: true,
@@ -17,11 +16,9 @@ export default {
       }
     }
   },
-
   render(createElement) {
     return createElement('div');
   },
-
   beforeDestroy() {
     this.editor.element = this.$el;
   }

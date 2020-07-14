@@ -64,11 +64,8 @@ import withinviewport from 'withinviewport';
 import Editor from './editor';
 import EditorContent from './components/editor_content';
 import { scrollTop } from './utils';
-import {
-  insertUploadPlaceholder,
-  replaceUploadPlaceholder,
-  removeUploadPlaceholder
-} from './commands';
+import { FileUploader } from './extensions';
+
 // import EditorMenuBar from './components/editor_menu_bar';
 
 import Icon from './components/icon';
@@ -164,25 +161,23 @@ export default {
     }
   },
   created() {
+    this.fileUploaderExtension = new FileUploader({
+      progressContainerNode: this.$refs.menubar,
+      locale: this.locale,
+      xhrEndpoint: this.uploadEndpoint,
+      xhrHeaders: this.uploadHeaders
+    });
+
     this.editor = new Editor({
-      extensions: [],
+      extensions: [this.fileUploader],
       content: this.content,
       baseUrl: this.baseUrl
-    }, Vue);
+    }, this, Vue);
     this.editorContent = this.content;
-  },
-  async mounted() {
-    const { default: ShikiFileUploader } = await import(
-      process.env.VUE_APP_USER === 'morr' ?
-        '../../shiki-utils/src/file_uploader' :
-        'shiki-utils/src/file_uploader'
-    );
-
-    this.fileUploader = this.buildFileUploader(ShikiFileUploader);
   },
   beforeDestroy() {
     this.editor.destroy();
-    this.fileUploader.destroy();
+    // this.fileUploader.destroy();
   },
   methods: {
     command(type, args) {
@@ -248,34 +243,6 @@ export default {
           window.scrollTo(0, scrollY);
         }
       });
-    },
-    buildFileUploader(ShikiFileUploader) {
-      return new ShikiFileUploader({
-        node: this.$refs.editor_container,
-        progressContainerNode: this.$refs.menubar,
-        locale: this.locale,
-        xhrEndpoint: this.uploadEndpoint,
-        xhrHeaders: () => ({}),
-        maxNumberOfFiles: 10
-      })
-        .on('upload:file:added', (_e, uppyFile) =>
-          insertUploadPlaceholder(
-            this.editor,
-            { uploadId: uppyFile.id, file: uppyFile.data }
-          )
-        )
-        .on('upload:file:success', (_e, { uppyFile, response }) =>
-          replaceUploadPlaceholder(
-            this.editor,
-            { uploadId: uppyFile.id, response }
-          )
-        )
-        .on('upload:file:error', (_e, { uppyFile }) =>
-          removeUploadPlaceholder(
-            this.editor,
-            { uploadId: uppyFile.id }
-          )
-        );
     }
   }
 };

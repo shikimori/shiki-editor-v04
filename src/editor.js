@@ -37,13 +37,14 @@ export default class ShikiEditor {
   focused = false
   selection = { from: 0, to: 0 }
 
-  constructor(options, Vue) {
+  constructor(options, vueComponent, Vue) {
     uEvent.mixin(this);
 
     this.options = {
       ...this.options,
       ...options
     };
+    this.vueComponent = vueComponent;
     this.Vue = Vue;
 
     this.extensionsManager = this.createExtensionManager();
