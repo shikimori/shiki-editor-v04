@@ -1,5 +1,6 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { Extension } from '../base';
+import { bind } from 'decko';
 
 import {
   insertUploadPlaceholder,
@@ -80,9 +81,23 @@ export default class FileUploader extends Extension {
   }
 
   get plugins() {
+    const extension = this;
+
     return [
       new Plugin({
-        key: new PluginKey(this.name)
+        key: new PluginKey(this.name),
+        props: {
+          @bind
+          handlePaste(_view, event, _slice) {
+            if (event.clipboardData.files.length) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+
+              extension.addFiles(event.clipboardData.files);
+              return true;
+            }
+          }
+        }
       })
     ];
   }
