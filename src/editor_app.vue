@@ -169,7 +169,6 @@ export default {
   },
   beforeDestroy() {
     this.editor.destroy();
-    // this.fileUploader.destroy();
   },
   methods: {
     command(type, args) {
