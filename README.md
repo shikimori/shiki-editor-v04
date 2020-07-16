@@ -1,1 +1,1 @@
-Moved to [shikimori/shiki-packages](shiki-packages)
+Moved to https://github.com/shikimori/shiki-packages
