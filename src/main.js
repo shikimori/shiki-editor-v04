@@ -5,8 +5,8 @@ import Demo from './demo.vue';
 import 'reset-css/reset.css';
 import '@/stylesheets/application.sass';
 
-import './../../packages/shiki-uploader/index.sass';
-import './../../packages/shiki-utils/index.sass';
+// import './../../packages/shiki-uploader/index.sass';
+// import './../../packages/shiki-utils/index.sass';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
