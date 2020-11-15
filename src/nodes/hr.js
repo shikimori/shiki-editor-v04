@@ -1,7 +1,9 @@
-import { nodeInputRule } from '../commands';
+import { nodeInputRule, pasteRule } from '../commands';
 import { Node } from '../base';
 
 export default class Hr extends Node {
+  BBCODE_REGEXP = /^\[hr\]$/
+
   get name() {
     return 'hr';
   }
@@ -18,7 +20,14 @@ export default class Hr extends Node {
 
   inputRules({ type }) {
     return [
-      nodeInputRule(/^(?:---|___\s|\*\*\*\s)$/, type)
+      nodeInputRule(/^(?:---|___\s|\*\*\*\s)$/, type),
+      nodeInputRule(this.BBCODE_REGEXP, type)
+    ];
+  }
+
+  pasteRules({ type }) {
+    return [
+      pasteRule(this.BBCODE_REGEXP, type)
     ];
   }
 

@@ -12,37 +12,38 @@ export default class SizeBlock extends Node {
   get schema() {
     return {
       attrs: {
-        size: {}
+        size: {},
+        nFormat: {
+          default: {
+            nBeforeOpen: true,
+            nAfterOpen: true,
+            nBeforeClose: true
+          }
+        }
       },
-      content: 'block+',
+      content: 'block*',
       group: 'block',
       draggable: false,
       parseDOM: [{
-        tag: 'div.size',
+        tag: 'div.prosemirror-size',
         getAttrs: node => {
           const match = node.style.fontSize.match(this.SIZE_REGEXP);
           return match ? { size: match[1] } : null;
         }
       }],
-      toDOM: (node) => [
+      toDOM: node => [
         'div',
         {
-          class: 'size',
-          style: `font-size: ${ensureDimension(node.attrs.size, 'px')};`
+          class: 'prosemirror-size',
+          style: `font-size: ${ensureDimension(node.attrs.size, 'px')};`,
+          'data-div': `[size=${node.attrs.size}]`
         },
         0
       ]
     };
   }
 
-  get markdownParserToken() {
-    return {
-      block: this.name,
-      getAttrs: token => token.serializeAttributes()
-    };
-  }
-
   markdownSerialize(state, node) {
-    state.renderBlock(node, 'size', `=${node.attrs.size}`);
+    state.renderBlock(node, 'size', `=${node.attrs.size}`, node.attrs.nFormat);
   }
 }

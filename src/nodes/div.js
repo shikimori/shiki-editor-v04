@@ -1,4 +1,8 @@
+import { LIST_DEPRECATION_TEXT } from '../markdown/tokenizer/bbcode_helpers';
 import { Node } from '../base';
+import { SwitcherView } from '../node_views';
+import { TabsView } from '../node_views';
+import { serializeClassAttr, serializeDataAttr } from '../utils/div_helpers';
 
 export default class Div extends Node {
   get name() {
@@ -7,13 +11,21 @@ export default class Div extends Node {
 
   get schema() {
     return {
+      attrs: {
+        class: { default: null },
+        data: { default: [] },
+        meta: { default: {} },
+        nFormat: {
+          default: {
+            nBeforeOpen: true,
+            nAfterOpen: true,
+            nBeforeClose: true
+          }
+        }
+      },
       content: 'block*',
       group: 'block',
       draggable: false,
-      attrs: {
-        class: { default: null },
-        data: { default: [] }
-      },
       parseDOM: [{
         tag: 'div[data-div]',
         getAttrs: node => ({
@@ -21,19 +33,19 @@ export default class Div extends Node {
           data: node
             .getAttributeNames()
             .filter(name => (
-              name != 'data-div' && name != 'data-pm-slice' &&
-                name.startsWith('data-')
+              name !== 'data-div' && name.startsWith('data-')
+                // && name !== 'data-pm-slice'
             ))
             .map(attribute => [attribute, node.getAttribute(attribute)])
         })
       }],
-      toDOM: (node) => {
+      toDOM: node => {
         const attributes = {};
 
         if (node.attrs.class) {
           attributes.class = node.attrs.class;
         }
-        node.attrs.data.forEach(data => attributes[data[0]] = data[1]);
+        node.attrs.data.forEach(data => attributes[data[0]] = data[1]); // eslint-disable-line
 
         return [
           'div',
@@ -49,34 +61,28 @@ export default class Div extends Node {
     };
   }
 
-  get markdownParserToken() {
-    return {
-      block: this.name,
-      getAttrs: token => token.serializeAttributes()
-    };
+  view(options) {
+    const isTabs = options.node.attrs.data?.some(([name, value]) => (
+      name === 'data-dynamic' && value === 'tabs'
+    ));
+    const isSwitcher = options.node.attrs.data?.some(([name, value]) => (
+      name === 'data-dynamic' && value === 'switcher'
+    ));
+
+    if (isTabs) {
+      return new TabsView(options);
+    } else if (isSwitcher) {
+      return new SwitcherView(options);
+    }
   }
 
   markdownSerialize(state, node) {
     const meta = `${serializeClassAttr(node)}${serializeDataAttr(node)}`;
 
-    if (meta === ' data-list=remove-it') {
-      state.renderBlock(node, 'list');
+    if (meta === ` data-deperecation=${LIST_DEPRECATION_TEXT}`) {
+      state.renderBlock(node, 'list', '', node.attrs.nFormat);
     } else {
-      state.renderBlock(node, 'div', meta);
+      state.renderBlock(node, 'div', meta, node.attrs.nFormat);
     }
   }
-}
-
-function serializeClassAttr(node) {
-  return node.attrs.class ? `=${node.attrs.class}`: '';
-}
-
-function serializeDataAttr(node) {
-  if (!node.attrs.data.length) { return ''; }
-
-  const data = node.attrs.data
-    .map(v => v[1] ? `${v[0]}=${v[1]}` : v[0])
-    .join(' ');
-
-  return ` ${data}`;
 }

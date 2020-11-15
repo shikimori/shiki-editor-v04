@@ -89,27 +89,48 @@ export default class MarkdownSerializerState {
     this.closed = node;
   }
 
-  renderBlock(node, bbcode, meta = '') {
-    this.write(`[${bbcode}${meta}]`);
-    this.ensureNewLine();
-    this.renderContent(node);
-    this.write(`[/${bbcode}]`);
-    this.closeBlock(node);
+  renderBlock(
+    node,
+    bbcode,
+    meta = '',
+    { nBeforeOpen, nAfterOpen, nBeforeClose }
+  ) {
+    if (nBeforeOpen) {
+      this.write(`[${bbcode}${meta}]`);
+    } else {
+      this.writeInline(`[${bbcode}${meta}]`);
+    }
 
-    // this.write(`[${bbcode}${meta}]`);
-    //
-    // if (!this.delim) {
-    //   this.ensureNewLine();
-    // }
-    //
-    // this.renderContent(node);
-    //
-    // if (this.delim) {
-    //   this.writeInline(`[/${bbcode}]`);
-    // } else {
-    //   this.write(`[/${bbcode}]`);
-    //   this.closeBlock(node);
-    // }
+    const indexToCheck = this.out.length;
+    if (nAfterOpen) {
+      // paragraph anyway produces new lines
+      if (node.content?.content?.[0]?.type?.name !== 'paragraph') {
+        this.ensureNewLine();
+      }
+      this.renderContent(node);
+
+      if (this.out[indexToCheck] !== '\n') {
+        // we have to explicitly ad \n because code above that was avoiding
+        // ensureNewLine was wrong
+        this.out = this.out.slice(0, indexToCheck) + '\n' +
+          this.out.slice(indexToCheck);
+      }
+    } else {
+      this.renderContent(node);
+
+      if (this.out[indexToCheck] === '\n') {
+        // we have explicitly prohibitted nAfterOpen, so lets remove \n here
+        this.out = this.out.slice(0, indexToCheck) +
+          this.out.slice(indexToCheck + 1);
+      }
+    }
+
+    if (nBeforeClose) {
+      this.write(`[/${bbcode}]`);
+    } else {
+      this.writeInline(`[/${bbcode}]`);
+    }
+    this.closeBlock(node);
   }
 
   // :: (string, ?bool)
@@ -234,11 +255,31 @@ export default class MarkdownSerializerState {
         if (noEsc && node.isText) {
           this.text(this.markString(inner, true, parent, index) + node.text +
                     this.markString(inner, false, parent, index + 1), false);
-        } else this.render(node, parent, index);
+        } else {
+          const i = active.length - 1;
+          const isShortcut = active.length > 0 &&
+            this.marks[active[i].type.name].isShortcut &&
+            this.marks[active[i].type.name].isShortcut(active[i], node);
+
+          if (isShortcut) {
+            active.pop();
+          } else if (node.isText) {
+            this.text(node.text);
+          } else {
+            this.render(node, parent, index);
+          }
+        }
       }
     };
-    parent.forEach(progress);
-    progress(null, null, parent.childCount);
+    if (parent.isText) {  // it is a text node with marks when when it is parsed from clipboard
+      progress(parent, null, 0);
+      active.forEach(mark => {
+        this.text(this.markString(mark, false, parent, 0), false);
+      });
+    } else {
+      parent.forEach(progress);
+      progress(null, null, parent.childCount);
+    }
   }
 
   // :: (Node, string, (number) → string)
@@ -246,7 +287,7 @@ export default class MarkdownSerializerState {
   // indentation added to all lines except the first in an item,
   // `firstDelim` is a function going from an item index to a
   // delimiter for the first line of the item.
-  renderList(node, delim, firstDelim) {
+  renderList(node, delim) {
     if (this.closed && this.closed.type === node.type) this.flushClose(3);
     else if (this.inTightList) this.flushClose(1);
 
@@ -258,7 +299,12 @@ export default class MarkdownSerializerState {
     this.inTightList = isTight;
     node.forEach((child, _, i) => {
       if (i && isTight) this.flushClose(1);
-      this.wrapBlock(delim, firstDelim(i), node, () => this.render(child, node, i));
+      this.wrapBlock(
+        delim,
+        child.attrs.bbcode,
+        node,
+        () => this.render(child, node, i)
+      );
     });
     this.inTightList = prevTight;
   }

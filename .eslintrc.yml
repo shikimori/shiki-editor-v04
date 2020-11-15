@@ -23,8 +23,6 @@ plugins:
 
 globals:
   I18n: true
-  describe: true
-  it: true
 
 rules:
   quotes:
@@ -114,16 +112,3 @@ rules:
       - router-view
       - router-link
   vue/no-v-html: 0
-  # TODO: enable when eslint-import-resolver-webpack is fixed
-  # import/no-extraneous-dependencies: 0
-  # import/no-unresolved: 2
-  # import/no-webpack-loader-syntax: 0
-  # import/prefer-default-export: 0
-  # import/extensions:
-  #   - error
-  #   - always
-  #   - js: never
-  #     vue: never
-  # import/first: 0
-  # import/order: 0
-

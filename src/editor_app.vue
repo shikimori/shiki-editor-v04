@@ -1,70 +1,132 @@
 <template>
   <div>
-    <div ref='menubar' class='menubar'>
-      <div v-if='editor' class='icons'>
+    <div
+      ref='menubar'
+      class='menubar'
+      :class='{ "is-sticky-menu-offset": isStickyMenuOffset }'
+    >
+      <div v-if='editor' v-dragscroll class='icons'>
         <div
-          v-for='(items, index) in menuItems'
+          v-for='([group, items], index) in menuItems'
           :key='index'
-          class='menu-group'
+          class='menu_group'
+          :class='{
+            [`menu_group-${group}`]: true,
+            "is-active": activeMobileMenuGroup === group,
+            "is-hidden": activeMobileMenuGroup && activeMobileMenuGroup !== group
+          }'
         >
+          <button
+            class='mobile_placeholder'
+            :class='{
+              [`mobile_placeholder-${group}`]: true,
+              "is-active": activeMobileMenuGroup === group
+            }'
+            @click='(e) => toggleMobileMenuGroup(group, e)'
+          />
           <Icon
             v-for='item in items'
             :key='item.constructor === Object ? item.type : item'
             :ref='item.type'
             v-bind='item'
-            :is-active='isActive[item.type]'
-            :is-enabled='item.isEnabled ? item.isEnabled() : isEnabled'
+            :is-active='nodesState[item.type]'
+            :is-enabled='item.isEditingEnabled ? item.isEditingEnabled() : isEditingEnabled'
             @command='args => command(item.type, args)'
           />
         </div>
-        <div class='menu-group source'>
+        <div class='menu_group menu_group-controls'>
+          <div
+            v-if='isPreviewLoading'
+            class='icon-loader b-ajax vk-like'
+          />
+          <Icon
+            v-bind='menuPreviewItem'
+            is-button
+            :is-active='isPreview'
+            :is-enabled='isPreviewEnabled'
+            @command='() => togglePreview()'
+          />
           <Icon
             v-bind='menuSourceItem'
+            is-button
             :is-active='isSource'
             :is-enabled='isSourceEnabled'
-            @command='() => toggleSourceCommand()'
+            :is-disabled='isSourceDisabled'
+            @command='() => toggleSource()'
           />
         </div>
       </div>
-      <Smileys
-        v-show='isSmiley'
-        ref='smileys'
-        :is-enabled='isSmiley'
-        target-ref='smiley'
-        :base-url='baseUrl'
-        @toggle='smileyCommand'
-      />
     </div>
-
-    <div v-if='editor' ref='editor_container' class='editor-container'>
+    <!--
+    {{ editor.selection.$from.pos }} - {{ editor.selection.$to.pos }}
+    -->
+    <div
+      v-if='editor'
+      ref='editor_container'
+      class='editor-container'
+      :class='{
+        "is-loading": isPreviewLoading,
+        "is-source": isSource && !isPreview
+      }'
+    >
+      <div
+        v-if='isPreview && previewHTML != null'
+        ref='preview'
+        class='preview'
+        v-html='previewHTML'
+      />
       <textarea
-        v-if='isSource'
+        v-else-if='isSource'
         ref='textarea'
         v-model='editorContent'
         class='ProseMirror'
+        @keydown='handleSourceKeypress'
       />
-      <EditorContent v-else :editor='editor' />
+      <EditorContent
+        v-else
+        :editor='editor'
+      />
     </div>
+
+    <Smileys
+      v-show='isSmiley && isEditingEnabled'
+      ref='smileys'
+      :is-enabled='isSmiley'
+      target-ref='smiley'
+      :shiki-request='shikiRequest'
+      :is-sticky-menu-offset='isStickyMenuOffset'
+      @toggle='smileyCommand'
+    />
+    <Suggestions
+      :is-available='isEditingEnabled'
+      :editor='editor'
+      :shiki-request='shikiRequest'
+    />
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
-
-import { undo, redo } from 'prosemirror-history';
 import autosize from 'autosize';
 import withinviewport from 'withinviewport';
+import { dragscroll } from 'vue-dragscroll';
 
-import Editor from './editor';
+import { keymap } from 'prosemirror-keymap';
+import { undo, redo } from 'prosemirror-history';
+
+import ShikiEditor from './editor';
 import EditorContent from './components/editor_content';
-import { scrollTop } from './utils';
-import { FileUploader } from './extensions';
+import { contentToNodes, scrollTop } from './utils';
+import { FileUploader, ShikiSearch } from './extensions';
+import { insertReply, insertFragment, insertQuote } from './commands';
+
+import { flash } from 'shiki-utils';
 
 import Icon from './components/icon';
 import Smileys from './components/smileys';
+import Suggestions from './components/suggestions';
 
-const MENU_ITEMS = [
-  [
+const MENU_ITEMS = {
+  inline: [
     'bold',
     'italic',
     'underline',
@@ -73,74 +135,150 @@ const MENU_ITEMS = [
     'code_inline',
     'link'
   ],
-  ['undo', 'redo'],
-  ['smiley', 'image', 'upload'],
-  ['blockquote', 'spoiler_block', 'code_block', 'bullet_list']
-];
+  history: ['undo', 'redo'],
+  item: ['smiley', 'image', 'shiki_link', 'upload'],
+  block: ['blockquote', 'spoiler_block', 'code_block', 'bullet_list']
+};
+const MAXIMUM_CONTENT_SIZE = 100000;
+
+const DEFAULT_DATA = {
+  isSource: false,
+  isItalicBlock: false,
+  isBoldBlock: false,
+  isLinkBlock: false,
+  isSmiley: false,
+  isPreview: false,
+  isPreviewLoading: false,
+  previewHTML: null,
+  isHugeContent: false,
+  activeMobileMenuGroup: null
+};
 
 export default {
   name: 'EditorApp',
+  directives: {
+    dragscroll
+  },
   components: {
     EditorContent,
     Icon,
-    Smileys
+    Smileys,
+    Suggestions
   },
   props: {
-    baseUrl: { type: String, required: true },
-    uploadEndpoint: { type: String, required: true },
-    uploadHeaders: { type: Function, required: true },
-    locale: { type: String, required: true },
-    content: { type: String, required: true }
+    vue: { type: Function, required: true },
+    shikiRequest: { type: Object, required: true },
+    content: { type: String, required: true },
+    shikiUploader: { type: Object, required: true },
+    globalSearch: { type: Object, required: false, default: undefined },
+    localizationField: {
+      type: String,
+      required: true,
+      validator: (value) => (
+        [
+          'name',
+          'russian'
+        ].indexOf(value) !== -1
+      )
+    },
+    previewParams: { type: Object, required: false, default: undefined }
   },
   data: () => ({
     editor: null,
     editorContent: null,
     editorPosition: null,
-    isSource: false,
-    isLinkBlock: false,
-    isSmiley: false,
-    fileUploaderExtension: null
+    ...DEFAULT_DATA
   }),
   computed: {
-    isEnabled() {
-      return !this.isSource;
+    isEditingEnabled() {
+      return !this.isSource && !this.isPreview;
     },
-    isEnabledMappings() {
+    isEditingEnabledMappings() {
       return {
         undo: this.undoIsEnabled,
         redo: this.redoIsEnabled
+        // link: this.linkIsEnabled
       };
     },
     menuItems() {
-      return MENU_ITEMS.map(items => items.map(item => ({
-        type: item,
-        title: I18n.t(`frontend.shiki_editor.${item}`),
-        isEnabled: this.isEnabledMappings[item]
-      })));
+      return Object.keys(MENU_ITEMS).map(group => (
+        [
+          group,
+          MENU_ITEMS[group].map(item => ({
+            type: item,
+            title: window.I18n.t(`frontend.shiki_editor.${item}`),
+            isEditingEnabled: this.isEditingEnabledMappings[item]
+          }))
+        ]
+      ));
+    },
+    menuPreviewItem() {
+      return {
+        type: 'preview',
+        title: window.I18n.t('frontend.shiki_editor.preview')
+      };
     },
     menuSourceItem() {
       return {
         type: 'source',
-        title: I18n.t('frontend.shiki_editor.undo')
+        title: window.I18n.t('frontend.shiki_editor.source')
       };
     },
-    isActive() {
+    nodesState() {
       const memo = {};
 
-      MENU_ITEMS.forEach(items => items.forEach(item => (
-        memo[item] = this.editor.activeChecks[item] ?
-          this.editor.activeChecks[item]() :
-          false
-      )));
+      Object.keys(MENU_ITEMS).forEach(group => (
+        MENU_ITEMS[group].forEach(item => (
+          memo[item] = this.editor.activeChecks[item] ?
+            this.editor.activeChecks[item]() :
+            false
+        ))
+      ));
+
+      this.isBoldBlock = this.editor.activeChecks.bold_block(); // eslint-disable-line
+      memo.bold = this.isBoldBlock || this.editor.activeChecks.bold_inline();
+
+      this.isItalicBlock = this.editor.activeChecks.italic_block(); // eslint-disable-line
+      memo.italic = this.isItalicBlock || this.editor.activeChecks.italic_inline();
 
       this.isLinkBlock = this.editor.activeChecks.link_block(); // eslint-disable-line
       memo.link = this.isLinkBlock || this.editor.activeChecks.link_inline();
+
       memo.smiley = this.isSmiley;
 
       return memo;
     },
+    isContentManipulationsPending() {
+      return this.fileUploaderExtension.isUploading;
+    },
+    isPreviewEnabled() {
+      return !this.isContentManipulationsPending;
+    },
     isSourceEnabled() {
-      return !this.fileUploaderExtension.isUploading;
+      return !this.isHugeContent &&
+        !this.isContentManipulationsPending;
+        // !this.isContentManipulationsPending && !this.isPreview;
+    },
+    isSourceDisabled() {
+      return this.isPreview;
+    },
+    fileUploaderExtension() {
+      return new FileUploader({
+        shikiUploader: this.shikiUploader
+      });
+    },
+    shikiSearchExtension() {
+      if (!this.globalSearch) { return null; }
+
+      return new ShikiSearch({
+        globalSearch: this.globalSearch
+      });
+    },
+    isStickyMenuOffset() {
+      const topMenuNode = document.querySelector('.l-top_menu-v2');
+      if (!topMenuNode) { return false; }
+
+      return getComputedStyle(topMenuNode).position === 'sticky';
     }
   },
   watch: {
@@ -152,45 +290,66 @@ export default {
       }
     }
   },
-  mounted() {
-    this.fileUploaderExtension = new FileUploader({
-      progressContainerNode: this.$refs.menubar,
-      locale: this.locale,
-      uploadEndpoint: this.uploadEndpoint,
-      uploadHeaders: this.uploadHeaders
-    });
-
-    this.editor = new Editor({
-      extensions: [this.fileUploaderExtension],
-      content: this.content,
-      baseUrl: this.baseUrl
-    }, this, Vue);
-    this.editorContent = this.content;
+  async created() {
+    window.editorApp = this;
+    this.createEditor();
   },
   beforeDestroy() {
     this.editor.destroy();
   },
   methods: {
+    focus(editorPosition = undefined) {
+      if (this.isSource) {
+        this.$refs.textarea.focus();
+      } else {
+        this.editor.focus(editorPosition);
+      }
+    },
     command(type, args) {
-      const method = `${type}Command`;
+      this.toggleMobileMenuGroup(null);
+
+      const prefix = type
+        .split('_')
+        .map((word, index) => (
+          index ? `${word[0].toUpperCase()}${word.slice(1)}` : word
+        ))
+        .join('');
+      const method = `${prefix}Command`;
 
       if (this[method] && this[method].constructor === Function) {
-        this[method](args);
-      } else if (type == 'link') {
-        this.isLinkBlock ?
-          this.editor.commands.link_block() :
-          this.editor.commands.link_inline();
-      } else {
-        this.editor.commands[type]();
+        return this[method](args);
+      }
+
+      switch (type) {
+        case 'link':
+          this.isLinkBlock ?
+            this.editor.commands.link_block() :
+            this.editor.commands.link_inline();
+          break;
+
+        case 'bold':
+          this.isBoldBlock ?
+            this.editor.commands.bold_block() :
+            this.editor.commands.bold_inline();
+          break;
+
+        case 'italic':
+          this.isItalicBlock ?
+            this.editor.commands.italic_block() :
+            this.editor.commands.italic_inline();
+          break;
+
+        default:
+          this.editor.commands[type](args);
       }
     },
     undoCommand() {
       undo(this.editor.state, this.editor.view.dispatch);
-      this.editor.focus();
+      this.focus();
     },
     redoCommand() {
       redo(this.editor.state, this.editor.view.dispatch);
-      this.editor.focus();
+      this.focus();
     },
     smileyCommand(kind) {
       this.isSmiley = !this.isSmiley;
@@ -199,47 +358,216 @@ export default {
         this.editor.commands.smiley(kind);
       }
     },
+    shikiLinkCommand() {
+      if (!this.shikiSearchExtension) {
+        alert('globalSearch prop is missing');
+        return;
+      }
+      this.shikiSearchExtension.searchOpen(this.editor);
+    },
     uploadCommand(files) {
       this.fileUploaderExtension.addFiles(files);
     },
     undoIsEnabled() {
-      return this.isEnabled && undo(this.editor.state);
+      return this.isEditingEnabled && undo(this.editor.state);
     },
     redoIsEnabled() {
-      return this.isEnabled && redo(this.editor.state);
+      return this.isEditingEnabled && redo(this.editor.state);
     },
-    toggleSourceCommand() {
-      const scrollY = scrollTop();
-
+    // linkIsEnabled() {
+    //   return this.isEditingEnabled && (
+    //     this.nodesState.link || !this.editor.state.selection.empty
+    //   );
+    // },
+    appendReply(reply) {
+      const { editor } = this;
+      insertReply(reply)(editor.state, editor.view.dispatch);
+      this.focus();
+    },
+    appendQuote(quote) {
+      const { editor } = this;
+      insertQuote(quote, editor)(editor.state, editor.view.dispatch);
+      this.focus();
+    },
+    appendText(content) {
+      const fragment = contentToNodes(this.editor, content);
+      insertFragment(fragment)(this.editor.state, this.editor.view.dispatch);
+      this.focus();
+    },
+    async setContent(
+      content,
+      isAaddToHistory = content !== this.editor.exportMarkdown()
+    ) {
       if (this.isSource) {
-        this.editor.setContent(this.editorContent);
-      } else {
-        this.editorContent = this.editor.exportMarkdown();
-        this.editorPosition = this.editor.selection.from;
+        await this.toggleSource();
       }
 
-      this.isSource = this.isEnabled;
+      this.editor.setContent(
+        content,
+        false,
+        isAaddToHistory
+      );
+    },
+    clearContent() {
+      this.editor.destroy();
 
-      this.$nextTick().then(() => {
+      Object.keys(DEFAULT_DATA).forEach(key => (
+        this[key] = DEFAULT_DATA[key]
+      ));
+
+      this.createEditor();
+    },
+    async createEditor() {
+      this.isHugeContent = this.content.length > MAXIMUM_CONTENT_SIZE;
+
+      const extensions = [this.fileUploaderExtension];
+      if (this.shikiSearchExtension) {
+        extensions.push(this.shikiSearchExtension);
+      }
+
+      this.editor = new ShikiEditor({
+        content: this.isHugeContent ? '' : this.content,
+        shikiRequest: this.shikiRequest,
+        localizationField: this.localizationField,
+        extensions,
+        plugins: [
+          keymap({ 'Mod-Enter': this.submit })
+        ]
+      }, this, this.vue);
+
+      this.editorContent = this.content;
+
+      if (this.isHugeContent) {
+        this.toggleSource(this.content);
+        await this.$nextTick();
+        flash.info(window.I18n.t('frontend.shiki_editor.too_large_content'));
+      }
+
+      await this.$nextTick();
+
+      this.fileUploaderExtension.attachShikiUploader({
+        node: this.$refs.editor_container,
+        progressContainerNode: this.$refs.menubar
+      });
+    },
+    async togglePreview() {
+      this.isPreview = !this.isPreview;
+      this.isPreviewLoading = this.isPreview;
+
+      if (this.isPreview) {
+        const text = this.isSource ?
+          this.editorContent :
+          this.editor.exportMarkdown();
+
+        const { data } = await this.shikiRequest.post(
+          'preview',
+          this.previewParams ? { ...this.previewParams, text } : { text }
+        );
+
+        if (data !== null) {
+          const { html, JS_EXPORTS } = data;
+
+          this.previewHTML = html;
+          this.isPreviewLoading = false;
+
+          await this.$nextTick();
+          this.$emit('preview', { node: this.$refs.preview, JS_EXPORTS });
+        } else {
+          this.isPreview = false;
+          this.isPreviewLoading = false;
+        }
+      } else {
+        this.previewHTML = null;
+
+        await this.$nextTick();
         if (this.isSource) {
           autosize(this.$refs.textarea);
-          this.$refs.textarea.focus();
-          window.scrollTo(0, scrollY);
-          if (!withinviewport(this.$refs.menubar, 'top')) {
-            this.$refs.textarea.blur();
-            this.$refs.textarea.focus();
-          }
-        } else {
-          this.editor.focus(this.editorPosition);
-          window.scrollTo(0, scrollY);
         }
-      });
+      }
+    },
+    async toggleSource(overrideContent) {
+      this.isPreview = false;
+      const scrollY = scrollTop();
+
+      this.isSource = !this.isSource;
+
+      if (this.isSource) {
+        this.editorContent = overrideContent || this.editor.exportMarkdown();
+        this.editorPosition = this.editor.selection.from;
+      } else {
+        this.setContent(this.editorContent);
+      }
+
+      await this.$nextTick();
+
+      if (this.isSource) {
+        autosize(this.$refs.textarea);
+        this.focus();
+        window.scrollTo(0, scrollY);
+
+        if (!withinviewport(this.$refs.menubar, 'top')) {
+          this.$refs.textarea.blur();
+          this.$refs.textarea.focus();
+        }
+      } else {
+        this.focus(this.editorPosition);
+        window.scrollTo(0, scrollY);
+      }
+    },
+    toggleMobileMenuGroup(group, e) {
+      this.activeMobileMenuGroup = this.activeMobileMenuGroup === group ?
+        null :
+        group;
+
+      if (e) {
+        e.preventDefault();
+        e.currentTarget.blur();
+        this.editor.focus();
+      }
+    },
+    exportContent() {
+      return this.isSource ? this.editorContent : this.editor.exportMarkdown();
+    },
+    async handleSourceKeypress(e) {
+      if (e.keyCode === 27) { // esc
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        this.toggleSource();
+      }
+      if (!e.metaKey && !e.ctrlKey) { return; }
+
+      if ((e.keyCode === 10) || (e.keyCode === 13)) { // ctrl+enter
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        this.toggleSource();
+        await this.$nextTick();
+
+        this.submit();
+      }
+    },
+    submit() {
+      this.$emit('submit');
     }
   }
 };
 </script>
 
+<style lang='sass'>
+@import ./stylesheets/prosemirror.sass
+@import ./stylesheets/prosemirror_shiki.sass
+</style>
+
 <style scoped lang='sass'>
+@import ./stylesheets/mixins/responsive
+@import ./stylesheets/mixins/icon
+
+=group_separator
+  border-right: 1px solid #ddd
+  content: ''
+  margin: 0 5px 0 3px
+
 .menubar
   background: #fff
   left: 0
@@ -247,79 +575,109 @@ export default {
   position: sticky
   right: 0
   top: 0
-  z-index: 10
+  z-index: 30
+
+  &.is-sticky-menu-offset
+    top: 45px
 
   .icons
     color: #456
     display: flex
-    flex-wrap: wrap
+    flex-wrap: nowrap
     font-size: 16px
     min-height: 1em
-    overflow: visible
+    overflow: hidden
 
   /deep/ .shiki-file_uploader-upload_progress
     margin-top: 1px
     margin-bottom: 3px
 
-.menu-group
+.menu_group
   display: flex
-  flex-wrap: wrap
+  flex-wrap: nowrap
   padding: 5px 0
 
-  & + .menu-group:before
-    border-right: 1px solid #ddd
-    content: ''
-    margin: 0 5px 0 3px
+  +iphone
+    /deep/ .icon
+      display: none
 
-  &.source
+      &.is-active
+        display: block
+
+    &.is-hidden
+      display: none
+
+    &.is-active:before
+      display: none
+
+    &.is-active,
+    &.menu_group-controls,
+    &.menu_group-history
+      /deep/ .icon
+        display: block
+
+  .mobile_placeholder
+    +iphone
+      +icon
+
+    +gte_ipad
+      display: none
+
+    &-history
+      display: none
+
+    &.is-active
+      color: var(--link-active-color, #ff0202)
+      position: relative
+      margin-right: 9px
+      background: transparent
+
+      &:after
+        +group_separator
+        position: absolute
+        top: 0
+        right: -10px
+        height: 100%
+
+    $icons: ("inline": "\E80A", "item": "\E80E", "block": "\E80F")
+    @each $name, $glyph in $icons
+      &-#{$name}:before
+        content: $glyph
+
+  & + .menu_group:before
+    +group_separator
+
+  &.is-active,
+  &-block
+    margin-right: 30px
+
+  &-controls
     margin-left: auto
 
     &:before
       display: none
 
-textarea.ProseMirror
-  min-height: 89px
-  outline: none
-  width: 100%
+  .icon-loader
+    width: 55px
 
-/deep/
-  [data-image]:hover,
-  [data-image].is-prosemirror-selected,
-  [data-link]:hover,
-  [data-div]:hover,
-  [data-div].is-prosemirror-selected
+.editor-container
+  &.is-loading
     position: relative
-    outline: 1px solid #8cf
 
     &:before
-      background: #fcfcfc
-      font-family: Monaco, Menlo, Consolas, Courier New, monospace;
-      color: #2b8acc
-      cursor: pointer
-      display: inline
-      font-size: 9px
-      font-weight: normal
+      background: rgba(255, 255, 255, 0.75)
+      content: ''
+      height: 100%
       left: 0
-      letter-spacing: 0.8px
-      line-height: 1
-      padding: 2px
-      pointer-events: none
       position: absolute
-      text-shadow: 1px 1px 0px #fff
       top: 0
-      z-index: 999
+      width: 100%
+      z-index: 3
 
-  [data-image]
-    &.is-prosemirror-selected:before,
-    &:hover:before
-      content: attr(data-image)
+  &.is-source
+    line-height: 0
 
-  [data-link]
-    &:hover:before
-      content: attr(data-link)
-
-  [data-div]
-    &.is-prosemirror-selected:before,
-    &:hover:before
-      content: attr(data-div)
+  .preview
+    min-height: 89px
+    padding: 5px 8px 5px
 </style>

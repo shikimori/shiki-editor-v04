@@ -1,2 +1,2 @@
-export { default as Editor } from './editor';
-export { default as EditorApp } from './editor_app';
+export { default as ShikiEditorApp } from './editor_app.vue';
+export { default as ShikiEditor } from './editor';

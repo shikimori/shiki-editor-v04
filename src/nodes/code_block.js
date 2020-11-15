@@ -38,7 +38,7 @@ export default class CodeBlock extends Node {
   }
 
   commands({ schema, type }) {
-    return () => toggleBlockType(type, schema.nodes.paragraph, {});
+    return () => toggleBlockType(type, schema.nodes.paragraph);
   }
 
   activeCheck(type, state) {
@@ -53,21 +53,9 @@ export default class CodeBlock extends Node {
     ];
   }
 
-  get markdownParserToken() {
-    return {
-      block: this.name,
-      getAttrs: token => token.serializeAttributes()
-    };
-  }
-
   markdownSerialize(state, node) {
-    // state.renderBlock(
-    //   node,
-    //   'code',
-    //   node.attrs.language ? `=${node.attrs.language}` : ''
-    // );
     state.write('```' + (node.attrs.language || '') + '\n');
-    state.text(node.textContent, false);
+    state.text(node.textContent.replace(/`/g, '\\`'), false);
     state.ensureNewLine();
     state.write('```');
     state.closeBlock(node);

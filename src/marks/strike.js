@@ -7,16 +7,12 @@ export default class Strike extends Mark {
 
   get schema() {
     return {
+      rank: 5,
       parseDOM: [{
-        tag: 's'
-      },
-      {
         tag: 'del'
-      },
-      {
+      }, {
         tag: 'strike'
-      },
-      {
+      }, {
         style: 'text-decoration',
         getAttrs: value => value === 'line-through'
       }],

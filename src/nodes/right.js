@@ -7,6 +7,15 @@ export default class Right extends Node {
 
   get schema() {
     return {
+      attrs: {
+        nFormat: {
+          default: {
+            nBeforeOpen: true,
+            nAfterOpen: true,
+            nBeforeClose: true
+          }
+        }
+      },
       content: 'block*',
       group: 'block',
       draggable: false,
@@ -25,6 +34,6 @@ export default class Right extends Node {
   }
 
   markdownSerialize(state, node) {
-    state.renderBlock(node, 'right');
+    state.renderBlock(node, 'right', '', node.attrs.nFormat);
   }
 }

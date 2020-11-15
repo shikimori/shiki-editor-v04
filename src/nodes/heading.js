@@ -1,4 +1,4 @@
-import { textblockTypeInputRule } from 'prosemirror-inputrules';
+import { wrappingInputRule } from 'prosemirror-inputrules';
 import { Node } from '../base';
 
 export default class Heading extends Node {
@@ -11,7 +11,7 @@ export default class Heading extends Node {
       attrs: {
         level: {}
       },
-      content: 'inline*',
+      content: 'block*',
       group: 'block',
       defining: true,
       draggable: false,
@@ -34,16 +34,15 @@ export default class Heading extends Node {
       toDOM: node => {
         if (node.attrs.level <= 3) {
           return [`h${node.attrs.level + 1}`, 0];
-        } else {
-          const css_class = node.attrs.level === 4 ? 'headline' : 'midheadline';
-          return ['div', { class: css_class }, 0];
         }
+        const cssClass = node.attrs.level === 4 ? 'headline' : 'midheadline';
+        return ['div', { class: cssClass }, 0];
       }
     };
   }
 
   inputRules({ type }) {
-    return [1,2,3,4,5].map(level => textblockTypeInputRule(
+    return [1, 2, 3, 4, 5].map(level => wrappingInputRule(
       new RegExp(`^(#{1,${level}})\\s$`),
       type,
       () => ({ level })

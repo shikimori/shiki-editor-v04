@@ -1,26 +1,39 @@
+/* eslint no-cond-assign: 0 */
+
 import { Mark } from '../base';
-import { ensureDimension } from '../utils';
+import { ensureDimension, ensureOnlyStyle } from '../utils';
 
 export default class SizeInline extends Mark {
   SIZE_REGEXP = /^(\d+)/
 
   get name() {
-    return 'size';
+    return 'size_inline';
   }
 
   get schema() {
     return {
+      rank: 5,
       attrs: {
         size: {}
       },
       parseDOM: [{
-        style: 'font-size',
-        getAttrs: value => {
-          const match = value.match(this.SIZE_REGEXP);
-          return match ? { size: match[1] } : null;
+        tag: 'span',
+        getAttrs: node => {
+          if (!ensureOnlyStyle(node, 'font-size')) { return false; }
+
+          const value = node.style.fontSize;
+
+          let match;
+          let size;
+
+          if (match = value.match(this.SIZE_REGEXP)) {
+            size = match[1];
+          }
+
+          return size ? { size } : false;
         }
       }],
-      toDOM: (node) => [
+      toDOM: node => [
         'span',
         {
           style: `font-size: ${ensureDimension(node.attrs.size, 'px')};`

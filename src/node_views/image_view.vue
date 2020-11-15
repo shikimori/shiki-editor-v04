@@ -1,19 +1,20 @@
 <template>
-  <div
+  <span
     class='b-image'
     :class='[customClass, {
       "is-prosemirror-selected": selected,
       "b-poster": isPoster,
       "check-width": isCheckWidth,
-      "no-zoom": node.attrs.isNoZoom,
+      "no-zoom": node.attrs.isNoZoom || isPoster,
     }]'
     :data-attrs='serializedAttributes'
     :data-image='tagPreview'
     @click='select'
   >
     <div class='controls'>
+      <a class='prosemirror-open' :href='node.attrs.src' target='_blank' />
       <div v-if='isPoster' class='collapse' @click='collapse' />
-      <div v-else-if='isExpandable' class='expand' @click='expand' />
+      <div v-else-if='isExpandable' class='prosemirror-expand' @click='expand' />
       <div class='delete' @click='remove' />
     </div>
     <img
@@ -22,19 +23,19 @@
       :width='width'
       :height='height'
     >
-  </div>
+  </span>
 </template>
 
 <script>
 import imagesloaded from 'imagesloaded';
 import { NodeSelection } from 'prosemirror-state';
 
-import { serializeImageAttributes } from '../nodes/image';
-
+import { tagSequence } from '../nodes/image';
 
 export default {
   name: 'ImageView',
   props: {
+    editor: { type: Object, required: true },
     node: { type: Object, required: true },
     getPos: { type: Function, required: true },
     view: { type: Object, required: true },
@@ -74,8 +75,7 @@ export default {
       return this.naturalWidth > this.imageWidth;
     },
     tagPreview() {
-      if (this.node.attrs.isPoster) { return '[poster]'; }
-      return `[img${serializeImageAttributes(this.node)}]`;
+      return tagSequence(this.node);
     }
   },
   mounted() {
@@ -97,6 +97,7 @@ export default {
           this.getPos() + 1
         )
       );
+      this.editor.focus();
     },
     select() {
       this.view.dispatch(
@@ -119,29 +120,6 @@ export default {
 
 <style scoped lang='sass'>
 .b-image
-  &:hover,
-  &.is-prosemirror-selected
-    outline: 2px solid #8cf
-    z-index: 9
-
-    &:after
-      border: 1px solid rgba(#fff, 0.5)
-      bottom: 0
-      content: ''
-      left: 0
-      pointer-events: none
-      position: absolute
-      right: 0
-      top: 0
-
-    img
-      opacity: 1
-
-    .controls
-      display: flex
-      top: 1px
-      right: 1px
-
   img
     transition: max-width .25s
 </style>

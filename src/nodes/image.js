@@ -2,10 +2,11 @@
 import { Node } from '../base';
 import { nodeInputRule } from '../commands';
 import { ImageView } from '../node_views';
+import { addToShikiCache } from '../extensions';
 
 const IMAGE_INPUT_REGEX = /\[img\](.*?)\[\/img\]/;
 
-export class Image extends Node {
+export default class Image extends Node {
   get name() {
     return 'image';
   }
@@ -14,6 +15,7 @@ export class Image extends Node {
     return {
       inline: true,
       attrs: {
+        id: { default: null },
         src: {},
         isPoster: { default: false },
         width: { default: null },
@@ -25,7 +27,21 @@ export class Image extends Node {
       draggable: true,
       parseDOM: [{
         tag: '.b-image',
-        getAttrs: node => JSON.parse(node.getAttribute('data-attrs'))
+        getAttrs: node => {
+          const attrs = JSON.parse(node.getAttribute('data-attrs')) || {};
+
+          attrs.src ||= node.tagName === 'A' ?
+            node.href :
+            node.querySelector('img').src;
+          attrs.isPoster = node.classList.contains('b-poster');
+
+          if (attrs.id) {
+            const shikiData = { id: attrs.id, url: attrs.src };
+            addToShikiCache('image', shikiData.id, shikiData);
+          }
+
+          return attrs;
+        }
       }, {
         tag: 'img.b-poster',
         getAttrs: node => ({ src: node.src, isPoster: true })
@@ -59,12 +75,12 @@ export class Image extends Node {
         }
 
         return [
-          'div',
+          'span',
           {
             class: classes.join(' '),
             'data-attrs': serializedAttributes
           },
-          [ 'img', attrs ]
+          ['img', attrs]
         ];
       }
     };
@@ -84,10 +100,10 @@ export class Image extends Node {
   }
 
   commands({ type }) {
-    return (imageUrl) => (state, dispatch) => {
+    return imageUrl => (state, dispatch) => {
       const src = imageUrl ||
-        prompt(I18n.t('frontend.shiki_editor.prompt.image_url'));
-      if (src == null) { return; }
+        prompt(window.I18n.t('frontend.shiki_editor.prompt.image_url'));
+      if (src == null) { return null; }
 
       const { selection } = state;
       const position = selection.$cursor ?
@@ -98,6 +114,8 @@ export class Image extends Node {
       const transaction = state.tr.insert(position, node);
 
       dispatch(transaction);
+
+      return src;
     };
   }
 
@@ -109,32 +127,54 @@ export class Image extends Node {
   }
 
   markdownSerialize(state, node) {
-    const seq = serializeImageAttributes(node);
+    const prefix = tagPrefix(node);
+    const startSequence = tagSequence(node);
 
-    if (node.attrs.isPoster) {
-      state.write(`[poster${seq}]${state.esc(node.attrs.src)}[/poster]`);
-      return;
-    }
-
-    state.write(`[img${seq}]${state.esc(node.attrs.src)}[/img]`);
+    state.write(
+      node.attrs.id ?
+        startSequence :
+        `${startSequence}${state.esc(node.attrs.src)}[/${prefix}]`
+    );
   }
 }
 
-export function serializeImageAttributes(node) {
-  if (node.attrs.isPoster) { return ''; }
+export function tagSequence(node) {
+  const { attrs } = node;
+  const prefix = tagPrefix(node);
+  const suffix = serializeImageAttributes(node);
+
+  return attrs.id ? `[${prefix}=${attrs.id}${suffix}]` : `[${prefix}${suffix}]`;
+}
+
+function tagPrefix(node) {
+  const { attrs } = node;
+
+  if (attrs.isPoster) {
+    return 'poster';
+  } else if (attrs.id) {
+    return 'image';
+  }
+  return 'img';
+}
+
+function serializeImageAttributes(node) {
+  const { attrs } = node;
 
   const attributes = [];
-  if (node.attrs.isNoZoom) {
+  if (attrs.isNoZoom) {
     attributes.push('no-zoom');
   }
-  if (node.attrs.width && node.attrs.height) {
-    attributes.push(`${node.attrs.width}x${node.attrs.height}`);
+  if (attrs.class) {
+    attributes.push(`class=${attrs.class}`);
+  }
+  if (attrs.width && attrs.height) {
+    attributes.push(`${attrs.width}x${attrs.height}`);
   } else {
-    if (node.attrs.width) {
-      attributes.push(`width=${node.attrs.width}`);
+    if (attrs.width) {
+      attributes.push(`width=${attrs.width}`);
     }
-    if (node.attrs.height) {
-      attributes.push(`height=${node.attrs.height}`);
+    if (attrs.height) {
+      attributes.push(`height=${attrs.height}`);
     }
   }
 

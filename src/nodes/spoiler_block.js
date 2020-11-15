@@ -1,3 +1,6 @@
+import { bind } from 'shiki-decorators';
+import { Plugin } from 'prosemirror-state';
+
 import { Node } from '../base';
 import { nodeIsActive } from '../checks';
 import { toggleWrap } from '../commands';
@@ -10,13 +13,22 @@ export default class SpoilerBlock extends Node {
 
   get schema() {
     return {
-      content: 'block+',
+      content: 'block*',
       group: 'block',
       defining: true,
       draggable: false,
       attrs: {
-        label: { default: I18n.t('frontend.shiki_editor.spoiler') },
-        isOpened: { default: true }
+        label: { default: this.defaultLabel },
+        isOpened: { default: true },
+        isFullwidth: { default: false },
+        isCentered: { default: false },
+        nFormat: {
+          default: {
+            nBeforeOpen: true,
+            nAfterOpen: true,
+            nBeforeClose: true
+          }
+        }
       },
       parseDOM: [{
         tag: 'div.b-spoiler_block',
@@ -30,17 +42,23 @@ export default class SpoilerBlock extends Node {
         return [
           'div',
           {
-            class: `b-spoiler_block${node.attrs.isOpened ? ' is-opened' : ''}`
+            class: 'b-spoiler_block' + (
+              node.attrs.isOpened ? ' is-opened' : ''
+            )
           },
-          ['button', node.attrs.label],
+          ['span', node.attrs.label],
           ['div', 0]
         ];
       }
     };
   }
 
-  view(node, view, getPos, decorations) {
-    return new SpoilerBlockView({ node, view, getPos, decorations });
+  get defaultLabel() {
+    return window.I18n.t('frontend.shiki_editor.spoiler');
+  }
+
+  view(options) {
+    return new SpoilerBlockView(options);
   }
 
   commands({ schema, type }) {
@@ -51,18 +69,41 @@ export default class SpoilerBlock extends Node {
     return nodeIsActive(type, state);
   }
 
-  get markdownParserToken() {
-    return {
-      block: this.name,
-      getAttrs: token => token.serializeAttributes()
-    };
+  // hack to prevent getting extra new line before tag
+  get plugins() {
+    return [
+      new Plugin({
+        props: {
+          transformPastedHTML(html) {
+            if (html.includes('data-pm-slice')) { return html; }
+
+            return html.replace(
+              /<br[^>]*><div class=(['"])b-spoiler_block/g,
+              '<div class=$1b-spoiler_block'
+            );
+          }
+        }
+      })
+    ];
   }
 
+  @bind
   markdownSerialize(state, node) {
+    let meta = node.attrs.label && node.attrs.label !== this.defaultLabel ?
+      `=${node.attrs.label}` :
+      '';
+    if (node.attrs.isFullwidth) {
+      meta += ' is-fullwidth';
+    }
+    if (node.attrs.isCentered) {
+      meta += ' is-centered';
+    }
+
     state.renderBlock(
       node,
-      'spoiler',
-      node.attrs.label ? `=${node.attrs.label}` : ''
+      'spoiler_block',
+      meta,
+      node.attrs.nFormat
     );
   }
 }

@@ -9,6 +9,7 @@ export default class SpoilerInline extends Mark {
 
   get schema() {
     return {
+      rank: 0,
       attrs: {
         isOpened: { default: true }
       },
@@ -18,18 +19,19 @@ export default class SpoilerInline extends Mark {
           isOpened: node.classList.contains('is-opened')
         })
       }],
-      toDOM: (node) => [
+      toDOM: node => [
         'span',
         {
-          class: `b-spoiler_inline${node.attrs.isOpened ? ' is-opened' : ''}`
+          class: `b-spoiler_inline${node.attrs.isOpened ? ' is-opened' : ''}`,
+          tabindex: 0
         },
         ['span', 0]
       ]
     };
   }
 
-  view(node, view, _inline) {
-    return new SpoilerInlineView({ node, view });
+  view(options) {
+    return new SpoilerInlineView(options);
   }
 
   inputRules({ type }) {

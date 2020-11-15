@@ -1,6 +1,7 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
+import { bind } from 'shiki-decorators';
+
 import { Extension } from '../base';
-import { bind } from 'decko';
 
 import {
   insertUploadPlaceholder,
@@ -9,75 +10,66 @@ import {
 } from '../commands';
 
 export default class FileUploader extends Extension {
-  fileUploader = null;
-
   get name() {
     return 'file_uploader';
   }
 
   get defaultOptions() {
     return {
-      progressContainerNode: null,
-      locale: null,
-      uploadEndpoint: null,
-      uploadHeaders: null
+      shikiUploader: null
     };
   }
 
-  async init() {
-    const { default: ShikiFileUploader } = await import(
-      process.env.VUE_APP_USER === 'morr' ?
-        '../../../shiki-utils/src/file_uploader' :
-        'shiki-utils/src/file_uploader'
-    );
-
-    this.fileUploader = this.buildFileUploader(ShikiFileUploader);
-    this.fileUploader
-      .on('upload:file:added', (_e, uppyFile) =>
-        insertUploadPlaceholder(
-          this.editor,
-          { uploadId: uppyFile.id, file: uppyFile.data }
-        )
-      )
-      .on('upload:file:success', (_e, { uppyFile, response }) =>
-        replaceUploadPlaceholder(
-          this.editor,
-          { uploadId: uppyFile.id, response }
-        )
-      )
-      .on('upload:file:error', (_e, { uppyFile }) =>
-        removeUploadPlaceholder(
-          this.editor,
-          { uploadId: uppyFile.id }
-        )
-      );
+  attachShikiUploader({ node, progressContainerNode }) {
+    this.options.shikiUploader
+      .attachTo({ node, progressContainerNode })
+      .on('upload:file:added', this._uploadFileAdded)
+      .on('upload:file:success', this._uploadFileSuccess)
+      .on('upload:file:error', this._uploadFileError);
   }
 
   get isUploading() {
-    return !!(this.fileUploader?.isUploading);
+    return !!(this.shikiUploader?.isUploading);
+  }
+
+  get shikiUploader() {
+    return this.options.shikiUploader;
   }
 
   addFiles(files) {
-    this.fileUploader.addFiles(files);
+    this.shikiUploader.addFiles(files);
   }
 
   enable() {
-    this.fileUploader.enable();
+    this.shikiUploader.enable();
   }
 
   disable() {
-    this.fileUploader.disable();
+    this.shikiUploader.disable();
   }
 
-  buildFileUploader(ShikiFileUploader) {
-    return new ShikiFileUploader({
-      node: this.editor.view.dom,
-      progressContainerNode: this.options.progressContainerNode,
-      locale: this.options.locale,
-      xhrEndpoint: this.options.uploadEndpoint,
-      xhrHeaders: this.options.uploadHeaders,
-      maxNumberOfFiles: 10
-    });
+  @bind
+  _uploadFileAdded(_e, uppyFile) {
+    insertUploadPlaceholder(
+      this.editor,
+      { uploadId: uppyFile.id, file: uppyFile.data }
+    );
+  }
+
+  @bind
+  _uploadFileSuccess(_e, { uppyFile, response }) {
+    replaceUploadPlaceholder(
+      this.editor,
+      { uploadId: uppyFile.id, response }
+    );
+  }
+
+  @bind
+  _uploadFileError(_e, { uppyFile }) {
+    removeUploadPlaceholder(
+      this.editor,
+      { uploadId: uppyFile.id }
+    );
   }
 
   get plugins() {
@@ -87,7 +79,6 @@ export default class FileUploader extends Extension {
       new Plugin({
         key: new PluginKey(this.name),
         props: {
-          @bind
           handlePaste(_view, event, _slice) {
             if (event.clipboardData.files.length) {
               event.preventDefault();
@@ -124,6 +115,9 @@ export default class FileUploader extends Extension {
   }
 
   destroy() {
-    this.fileUploader.destroy();
+    this.shikiUploader.detach()
+      .off('upload:file:added', this._uploadFileAdded)
+      .off('upload:file:success', this._uploadFileSuccess)
+      .off('upload:file:error', this._uploadFileError);
   }
 }
